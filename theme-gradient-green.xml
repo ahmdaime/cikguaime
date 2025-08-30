@@ -7,6 +7,12 @@
 <b:with value='data:i.texts' var='texts'>
 
 <head>
+  
+<b:comment><!-- Rate limiting fix --></b:comment>
+<meta content='crawl-delay: 10' name='robots'/>
+<b:if cond='data:view.search.query'>
+    <meta content='noindex, nofollow' name='robots'/>
+</b:if>
 
 <b:comment><!-- kalau dihapus templatenya jadi tidak responsive --></b:comment>
 <meta content='width=device-width, initial-scale=1' name='viewport'/>
@@ -31,7 +37,15 @@
 <b:if cond='data:view.isHomepage || data:view.isSingleItem'>
     <b:if cond='data:view.description.escaped'>
         <meta expr:content='data:view.description.escaped' name='description'/>
+    <b:else/>
+        <meta expr:content='data:view.title.escaped + &quot; - &quot; + data:blog.title + &quot; - Latest articles and updates&quot;' name='description'/>
     </b:if>
+<b:elseif cond='data:view.isLabelSearch'/>
+    <meta expr:content='&quot;Browse articles in &quot; + data:view.title.escaped + &quot; category - &quot; + data:blog.title' name='description'/>
+<b:elseif cond='data:view.isArchive'/>
+    <meta expr:content='&quot;Archive for &quot; + data:view.title.escaped + &quot; - &quot; + data:blog.title' name='description'/>
+<b:else/>
+    <meta expr:content='data:blog.title + &quot; - &quot; + data:view.title.escaped' name='description'/>
 </b:if>
 
 <b:comment><!-- redirect blog page --></b:comment>
@@ -63,13 +77,6 @@ window.location.replace(&quot;<data:blog.canonicalHomepageUrl/>&quot; + &quot;se
 <b:comment><!-- Meta Robots --></b:comment>
 <b:if cond='data:view.isLabelSearch or data:view.search.query or data:view.isArchive or data:view.isError'>
     <meta content='noindex, noarchive' name='robots'/>
-</b:if>
-
-<b:comment><!-- Meta keywords --></b:comment>
-<b:if cond='data:view.isHomepage'>
-    <meta expr:content='data:view.title.escaped' name='keywords'/> 
-<b:elseif cond='data:view.isSingleItem'/>
-    <meta expr:content='data:view.title.escaped' name='keywords'/>
 </b:if>
 
 <b:comment><!-- google analytics --></b:comment>
@@ -150,6 +157,17 @@ Name:     wuzz
 Version:  1.6.0
 Designer: Mas Sugeng (sugeng.id)
 */
+
+/* Font display optimization - ADD THIS */
+@font-face{
+font-family:Inter;
+font-style:normal;
+font-weight:100 900;
+font-display:swap;
+src:url(https://cdn.jsdelivr.net/gh/sugengid/wuzz-fonts@v0.1.0/inter.woff2) format("woff2");
+unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD
+}
+/* End font optimization */
 
 /* Skin variable start
 <Group description="JANGAN DIEDIT">
@@ -1977,6 +1995,14 @@ body#layout{background-color:#fff4e5;border:1px solid #f7dab2;text-align:left;fo
 <style>#ads-code-widget .widget-content { display: none }</style>
 </noscript>
 
+  <!-- 3. Mobile-only optimizations that don't affect desktop -->
+<script>
+if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  // This code ONLY runs on mobile, desktop ignores it completely
+  document.addEventListener(&#39;touchstart&#39;, function(){}, {passive: true});
+}
+</script>
+ 
 </head>
 <body>
 
@@ -2099,7 +2125,26 @@ let globalSettings={darkMode:!0,defaultDark:!1,logoDarkModeUrl:!1,navShowOnScrol
     <b:section class='nav' id='nav' maxwidgets='1' showaddelement='no'>
       <b:widget id='HTML72' locked='true' title='Kode Menu Navigasi' type='HTML' version='2' visible='true'>
         <b:widget-settings>
-          <b:widget-setting name='content'/>
+          <b:widget-setting name='content'><![CDATA[<li><a href="https://www.cikguaime.com/" rel="nofollow" target="_blank">Home</a></li>
+<li class="has-sub"><a href="#">Subjek</a>
+	<ul>
+	<li><a href="https://www.cikguaime.com/search/label/Sejarah" rel="nofollow" target="_blank">Sejarah</a></li>
+	<li><a href="https://www.cikguaime.com/search/label/PSV" rel="nofollow" target="_blank">Seni Visual</a></li>
+	</ul>
+</li>
+<li class="has-sub"><a href="#" rel="nofollow" target="_blank">Tutorial</a>
+	<ul>
+	<li><a href="https://www.cikguaime.com/search/label/Tutorial%20Pendidikan" rel="nofollow" target="_blank">Pendidikan</a></li>
+	<li><a href="https://www.cikguaime.com/search/label/Tutorial%20Teknologi" rel="nofollow" target="_blank">Teknologi</a></li>
+	</ul>
+</li>
+<li class="has-sub"><a href="https://www.cikguaime.com/search/label/Sekolah" rel="nofollow" target="_blank">Sekolah</a>
+	<ul>
+	<li><a href="https://www.cikguaime.com/search/label/Pencapaian" rel="nofollow" target="_blank">Pencapaian</a></li>
+	</ul>
+</li>
+<li><a href="https://www.cikguaime.com/search/label/Blog" rel="nofollow" target="_blank">Blog</a></li>
+<li><a href="https://www.cikguaime.com/search/label/SPP" rel="nofollow" target="_blank">SPP</a></li>]]></b:widget-setting>
         </b:widget-settings>
         <b:includable id='main'>
                 <div class='nav-container'>
@@ -2168,13 +2213,6 @@ let globalSettings={darkMode:!0,defaultDark:!1,logoDarkModeUrl:!1,navShowOnScrol
 <div id='menu-label-outer'>
     <b:section class='menu-label' id='menu-label' maxwidgets='1' showaddelement='no'>
       <b:widget id='Label222' locked='true' title='Manu Label Berjejer' type='Label' version='2' visible='true'>
-        <b:widget-settings>
-          <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
-          <b:widget-setting name='display'>LIST</b:widget-setting>
-          <b:widget-setting name='selectedLabelsList'>Blog,IPG,Lain-lain,Nota IPG,PSV,Pencapaian,SPP,Sejarah,Sekolah,Tutorial Pendidikan</b:widget-setting>
-          <b:widget-setting name='showType'>USER_SELECTED</b:widget-setting>
-          <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
-        </b:widget-settings>
         <b:includable id='main' var='this'>
                 <b:include name='content'/>
             </b:includable>
@@ -4118,10 +4156,10 @@ let globalSettings={darkMode:!0,defaultDark:!1,logoDarkModeUrl:!1,navShowOnScrol
         <aside id='aside-bottom'>
             <div class='container'>
             <b:section class='aside-bottom-widgets' id='aside-bottom-widget1'>
-              <b:widget id='Profile1' locked='false' title='About' type='Profile' visible='true'>
+              <b:widget id='Profile1' locked='false' title='Pemilik CikguAimeDotCom' type='Profile' visible='true'>
                 <b:widget-settings>
                   <b:widget-setting name='showaboutme'>true</b:widget-setting>
-                  <b:widget-setting name='showlocation'>true</b:widget-setting>
+                  <b:widget-setting name='showlocation'>false</b:widget-setting>
                 </b:widget-settings>
                 <b:includable id='main' var='this'>
         <b:if cond='data:title'>
@@ -4251,7 +4289,7 @@ let globalSettings={darkMode:!0,defaultDark:!1,logoDarkModeUrl:!1,navShowOnScrol
   </a>
 </b:includable>
               </b:widget>
-              <b:widget id='HTML71' locked='true' title='Kode Icon Media Sosial' type='HTML' version='2' visible='true'>
+              <b:widget id='HTML71' locked='true' title='Kode Icon Media Sosial' type='HTML' version='2' visible='false'>
                 <b:widget-settings>
                   <b:widget-setting name='content'/>
                 </b:widget-settings>
@@ -4262,16 +4300,70 @@ let globalSettings={darkMode:!0,defaultDark:!1,logoDarkModeUrl:!1,navShowOnScrol
         </b:includable>
               </b:widget>
             </b:section>
-<b:section class='aside-bottom-widgets' id='aside-bottom-widget2'/>
+<b:section class='aside-bottom-widgets' id='aside-bottom-widget2'>
+  <b:widget id='PageList1' locked='false' title='Pages' type='PageList' visible='true'>
+    <b:widget-settings>
+      <b:widget-setting name='pageListJson'><![CDATA[{"link0":{"href":"http://www.cikguaime.com/","position":0,"title":"Home"},"6904121012500324888":{"href":"https://www.cikguaime.com/p/contact_10.html","position":3,"title":"Contact"},"4159203143523440066":{"href":"https://www.cikguaime.com/p/disclaimer_10.html","position":1,"title":"Disclaimer"},"5238010115214298385":{"href":"https://www.cikguaime.com/p/privacy-policy_10.html","position":2,"title":"Privacy Policy"}}]]></b:widget-setting>
+      <b:widget-setting name='homeTitle'>Home</b:widget-setting>
+    </b:widget-settings>
+    <b:includable id='main'>
+        <b:if cond='data:title'>
+            <div class='widget-title'>
+                <h2 class='title'><data:title/></h2>
+            </div>
+        </b:if>
+        <b:include name='content'/>
+    </b:includable>
+    <b:includable id='content'>
+        <div class='widget-content'>
+            <b:include name='pageList'/>
+        </div>
+    </b:includable>
+    <b:includable id='overflowButton'>
+        <b:include name='verticalMoreIcon'/>
+    </b:includable>
+    <b:includable id='overflowablePageList'>
+        <div class='overflowable-container'>
+            <div class='overflowable-contents'>
+                <div class='container'>
+                    <b:with value='true' var='overflow'>
+                        <b:with value='&quot;tabs&quot;' var='pageListClass'>
+                            <b:include name='pageList'/>
+                        </b:with>
+                    </b:with>
+                </div>
+            </div>
+            <div class='overflow-button hidden'>
+                <b:include name='overflowButton'/>
+            </div>
+        </div>
+    </b:includable>
+    <b:includable id='pageLink'>
+        <li>
+            <b:class cond='data:overflow' name='overflowable-item'/>
+            <b:class cond='data:link.isCurrentPage' name='selected'/>
+            <a expr:href='data:link.href'><span class='icon-page'/> <data:link.title/></a>
+        </li>
+    </b:includable>
+    <b:includable id='pageList'>
+        <ul>
+            <b:class cond='data:pageListClass' expr:name='data:pageListClass'/>
+            <b:loop values='data:links' var='link'>
+                <b:include name='pageLink'/>
+            </b:loop>
+        </ul>
+    </b:includable>
+  </b:widget>
+</b:section>
             </div>
         </aside>
 
         <footer id='footer'>
             <div class='container'>
-            <b:section class='footer-text' id='footer-text' maxwidgets='1' showaddelement='no'>
+            <b:section class='footer-text' id='footer-text' maxwidgets='2' showaddelement='no'>
               <b:widget id='HTML80' locked='true' title='Teks Footer' type='HTML' version='2' visible='true'>
                 <b:widget-settings>
-                  <b:widget-setting name='content'/>
+                  <b:widget-setting name='content'>&#169; 2018 - 2025 Cikgu Aiman</b:widget-setting>
                 </b:widget-settings>
                 <b:includable id='main'>
             <div class='footer-text'>
@@ -4364,6 +4456,23 @@ Defer.dom(&quot;img.lazyload&quot;, 0, &quot;loaded&quot;);
 
     </div>
 
+  <script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    document.querySelectorAll(&#39;img:not([alt])&#39;).forEach(function(img) {
+        var title = img.getAttribute(&#39;title&#39;) || &#39;&#39;;
+        var alt = title || &#39;Blog image from &#39; + document.title;
+        img.setAttribute(&#39;alt&#39;, alt);
+    });
+    
+    // Fix &quot;Learn more&quot; links
+    document.querySelectorAll(&#39;a[href*=&quot;support.google.com&quot;]&#39;).forEach(function(link) {
+        if (link.textContent.trim() === &#39;Learn more&#39;) {
+            link.textContent = &#39;Learn more about Google Search&#39;;
+        }
+    });
+});
+</script>
+  
 &lt;!--</body>--&gt;&lt;/body&gt;
 </b:with>
 </b:with>
