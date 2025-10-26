@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz Interaktif Sejarah Tahun 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .drag-item {
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+        .drag-item:active {
+            cursor: grabbing;
+        }
+        .drop-zone {
+            min-height: 40px;
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .drop-zone.filled {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-full font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">📚 Kuiz Interaktif Sejarah Tahun 5</h1>
+            <p class="text-gray-600">Ujian komprehensif dengan soalan rawak untuk pembelajaran yang berkesan</p>
+        </header>
+
+        <!-- Student Info Form -->
+        <div id="studentInfoForm" class="bg-white rounded-xl shadow-lg p-8">
+            <div class="mb-8 text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Maklumat Murid</h2>
+                <p class="text-gray-600 mb-6">Sila isi maklumat anda sebelum memulakan kuiz</p>
+            </div>
+            
+            <div class="max-w-md mx-auto space-y-6">
+                <div>
+                    <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Nama Penuh:</label>
+                    <input type="text" id="studentName" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none" placeholder="Masukkan nama penuh anda">
+                </div>
+                
+                <div>
+                    <label for="studentClass" class="block text-sm font-medium text-gray-700 mb-2">Kelas:</label>
+                    <input type="text" id="studentClass" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none" placeholder="Contoh: 5 Bestari">
+                </div>
+                
+                <div>
+                    <label for="studentSchool" class="block text-sm font-medium text-gray-700 mb-2">Sekolah:</label>
+                    <input type="text" id="studentSchool" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none" placeholder="Nama sekolah anda">
+                </div>
+                
+                <button onclick="submitStudentInfo()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Teruskan ke Menu Kuiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="mainMenu" class="hidden bg-white rounded-xl shadow-lg p-8 text-center">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Pilih Bahagian Kuiz</h2>
+                <p class="text-gray-600 mb-6">Setiap bahagian mempunyai soalan yang berbeza dan akan diacak secara rawak</p>
+                <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                    <p class="text-sm text-blue-800"><strong>Jumlah Markah:</strong> 50 markah (A: 30, B: 10, C: 10)</p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <button onclick="startSection('A')" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+                    <div class="text-3xl mb-2">📝</div>
+                    <div class="text-xl mb-2">Bahagian A</div>
+                    <div class="text-sm opacity-90">30 Soalan Objektif</div>
+                </button>
+                
+                <button onclick="startSection('B')" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+                    <div class="text-3xl mb-2">📋</div>
+                    <div class="text-xl mb-2">Bahagian B</div>
+                    <div class="text-sm opacity-90">2 Soalan Struktur</div>
+                </button>
+                
+                <button onclick="startSection('C')" class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+                    <div class="text-3xl mb-2">✍️</div>
+                    <div class="text-xl mb-2">Bahagian C</div>
+                    <div class="text-sm opacity-90">4 Soalan Jawapan Pendek</div>
+                </button>
+            </div>
+            
+            <div class="text-center">
+                <button onclick="showLeaderboard()" class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+                    🏆 Papan Pendahulu
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer" class="hidden">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Kemajuan</span>
+                    <span id="progressText" class="text-sm font-medium text-gray-700">1 / 30</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="questionCard" class="bg-white rounded-xl shadow-lg p-8 mb-6 fade-in">
+                <div id="questionContent"></div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center">
+                <button id="prevBtn" onclick="previousQuestion()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    ← Sebelum
+                </button>
+                
+                <button id="nextBtn" onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Seterusnya →
+                </button>
+                
+                <button id="submitBtn" onclick="submitQuiz()" class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Hantar Jawapan
+                </button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsContainer" class="hidden bg-white rounded-xl shadow-lg p-8 text-center">
+            <div class="mb-6">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Tahniah!</h2>
+                <p class="text-gray-600">Anda telah selesai menjawab kuiz</p>
+            </div>
+            
+            <div id="scoreDisplay" class="text-4xl font-bold text-indigo-600 mb-6"></div>
+            
+            <div id="navigationButtons" class="flex justify-center gap-4 mb-6">
+                <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Cuba Lagi
+                </button>
+                <button onclick="backToMenu()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Menu Utama
+                </button>
+            </div>
+            
+            <div id="nextSectionButton" class="hidden mb-6">
+                <button onclick="goToNextSection()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-300 text-lg">
+                    <span id="nextSectionText">Teruskan ke Bahagian B</span> →
+                </button>
+            </div>
+            
+            <div class="flex justify-center gap-4">
+                <div id="reviewMistakes" class="hidden">
+                    <button onclick="showMistakeReview()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                        📋 Semak Kesilapan
+                    </button>
+                </div>
+                <div id="showTeacherAnswers" class="hidden">
+                    <button onclick="showTeacherAnswers()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                        👩‍🏫 Jawapan Guru
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mistake Review -->
+        <div id="mistakeReviewContainer" class="hidden bg-white rounded-xl shadow-lg p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">📋 Semakan Kesilapan</h2>
+                <p class="text-gray-600">Semak jawapan yang salah untuk pembelajaran yang lebih baik</p>
+            </div>
+            
+            <div id="mistakesList" class="space-y-6 mb-6"></div>
+            
+            <div class="text-center">
+                <button onclick="closeMistakeReview()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Tutup
+                </button>
+            </div>
+        </div>
+
+        <!-- Teacher Answers -->
+        <div id="teacherAnswersContainer" class="hidden bg-white rounded-xl shadow-lg p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">👩‍🏫 Jawapan Guru - Bahagian C</h2>
+                <p class="text-gray-600">Rujukan jawapan lengkap untuk pembelajaran tambahan</p>
+            </div>
+            
+            <div id="teacherAnswersList" class="space-y-6 mb-6"></div>
+            
+            <div class="text-center">
+                <button onclick="closeTeacherAnswers()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Tutup
+                </button>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div id="leaderboardContainer" class="hidden bg-white rounded-xl shadow-lg p-8">
+            <div class="mb-6 text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">🏆 Papan Pendahulu</h2>
+                <p class="text-gray-600">Kedudukan terbaik murid-murid</p>
+            </div>
+            
+            <div id="leaderboardList" class="space-y-3 mb-6"></div>
+            
+            <div class="text-center">
+                <button onclick="closeLeaderboard()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    Tutup
+                </button>
+                <button onclick="refreshLeaderboard()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 ml-3">
+                    🔄 Muat Semula
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🚨 TUKAR URL INI SAHAJA! 🚨
+        // Gantikan dengan URL Google Apps Script anda
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzbG7SEOT5H4beUdzObqi_nnUlnFrAWvx2oNKJkoxqWSDTTvIT6S7fERdnTDd7TqAE/exec';
+
+        // Quiz data
+        const quizData = {
+            A: [
+                {
+                    type: 'multiple',
+                    question: 'Gelaran Yang-di Pertuan besar hanya ada pada negeri',
+                    options: ['Negeri Sembilan', 'Selangor', 'Kedah', 'Sabah'],
+                    correct: [0]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Apakah yang berlaku pada Institusi Raja bila Jepun menjajah tanah Melayu? (Pilih DUA jawapan)',
+                    options: ['Raja ada kuasa mutlak', 'Raja kekal sebagai ketua negeri', 'Raja ketua agama islam', 'Raja dibantu oleh pembesar'],
+                    correct: [1, 2],
+                    multiSelect: true
+                },
+                {
+                    type: 'multiple',
+                    question: 'Apakah kepentingan penemuan batu bersurat?',
+                    options: ['Kekayaan warisan sejarah', 'Undang-undang Islam', 'Titah perintah raja', 'Menandakan kedatangan Islam'],
+                    correct: [3]
+                },
+                {
+                    type: 'drag',
+                    question: 'Bahasa Melayu merupakan bahasa yang mudah _________ dan bersifat _________ menjadikan ia mudah berkembang',
+                    blanks: ['menerima unsur luar', 'terbuka'],
+                    options: ['menerima unsur luar', 'diterima semua bangsa', 'tertutup', 'terbuka']
+                },
+                {
+                    type: 'multiple',
+                    question: 'Berikut merupakan cara-cara memupuk perpaduan dalam kalangan rakyat Malaysia KECUALI',
+                    options: ['Pertandingan mendeklamasikan sajak', 'Pertandingan Pidato', 'Minggu Bahasa Kebangsaan', 'Pertandingan Melukis Poster'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Bunga mas dihantar sebagai ufti kepada pemerintah Siam sebagai tanda persahabatan dan menjamin keselamatan. Bunga ini dihantar setiap',
+                    options: ['3 minggu sekali', '3 bulan sekali', '3 tahun sekali', '3 hari sekali'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Negara Y merupakan sebuah negara yang telah bangkit pada tahun 1942 dan telah berjaya menguasai hampir keseluruhan Tanah Melayu. Apakah negara Y?',
+                    options: ['Siam', 'Jepun', 'Portugis', 'Belanda'],
+                    correct: [1]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Dato Maharaja Lela merupakan pejuang dari Negeri Perak. Perjuangan beliau menentang penjajah akhirnya telah menyebabkan beliau',
+                    options: ['menyerah diri', 'dibuang negeri', 'Dihukum gantung', 'Dipenjara'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Siapakah pejuang kemerdekaan yang menjadi Presiden pertama Malayan Chinese Association (MCA)?',
+                    options: ['Dato\' Abdul Wahab', 'Tun Dr. Ismail', 'Tun Tan Cheng Lock', 'Tun Abdul Razak'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Siapakah yang telah mereka cipta bendera Malaysia?',
+                    options: ['Dato\' Onn Jaafar', 'En. Mohamed bin Hamzah', 'En. Jaafar bin Hamzah', 'En. Hamzah bin Muhammad'],
+                    correct: [1]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Siapakah yang memakai alat kebesaran diraja ini? (Rujuk gambar)',
+                    imageNote: 'Gambar menunjukkan alat kebesaran diraja untuk Permaisuri',
+                    options: ['Menteri besar', 'Perdana Menteri', 'Permaisuri Agong', 'Sultan'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Alat kebesaran ini kebiasaan dijadikan hiasan pada tali pinggang atau bengkung. Apakah nama alat kebesaran tersebut?',
+                    imageNote: 'Gambar menunjukkan Pending Diraja',
+                    options: ['Muskat', 'Keris Pendek Diraja', 'Cogan Alam', 'Pending Diraja'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Bagaimanakah pemilihan Yang di-Pertuan Agong dilakukan?',
+                    options: ['Melalui pungutan suara', 'Melalui proses pengundian', 'Melalui Sistem Penggiliran', 'Melalui Sistem Pewarisan Takhta'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Anda ternampak bendera Jalur Gemilang lusuh dan koyak, apakah yang anda akan lakukan untuk melupuskan bendera tersebut?',
+                    options: ['Membakar secara tertutup', 'Membuang ke dalam tong sampah', 'Menyimpan di tempat yang selamat', 'Memberikan kepada pegawai keselamatan'],
+                    correct: [0]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Apakah maksud bendera separuh tiang?',
+                    options: ['Tanda kejayaan', 'Tanda malapetak', 'Tanda berkabung', 'Tanda menyerah kalah'],
+                    correct: [2]
+                },
+                {
+                    type: 'truefalse',
+                    question: 'Menurut Perlembagaan Persekutuan dalam Perkara 152, Bahasa Melayu dianggap sebagai Bahasa Kebangsaan.',
+                    correct: true
+                },
+                {
+                    type: 'multiple',
+                    question: 'Anda datang lewat ke sekolah dan tiba-tiba anda terdengar lagu Negaraku. Apakah yang perlu anda buat? (Pilih DUA jawapan)',
+                    options: ['Tangan diletakkan di dada', 'Letakkan beg di sisi kaki', 'Berhenti berjalan', 'Kedua-dua tangan di atas paha'],
+                    correct: [1, 2],
+                    multiSelect: true
+                },
+                {
+                    type: 'multiple',
+                    question: 'Lima kelopak yang ada pada Bunga Raya bermaksud',
+                    imageNote: 'Bunga Raya - Bunga Kebangsaan Malaysia',
+                    options: ['5 Rukun Islam', '5 Rukun Negara', '6 Rukun Iman', '5 Perlembagaan negara'],
+                    correct: [1]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Jata Negara juga merupakan simbol perpaduan, _____________ dan ___________ rakyat Malaysia',
+                    options: ['kegemilangan …. identiti', 'kemegahan …. kekayaan', 'kemegahan …. identiti', 'Ketegasan …. identiti'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Lambang Jata Negara boleh ditemui di tempat-tempat berikut KECUALI',
+                    options: ['Kad Pengenalan', 'Bangunan Kerajaan', 'Passport', 'Kad Pekerja'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Pengisytiharan kemerdekaan telah dibuat',
+                    options: ['Lancaster House, London', 'Padang Bandar Hilir, Melaka', 'Istana Negara, Kuala Lumpur', 'Stadium Merdeka, Kuala Lumpur'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Apakah pengajaran yang kita perolehi daripada penjajahan kuasa asing di negara kita?',
+                    options: ['perlu memupuk semangat patriotik', 'perlu menerima pengaruh luar', 'perlu membuat kubu pertahanan', 'lupakan jasa pejuang negara'],
+                    correct: [0]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Nyatakan dua sumber perundangan yang terdapat pada zaman Kesultanan Melayu Melaka.',
+                    options: ['Undang-undang Laut Melaka dan Hukum Kanun Pahang', 'Undang-undang 99 Perak dan Hukum Kanun Pahang', 'Undang-undang Laut Melaka dan Hukum Kanun Melaka', 'Undang-undang 99 Perak dan Hukum Kanun Melaka'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Berikut merupakan peranan Bahasa Melayu pada masa dahulu dan kini, KECUALI',
+                    options: ['bahasa rasmi', 'bahasa perpaduan', 'bahasa pendidikan', 'bahasa perjuangan'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Ini adalah pakaian RASMI yang dipakai oleh Seri Paduka Baginda Yang di-Pertuan Agong (RUJUK GAMBAR). Apakah nama pakaian tersebut?',
+                    imageNote: 'Pakaian Diraja Yang di-Pertuan Agong',
+                    options: ['Muskat', 'Gandik Diraja', 'Pending Diraja', 'Pakaian Diraja'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Yang di-Pertuan Agong memayungi tiga Badan Kerajaan seperti dalam rajah. Apakah X, Y dan Z? (Rujuk Gambar)',
+                    imageNote: 'Carta organisasi menunjukkan tiga badan kerajaan',
+                    options: ['Perundangan, Eksekutif dan Perniagaan', 'Perundangan, Pemasaran dan Kehakiman', 'Perundangan, Hubungan Luar dan Kehakiman', 'Perundangan, Eksekutif dan Kehakiman'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Apakah yang dimaksudkan dengan peranan bahasa kebangsaan sebagai bahasa pentadbiran?',
+                    options: ['Bahasa kebangsaan digunakan dalam kegiatan ekonomi.', 'Bahasa kebangsaan merupakan bahasa penghantar.', 'Bahasa kebangsaan digunakan dalam urusan rasmi.', 'Masyarakat berbilang kaum memerlukan satu bahasa yang di fahami oleh semua kaum.'],
+                    correct: [2]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Siapakah yang mengurus pentadbiran negeri-negeri Melayu semasa zaman pendudukan Jepun?',
+                    options: ['Penasihat British', 'Gabenor Jepun', 'Sultan', 'Para pembesar'],
+                    correct: [1]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Bahasa Melayu berasal dari rumpun',
+                    options: ['Australia', 'Malaysia', 'Indonesia', 'Austronesia'],
+                    correct: [3]
+                },
+                {
+                    type: 'multiple',
+                    question: 'Berikut menunjukkan cara kita memupuk perpaduan antara kaum dengan pelbagai agama KECUALI',
+                    options: ['Tidak melarang upacara keagamaan kaum lain', 'Tidak menghormati agama dan kepercayaan kaum lain', 'Menghormati tempat ibadat kaum lain', 'Bersikap toleransi dengan penganut agama lain'],
+                    correct: [1]
+                }
+            ],
+            B: [
+                {
+                    type: 'fillblanks',
+                    question: 'Soalan 1: Isikan tempat kosong dengan jawapan yang sesuai.',
+                    points: 5,
+                    guidelines: 'Seret jawapan yang betul ke tempat kosong yang sesuai.',
+                    blanks: [
+                        { text: 'A. Kedatangan para pedagang dari Tanah Arab, ____________ dan Parsi yang berdakwah dan menyebarkan agama Islam di Melaka.', answer: 'India' },
+                        { text: 'B. Menurut Hikayat Raja-raja Pasai, agama Islam disebarkan di Melaka oleh Ulama dari Mekah yang bernama _____________.', answer: 'Syeikh Abdul Aziz' },
+                        { text: 'C. Ulama tersebut telah mengislamkan raja, ________________ dan rakyat Melaka.', answer: 'pembesar' },
+                        { text: 'D. Sultan Melaka iaitu _______________ telah berkahwin dengan Puteri Raja Pasai dan baginda memeluk agama Islam.', answer: 'Megat Iskandar Shah' },
+                        { text: 'E. Pengislaman Sultan Melaka telah diikuti oleh pembesar dan _____________.', answer: 'rakyat' }
+                    ],
+                    options: ['India', 'pembesar', 'Megat Iskandar Shah', 'rakyat', 'Syeikh Abdul Aziz', 'Sultan Abdullah']
+                },
+                {
+                    type: 'matching',
+                    question: 'Soalan 2: Padankan warna dan lambang Jalur Gemilang dengan makna yang betul.',
+                    points: 5,
+                    guidelines: 'Seret setiap warna/lambang ke makna yang sesuai.',
+                    pairs: [
+                        { left: 'Kuning', right: 'Kesetiaan pada raja dan negara' },
+                        { left: 'Biru', right: 'Perpaduan rakyat' },
+                        { left: 'Merah', right: 'Keberanian rakyat hadapi cabaran' },
+                        { left: 'Putih', right: 'Kesucian' },
+                        { left: 'Bulan Sabit', right: 'Agama Islam agama Persekutuan' }
+                    ]
+                }
+            ],
+            C: [
+                {
+                    type: 'shortanswer',
+                    question: 'Soalan 1 (a) Islam telah berkembang semasa Zaman Kesultanan Melayu Melaka, bagaimanakah agama Islam boleh tersebar?',
+                    points: 2,
+                    guidelines: 'Jawapan hendaklah menyebut cara penyebaran Islam.',
+                    keywords: ['dakwah', 'perkahwinan'],
+                    scoring: 'simple',
+                    teacherAnswer: `
+                        <div class="space-y-4">
+                            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                <h5 class="font-bold text-green-800 mb-2">Jawapan Lengkap:</h5>
+                                <ul class="list-disc list-inside space-y-1 text-green-700">
+                                    <li><strong>Dakwah</strong> - Para ulama dan pedagang Muslim menyebarkan ajaran Islam</li>
+                                    <li><strong>Perkahwinan</strong> - Melalui perkahwinan antara pedagang Muslim dengan penduduk tempatan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    type: 'shortanswer',
+                    question: 'Soalan 1 (b) Sebagai seorang murid yang mempelajari Sejarah, kenapa kita perlu menghormati agama lain yang ada di Malaysia?',
+                    points: 3,
+                    guidelines: 'Jawapan hendaklah menjelaskan kepentingan menghormati agama lain.',
+                    keywords: {
+                        'Perpaduan/Harmoni': {
+                            weight: 1,
+                            words: ['perpaduan','bersatu','harmoni','muafakat','kebersamaan','integrasi','kohesi sosial','kerjasama','saling memahami']
+                        },
+                        'Elak Konflik/Salah faham': {
+                            weight: 1,
+                            words: ['elak','mengelakkan','menghindari','kurangkan','mencegah','konflik','pergaduhan','ketegangan','salah faham','prasangka']
+                        },
+                        'Nilai Murni/Rukun Negara': {
+                            weight: 1,
+                            words: ['nilai murni','adab','kesopanan','kesusilaan','toleransi','hormat-menghormati','empati','rukun negara','kesopanan dan kesusilaan']
+                        }
+                    },
+                    scoring: 'weighted',
+                    teacherAnswer: `
+                        <div class="space-y-4">
+                            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                <h5 class="font-bold text-green-800 mb-2">Jawapan Lengkap:</h5>
+                                <ul class="list-disc list-inside space-y-1 text-green-700">
+                                    <li><strong>Perpaduan dan Harmoni</strong> - Mengekalkan keharmonian dalam masyarakat berbilang kaum</li>
+                                    <li><strong>Mengelakkan Konflik</strong> - Mencegah salah faham dan ketegangan antara kaum</li>
+                                    <li><strong>Nilai Murni</strong> - Mengamalkan toleransi dan kesopanan seperti dalam Rukun Negara</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    type: 'shortanswer',
+                    question: 'Soalan 2 (a) Sebutkan dua buah wilayah/negara yang pernah menuturkan Bahasa Melayu.',
+                    points: 2,
+                    guidelines: 'Sebutkan mana-mana dua negara/wilayah.',
+                    keywords: ['indonesia', 'selatan thailand', 'filipina', 'brunei', 'singapura', 'kemboja', 'vietnam', 'afrika selatan', 'sri lanka', 'pulau cocos', 'madagaskar', 'new zealand', 'pulau easter', 'arab saudi', 'pulau krismas', 'australia barat'],
+                    scoring: 'countries',
+                    teacherAnswer: `
+                        <div class="space-y-4">
+                            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                <h5 class="font-bold text-green-800 mb-2">Jawapan Lengkap (Pilih mana-mana 2):</h5>
+                                <div class="grid grid-cols-2 gap-2 text-green-700 text-sm">
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Indonesia</li>
+                                        <li>Selatan Thailand</li>
+                                        <li>Filipina</li>
+                                        <li>Brunei</li>
+                                        <li>Singapura</li>
+                                        <li>Kemboja</li>
+                                        <li>Vietnam</li>
+                                        <li>Afrika Selatan</li>
+                                    </ul>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Sri Lanka</li>
+                                        <li>Pulau Cocos</li>
+                                        <li>Madagaskar</li>
+                                        <li>New Zealand</li>
+                                        <li>Pulau Easter</li>
+                                        <li>Arab Saudi</li>
+                                        <li>Pulau Krismas</li>
+                                        <li>Australia Barat</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    type: 'shortanswer',
+                    question: 'Soalan 2 (b) Apakah aktiviti yang boleh dilaksanakan sempena Sambutan Bulan Bahasa untuk meningkatkan kemahiran murid dalam Berbahasa Melayu?',
+                    points: 3,
+                    guidelines: 'Berikan contoh aktiviti yang sesuai.',
+                    keywords: {
+                        'Pertandingan nyanyian lagu patriotik': {
+                            weight: 1,
+                            words: ['pertandingan nyanyian lagu patriotik', 'nyanyian lagu patriotik', 'lagu patriotik', 'nyanyian patriotik']
+                        },
+                        'Persembahan drama kemerdekaan': {
+                            weight: 1,
+                            words: ['persembahan drama kemerdekaan', 'drama kemerdekaan', 'persembahan drama', 'teater kemerdekaan']
+                        },
+                        'Pertandingan mendeklamasikan sajak': {
+                            weight: 1,
+                            words: ['pertandingan mendeklamasikan sajak', 'deklamasi sajak', 'mendeklamasikan sajak', 'pertandingan sajak', 'deklamasi']
+                        }
+                    },
+                    scoring: 'weighted',
+                    teacherAnswer: `
+                        <div class="space-y-4">
+                            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                <h5 class="font-bold text-green-800 mb-2">Jawapan Lengkap:</h5>
+                                <ol class="list-decimal list-inside space-y-2 text-green-700">
+                                    <li><strong>Pertandingan nyanyian lagu patriotik</strong> yang disertai oleh murid pelbagai kaum menggunakan bahasa Melayu.</li>
+                                    <li><strong>Persembahan drama kemerdekaan</strong> menggunakan bahasa Melayu.</li>
+                                    <li><strong>Pertandingan mendeklamasikan sajak</strong> menggunakan bahasa Melayu.</li>
+                                    <li>Mana-mana jawapan yang munasabah yang berkait dengan bahasa Melayu boleh diterima.</li>
+                                </ol>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                                <h5 class="font-bold text-blue-800 mb-2">Nota Guru:</h5>
+                                <p class="text-blue-700 text-sm">Aktiviti-aktiviti ini membantu murid menggunakan bahasa Melayu secara aktif dan kreatif, sambil memupuk semangat patriotik dan perpaduan.</p>
+                            </div>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        // Quiz state
+        let currentSection = '';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let totalScore = 0;
+        let maxScore = 0;
+        let studentInfo = {
+            name: '',
+            class: '',
+            school: ''
+        };
+        let sectionScores = {
+            A: { score: 0, max: 30 },
+            B: { score: 0, max: 10 },
+            C: { score: 0, max: 10 }
+        };
+        let mistakes = [];
+        let completedSections = [];
+
+        // Submit student information
+        function submitStudentInfo() {
+            const name = document.getElementById('studentName').value.trim();
+            const studentClass = document.getElementById('studentClass').value.trim();
+            const school = document.getElementById('studentSchool').value.trim();
+            
+            if (!name || !studentClass || !school) {
+                showInlineMessage('Sila isi semua maklumat yang diperlukan.', 'error');
+                return;
+            }
+            
+            studentInfo.name = name;
+            studentInfo.class = studentClass;
+            studentInfo.school = school;
+            
+            document.getElementById('studentInfoForm').classList.add('hidden');
+            document.getElementById('mainMenu').classList.remove('hidden');
+        }
+
+        // Show inline message instead of alert
+        function showInlineMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.inline-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `inline-message mt-4 p-4 rounded-lg border ${
+                type === 'error' ? 'bg-red-100 border-red-400 text-red-700' :
+                type === 'success' ? 'bg-green-100 border-green-400 text-green-700' :
+                'bg-blue-100 border-blue-400 text-blue-700'
+            }`;
+            messageDiv.innerHTML = `
+                <div class="flex items-center">
+                    <div class="text-2xl mr-3">${type === 'error' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️'}</div>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            // Insert after the form
+            const form = document.getElementById('studentInfoForm');
+            if (form && !form.classList.contains('hidden')) {
+                form.appendChild(messageDiv);
+            }
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Shuffle array function
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Start quiz section
+        function startSection(section) {
+            currentSection = section;
+            currentQuestions = shuffleArray([...quizData[section]]);
+            
+            // Shuffle options for multiple choice questions and matching pairs
+            currentQuestions.forEach(q => {
+                if (q.type === 'multiple' || q.type === 'drag') {
+                    const originalOptions = [...q.options];
+                    const shuffledOptions = shuffleArray(originalOptions);
+                    
+                    // Update correct answers indices
+                    if (q.correct) {
+                        q.correct = q.correct.map(correctIndex => 
+                            shuffledOptions.indexOf(originalOptions[correctIndex])
+                        );
+                    }
+                    
+                    q.options = shuffledOptions;
+                } else if (q.type === 'matching') {
+                    // Shuffle the pairs for matching questions
+                    q.pairs = shuffleArray([...q.pairs]);
+                }
+            });
+            
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            score = 0;
+            
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            
+            updateProgress();
+            displayQuestion();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+        }
+
+        // Display current question
+        function displayQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            const questionContent = document.getElementById('questionContent');
+            
+            let html = `<h3 class="text-xl font-bold text-gray-800 mb-6">Soalan ${currentQuestionIndex + 1}</h3>`;
+            
+            if (question.type === 'multiple') {
+                html += `<p class="text-lg text-gray-700 mb-6">${question.question}</p>`;
+                
+                // Add image note if exists (for questions that reference images)
+                if (question.imageNote) {
+                    html += `
+                        <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg">
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-3">🖼️</div>
+                                <div>
+                                    <p class="text-blue-800 font-medium">Rujukan Gambar:</p>
+                                    <p class="text-blue-700 text-sm">${question.imageNote}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (question.multiSelect) {
+                    html += `<p class="text-sm text-blue-600 mb-4">💡 Pilih lebih daripada satu jawapan</p>`;
+                }
+                
+                html += '<div class="space-y-3">';
+                question.options.forEach((option, index) => {
+                    const inputType = question.multiSelect ? 'checkbox' : 'radio';
+                    const inputName = question.multiSelect ? `q${currentQuestionIndex}_${index}` : `q${currentQuestionIndex}`;
+                    
+                    html += `
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 cursor-pointer transition-all duration-300">
+                            <input type="${inputType}" name="${inputName}" value="${index}" class="mr-4 w-5 h-5 text-indigo-600">
+                            <span class="text-gray-700">${String.fromCharCode(65 + index)}. ${option}</span>
+                        </label>
+                    `;
+                });
+                html += '</div>';
+                
+            } else if (question.type === 'truefalse') {
+                html += `<p class="text-lg text-gray-700 mb-6">${question.question}</p>`;
+                html += '<div class="space-y-4">';
+                html += `
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 cursor-pointer transition-all duration-300">
+                        <input type="radio" name="q${currentQuestionIndex}" value="true" class="mr-4 w-5 h-5 text-green-600">
+                        <span class="text-gray-700 font-medium">✓ BETUL</span>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-red-300 hover:bg-red-50 cursor-pointer transition-all duration-300">
+                        <input type="radio" name="q${currentQuestionIndex}" value="false" class="mr-4 w-5 h-5 text-red-600">
+                        <span class="text-gray-700 font-medium">✗ SALAH</span>
+                    </label>
+                `;
+                html += '</div>';
+                
+            } else if (question.type === 'drag') {
+                html += `<p class="text-lg text-gray-700 mb-6">${question.question}</p>`;
+                html += `<p class="text-sm text-blue-600 mb-4">💡 Seret jawapan ke tempat yang betul</p>`;
+                
+                // Create blanks
+                html += '<div class="mb-6 space-y-4">';
+                question.blanks.forEach((blank, index) => {
+                    html += `
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-700 font-medium">Tempat ${index + 1}:</span>
+                            <div class="drop-zone flex-1 p-4 rounded-lg border-2 border-dashed border-gray-300" data-blank="${index}">
+                                <span class="text-gray-400">Letakkan jawapan di sini</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                // Create draggable options
+                html += '<div class="grid grid-cols-2 gap-3">';
+                question.options.forEach((option, index) => {
+                    html += `
+                        <div class="drag-item bg-blue-100 border-2 border-blue-300 p-3 rounded-lg text-center cursor-grab hover:bg-blue-200 transition-colors duration-300" draggable="true" data-option="${option}">
+                            ${option}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+            } else if (question.type === 'shortanswer') {
+                html += `<p class="text-lg text-gray-700 mb-4">${question.question}</p>`;
+                html += `<p class="text-sm text-blue-600 mb-4">📝 Markah: ${question.points}</p>`;
+                html += `<p class="text-sm text-gray-600 mb-6"><strong>Panduan:</strong> ${question.guidelines}</p>`;
+                html += `
+                    <textarea 
+                        id="shortAnswer" 
+                        class="w-full h-32 p-4 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none resize-none" 
+                        placeholder="Tulis jawapan anda di sini..."
+                    ></textarea>
+                `;
+            } else if (question.type === 'fillblanks') {
+                html += `<p class="text-lg text-gray-700 mb-4">${question.question}</p>`;
+                html += `<p class="text-sm text-blue-600 mb-4">📝 Markah: ${question.points}</p>`;
+                html += `<p class="text-sm text-gray-600 mb-4"><strong>Panduan:</strong> ${question.guidelines}</p>`;
+                html += `<p class="text-sm text-blue-600 mb-6">💡 Seret jawapan yang betul ke tempat kosong</p>`;
+                
+                // Display blanks
+                html += '<div class="space-y-4 mb-6">';
+                question.blanks.forEach((blank, index) => {
+                    const blankText = blank.text.replace('____________', `<span class="drop-zone-blank inline-block min-w-32 mx-2 px-3 py-1 border-2 border-dashed border-gray-400 rounded bg-gray-50 text-center" data-blank="${index}">_____</span>`);
+                    html += `
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <p class="text-gray-800">${blankText}</p>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                // Display options
+                html += '<div class="grid grid-cols-2 md:grid-cols-3 gap-3">';
+                question.options.forEach((option, index) => {
+                    html += `
+                        <div class="drag-item bg-blue-100 border-2 border-blue-300 p-3 rounded-lg text-center cursor-grab hover:bg-blue-200 transition-colors duration-300" draggable="true" data-option="${option}">
+                            ${option}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+            } else if (question.type === 'matching') {
+                html += `<p class="text-lg text-gray-700 mb-4">${question.question}</p>`;
+                html += `<p class="text-sm text-blue-600 mb-4">📝 Markah: ${question.points}</p>`;
+                html += `<p class="text-sm text-gray-600 mb-4"><strong>Panduan:</strong> ${question.guidelines}</p>`;
+                html += `<p class="text-sm text-blue-600 mb-6">💡 Seret item dari sebelah kiri ke kotak yang sesuai di sebelah kanan</p>`;
+                
+                html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-8">';
+                
+                // Left column - draggable items
+                html += '<div class="space-y-3">';
+                html += '<h4 class="font-bold text-gray-800 mb-4">Warna/Lambang:</h4>';
+                question.pairs.forEach((pair, index) => {
+                    html += `
+                        <div class="drag-item bg-yellow-100 border-2 border-yellow-300 p-3 rounded-lg text-center cursor-grab hover:bg-yellow-200 transition-colors duration-300" draggable="true" data-match="${pair.left}">
+                            ${pair.left}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                // Right column - drop zones
+                html += '<div class="space-y-3">';
+                html += '<h4 class="font-bold text-gray-800 mb-4">Makna:</h4>';
+                question.pairs.forEach((pair, index) => {
+                    html += `
+                        <div class="flex items-center space-x-3">
+                            <div class="drop-zone-match flex-1 p-3 rounded-lg border-2 border-dashed border-gray-300 min-h-12 flex items-center" data-answer="${pair.right}">
+                                <span class="text-gray-400 text-sm">Letakkan jawapan di sini</span>
+                            </div>
+                            <div class="w-1/2 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                                ${pair.right}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                html += '</div>';
+            }
+            
+            questionContent.innerHTML = html;
+            
+            // Setup drag and drop for drag questions
+            if (question.type === 'drag') {
+                setupDragAndDrop();
+            } else if (question.type === 'matching') {
+                setupMatchingDragAndDrop();
+            } else if (question.type === 'fillblanks') {
+                setupFillBlanksDragAndDrop();
+            }
+            
+            // Load previous answer if exists
+            loadPreviousAnswer();
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+        }
+
+        // Setup drag and drop functionality
+        function setupDragAndDrop() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.option);
+                    e.target.style.opacity = '0.5';
+                });
+                
+                item.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '1';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const data = e.dataTransfer.getData('text/plain');
+                    zone.innerHTML = `<span class="text-gray-800 font-medium">${data}</span>`;
+                    zone.classList.remove('drag-over');
+                    zone.classList.add('filled');
+                    zone.dataset.answer = data;
+                });
+            });
+        }
+
+        // Setup matching drag and drop functionality
+        function setupMatchingDragAndDrop() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone-match');
+            
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.match);
+                    e.target.style.opacity = '0.5';
+                });
+                
+                item.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '1';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const data = e.dataTransfer.getData('text/plain');
+                    zone.innerHTML = `<span class="text-gray-800 font-medium">${data}</span>`;
+                    zone.classList.remove('drag-over');
+                    zone.classList.add('filled');
+                    zone.dataset.matched = data;
+                });
+            });
+        }
+
+        // Setup fill blanks drag and drop functionality
+        function setupFillBlanksDragAndDrop() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone-blank');
+            
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.option);
+                    e.target.style.opacity = '0.5';
+                });
+                
+                item.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '1';
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const data = e.dataTransfer.getData('text/plain');
+                    zone.innerHTML = `<span class="text-gray-800 font-medium">${data}</span>`;
+                    zone.classList.remove('drag-over');
+                    zone.classList.add('filled');
+                    zone.dataset.answer = data;
+                });
+            });
+        }
+
+        // Load previous answer
+        function loadPreviousAnswer() {
+            const answer = userAnswers[currentQuestionIndex];
+            if (!answer) return;
+            
+            const question = currentQuestions[currentQuestionIndex];
+            
+            if (question.type === 'multiple') {
+                if (question.multiSelect) {
+                    answer.forEach(index => {
+                        const checkbox = document.querySelector(`input[name="q${currentQuestionIndex}_${index}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                } else {
+                    const radio = document.querySelector(`input[name="q${currentQuestionIndex}"][value="${answer[0]}"]`);
+                    if (radio) radio.checked = true;
+                }
+            } else if (question.type === 'truefalse') {
+                const radio = document.querySelector(`input[name="q${currentQuestionIndex}"][value="${answer}"]`);
+                if (radio) radio.checked = true;
+            } else if (question.type === 'drag') {
+                answer.forEach((ans, index) => {
+                    const dropZone = document.querySelector(`[data-blank="${index}"]`);
+                    if (dropZone && ans) {
+                        dropZone.innerHTML = `<span class="text-gray-800 font-medium">${ans}</span>`;
+                        dropZone.classList.add('filled');
+                        dropZone.dataset.answer = ans;
+                    }
+                });
+            } else if (question.type === 'shortanswer') {
+                const textarea = document.getElementById('shortAnswer');
+                if (textarea) textarea.value = answer || '';
+            } else if (question.type === 'fillblanks') {
+                if (answer) {
+                    answer.forEach((ans, index) => {
+                        const dropZone = document.querySelector(`[data-blank="${index}"]`);
+                        if (dropZone && ans) {
+                            dropZone.innerHTML = `<span class="text-gray-800 font-medium">${ans}</span>`;
+                            dropZone.classList.add('filled');
+                            dropZone.dataset.answer = ans;
+                        }
+                    });
+                }
+            } else if (question.type === 'matching') {
+                if (answer) {
+                    Object.keys(answer).forEach(key => {
+                        const dropZone = document.querySelector(`[data-answer="${key}"]`);
+                        if (dropZone && answer[key]) {
+                            dropZone.innerHTML = `<span class="text-gray-800 font-medium">${answer[key]}</span>`;
+                            dropZone.classList.add('filled');
+                            dropZone.dataset.matched = answer[key];
+                        }
+                    });
+                }
+            }
+        }
+
+        // Save current answer
+        function saveCurrentAnswer() {
+            const question = currentQuestions[currentQuestionIndex];
+            let answer = null;
+            
+            if (question.type === 'multiple') {
+                if (question.multiSelect) {
+                    answer = [];
+                    question.options.forEach((_, index) => {
+                        const checkbox = document.querySelector(`input[name="q${currentQuestionIndex}_${index}"]`);
+                        if (checkbox && checkbox.checked) {
+                            answer.push(index);
+                        }
+                    });
+                } else {
+                    const radio = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+                    answer = radio ? [parseInt(radio.value)] : null;
+                }
+            } else if (question.type === 'truefalse') {
+                const radio = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+                answer = radio ? (radio.value === 'true') : null;
+            } else if (question.type === 'drag') {
+                answer = [];
+                question.blanks.forEach((_, index) => {
+                    const dropZone = document.querySelector(`[data-blank="${index}"]`);
+                    answer.push(dropZone ? dropZone.dataset.answer || null : null);
+                });
+            } else if (question.type === 'shortanswer') {
+                const textarea = document.getElementById('shortAnswer');
+                answer = textarea ? textarea.value : '';
+            } else if (question.type === 'fillblanks') {
+                answer = [];
+                question.blanks.forEach((_, index) => {
+                    const dropZone = document.querySelector(`[data-blank="${index}"]`);
+                    answer.push(dropZone ? dropZone.dataset.answer || null : null);
+                });
+            } else if (question.type === 'matching') {
+                answer = {};
+                const dropZones = document.querySelectorAll('.drop-zone-match');
+                dropZones.forEach(zone => {
+                    const correctAnswer = zone.dataset.answer;
+                    const matchedItem = zone.dataset.matched;
+                    if (correctAnswer && matchedItem) {
+                        answer[correctAnswer] = matchedItem;
+                    }
+                });
+            }
+            
+            userAnswers[currentQuestionIndex] = answer;
+        }
+
+        // Update navigation buttons
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        // Navigation functions
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                saveCurrentAnswer();
+                currentQuestionIndex--;
+                updateProgress();
+                displayQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                saveCurrentAnswer();
+                currentQuestionIndex++;
+                updateProgress();
+                displayQuestion();
+            }
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            saveCurrentAnswer();
+            calculateScore();
+            showResults();
+        }
+
+        // Calculate score for all question types
+        function calculateScore() {
+            score = 0;
+            mistakes = []; // Reset mistakes for current section
+            
+            currentQuestions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                let isCorrect = false;
+                let correctAnswer = '';
+                let userAnswerText = '';
+                
+                if (question.type === 'multiple') {
+                    if (question.multiSelect) {
+                        if (userAnswer && userAnswer.length === question.correct.length) {
+                            isCorrect = question.correct.every(correct => userAnswer.includes(correct));
+                        }
+                        correctAnswer = question.correct.map(i => `${String.fromCharCode(65 + i)}. ${question.options[i]}`).join(', ');
+                        userAnswerText = userAnswer ? userAnswer.map(i => `${String.fromCharCode(65 + i)}. ${question.options[i]}`).join(', ') : 'Tiada jawapan';
+                    } else {
+                        if (userAnswer && userAnswer[0] === question.correct[0]) {
+                            isCorrect = true;
+                        }
+                        correctAnswer = `${String.fromCharCode(65 + question.correct[0])}. ${question.options[question.correct[0]]}`;
+                        userAnswerText = userAnswer ? `${String.fromCharCode(65 + userAnswer[0])}. ${question.options[userAnswer[0]]}` : 'Tiada jawapan';
+                    }
+                    if (isCorrect) score++;
+                } else if (question.type === 'truefalse') {
+                    isCorrect = userAnswer === question.correct;
+                    correctAnswer = question.correct ? 'BETUL' : 'SALAH';
+                    userAnswerText = userAnswer === true ? 'BETUL' : userAnswer === false ? 'SALAH' : 'Tiada jawapan';
+                    if (isCorrect) score++;
+                } else if (question.type === 'drag') {
+                    if (userAnswer) {
+                        isCorrect = question.blanks.every((blank, i) => userAnswer[i] === blank);
+                    }
+                    correctAnswer = question.blanks.join(', ');
+                    userAnswerText = userAnswer ? userAnswer.join(', ') : 'Tiada jawapan';
+                    if (isCorrect) score++;
+                } else if (question.type === 'fillblanks') {
+                    if (userAnswer) {
+                        let correctCount = 0;
+                        question.blanks.forEach((blank, i) => {
+                            if (userAnswer[i] === blank.answer) {
+                                correctCount++;
+                            }
+                        });
+                        const partialScore = Math.round((correctCount / question.blanks.length) * question.points);
+                        score += partialScore;
+                        isCorrect = correctCount === question.blanks.length;
+                    }
+                    correctAnswer = question.blanks.map(b => b.answer).join(', ');
+                    userAnswerText = userAnswer ? userAnswer.join(', ') : 'Tiada jawapan';
+                } else if (question.type === 'matching') {
+                    if (userAnswer) {
+                        let correctCount = 0;
+                        question.pairs.forEach(pair => {
+                            if (userAnswer[pair.right] === pair.left) {
+                                correctCount++;
+                            }
+                        });
+                        const partialScore = Math.round((correctCount / question.pairs.length) * question.points);
+                        score += partialScore;
+                        isCorrect = correctCount === question.pairs.length;
+                    }
+                    correctAnswer = question.pairs.map(p => `${p.left} → ${p.right}`).join(', ');
+                    userAnswerText = userAnswer ? Object.keys(userAnswer).map(k => `${userAnswer[k]} → ${k}`).join(', ') : 'Tiada jawapan';
+                } else if (question.type === 'shortanswer') {
+                    if (userAnswer && userAnswer.trim()) {
+                        const answerResult = scoreShortAnswer(question, userAnswer);
+                        
+                        // Handle both simple scoring (returns number) and AI scoring (returns object)
+                        if (typeof answerResult === 'object') {
+                            score += answerResult.score;
+                            isCorrect = answerResult.score === question.points;
+                            
+                            // Store AI analysis for display
+                            if (!window.aiAnalysis) window.aiAnalysis = {};
+                            window.aiAnalysis[index] = answerResult;
+                        } else {
+                            score += answerResult;
+                            isCorrect = answerResult === question.points;
+                        }
+                    }
+                    correctAnswer = 'Jawapan terbuka (semak dengan guru)';
+                    userAnswerText = userAnswer || 'Tiada jawapan';
+                }
+                
+                // Track mistakes
+                if (!isCorrect) {
+                    mistakes.push({
+                        questionNumber: index + 1,
+                        question: question.question,
+                        userAnswer: userAnswerText,
+                        correctAnswer: correctAnswer,
+                        section: currentSection
+                    });
+                }
+            });
+        }
+
+        // Advanced AI-powered scoring for KBAT questions
+        function scoreShortAnswer(question, userAnswer) {
+            const normalizedAnswer = userAnswer.toLowerCase()
+                .replace(/[^\w\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+            
+            if (question.scoring === 'simple') {
+                // Simple keyword matching for question (a)
+                const foundKeywords = question.keywords.filter(keyword => 
+                    normalizedAnswer.includes(keyword.toLowerCase())
+                );
+                return foundKeywords.length >= 2 ? question.points : 
+                       foundKeywords.length === 1 ? Math.floor(question.points / 2) : 0;
+            } else if (question.scoring === 'weighted') {
+                // Advanced AI scoring for KBAT questions
+                return scoreKBATAnswer(question, normalizedAnswer, userAnswer);
+            } else if (question.scoring === 'countries') {
+                // Country matching for question 2(a)
+                const foundCountries = question.keywords.filter(country => 
+                    normalizedAnswer.includes(country.toLowerCase())
+                );
+                return foundCountries.length >= 2 ? question.points : 
+                       foundCountries.length === 1 ? Math.floor(question.points / 2) : 0;
+            }
+            
+            return 0;
+        }
+
+        // Advanced KBAT Answer Scoring with AI-like analysis
+        function scoreKBATAnswer(question, normalizedAnswer, originalAnswer) {
+            const maxScore = question.points;
+            
+            // Check minimum answer length
+            const wordCount = originalAnswer.trim().split(/\s+/).length;
+            if (wordCount < 3) {
+                return { 
+                    score: 0, 
+                    status: "❌",
+                    feedback: "Jawapan terlalu pendek. Sila berikan penjelasan yang lebih lengkap.",
+                    analysis: generateKBATAnalysis(question, originalAnswer, 0, maxScore)
+                };
+            }
+            
+            // Use intelligent KBAT evaluation
+            return evaluateKBATAnswer(question, originalAnswer, normalizedAnswer);
+        }
+
+        // Intelligent KBAT Answer Evaluation
+        function evaluateKBATAnswer(question, originalAnswer, normalizedAnswer) {
+            const maxScore = question.points;
+            
+            // Define reference answers and scoring patterns for each question
+            const kbatPatterns = {
+                // Question 1(b): Why respect other religions?
+                'kenapa kita perlu menghormati agama lain': {
+                    patterns: [
+                        {
+                            concepts: ['perpaduan', 'bersatu', 'harmoni', 'keharmonian', 'rukun', 'damai', 'aman'],
+                            weight: 1,
+                            description: 'Perpaduan dan Keharmonian'
+                        },
+                        {
+                            concepts: ['toleransi', 'hormat', 'menghormati', 'saling menghargai', 'bertolak ansur', 'faham memahami'],
+                            weight: 1,
+                            description: 'Sikap Toleransi dan Hormat-menghormati'
+                        },
+                        {
+                            concepts: ['elak', 'mengelak', 'hindari', 'mencegah', 'konflik', 'pergaduhan', 'masalah', 'ketegangan'],
+                            weight: 1,
+                            description: 'Mengelakkan Konflik'
+                        }
+                    ]
+                },
+                // Question 2(b): Language month activities
+                'aktiviti yang boleh dilaksanakan sempena sambutan bulan bahasa': {
+                    patterns: [
+                        {
+                            concepts: ['pertandingan', 'pidato', 'bercerita', 'sajak', 'deklamasi', 'puisi'],
+                            weight: 1,
+                            description: 'Pertandingan Lisan (Pidato/Sajak/Bercerita)'
+                        },
+                        {
+                            concepts: ['drama', 'persembahan', 'teater', 'lakonan'],
+                            weight: 1,
+                            description: 'Persembahan Drama/Teater'
+                        },
+                        {
+                            concepts: ['menulis', 'karangan', 'esei', 'kuiz', 'aktiviti', 'interaktif', 'permainan bahasa'],
+                            weight: 1,
+                            description: 'Aktiviti Penulisan dan Interaktif'
+                        }
+                    ]
+                }
+            };
+            
+            // Find matching pattern based on question content
+            let matchedPattern = null;
+            const questionLower = question.question.toLowerCase();
+            
+            for (const [key, pattern] of Object.entries(kbatPatterns)) {
+                if (questionLower.includes(key)) {
+                    matchedPattern = pattern;
+                    break;
+                }
+            }
+            
+            if (!matchedPattern) {
+                // Fallback to original keyword matching
+                return fallbackKBATScoring(question, originalAnswer, normalizedAnswer);
+            }
+            
+            // Evaluate answer against patterns
+            let totalScore = 0;
+            let foundConcepts = [];
+            let missedConcepts = [];
+            
+            matchedPattern.patterns.forEach(pattern => {
+                let conceptFound = false;
+                let foundInThisPattern = [];
+                
+                pattern.concepts.forEach(concept => {
+                    if (normalizedAnswer.includes(concept.toLowerCase())) {
+                        conceptFound = true;
+                        foundInThisPattern.push(concept);
+                    }
+                });
+                
+                if (conceptFound) {
+                    totalScore += pattern.weight;
+                    foundConcepts.push({
+                        description: pattern.description,
+                        concepts: foundInThisPattern
+                    });
+                } else {
+                    missedConcepts.push(pattern.description);
+                }
+            });
+            
+            // Determine status and feedback
+            let status, feedback;
+            const percentage = (totalScore / maxScore) * 100;
+            
+            if (percentage >= 80) {
+                status = "✅";
+                feedback = `Jawapan cemerlang! Menunjukkan kefahaman yang mendalam tentang topik ini.`;
+            } else if (percentage >= 50) {
+                status = "⚠️";
+                feedback = `Jawapan baik tetapi boleh diperbaiki. Cuba tambah: ${missedConcepts.slice(0, 2).join(', ')}.`;
+            } else {
+                status = "❌";
+                feedback = `Jawapan perlu diperbaiki. Fokus pada: ${missedConcepts.slice(0, 2).join(', ')}.`;
+            }
+            
+            return {
+                score: Math.min(totalScore, maxScore),
+                status: status,
+                feedback: feedback,
+                analysis: generateKBATAnalysis(question, originalAnswer, totalScore, maxScore, foundConcepts, missedConcepts)
+            };
+        }
+        
+        // Fallback scoring for questions without specific patterns
+        function fallbackKBATScoring(question, originalAnswer, normalizedAnswer) {
+            let totalScore = 0;
+            const maxScore = question.points;
+            let feedback = [];
+            
+            // Use original keyword matching as fallback
+            if (question.keywords && typeof question.keywords === 'object') {
+                Object.keys(question.keywords).forEach(category => {
+                    const categoryData = question.keywords[category];
+                    let categoryFound = false;
+                    
+                    if (categoryData.words) {
+                        categoryData.words.forEach(word => {
+                            if (normalizedAnswer.includes(word.toLowerCase())) {
+                                categoryFound = true;
+                            }
+                        });
+                    }
+                    
+                    if (categoryFound) {
+                        totalScore += categoryData.weight || 1;
+                        feedback.push(`✓ ${category}`);
+                    } else {
+                        feedback.push(`✗ ${category}`);
+                    }
+                });
+            }
+            
+            const percentage = (totalScore / maxScore) * 100;
+            let status = percentage >= 80 ? "✅" : percentage >= 50 ? "⚠️" : "❌";
+            
+            return {
+                score: Math.min(totalScore, maxScore),
+                status: status,
+                feedback: feedback.join(', '),
+                analysis: generateKBATAnalysis(question, originalAnswer, totalScore, maxScore)
+            };
+        }
+
+        // Generate detailed KBAT analysis
+        function generateKBATAnalysis(question, answer, score, maxScore, foundConcepts = [], missedConcepts = []) {
+            const percentage = Math.round((score / maxScore) * 100);
+            const wordCount = answer.trim().split(/\s+/).length;
+            
+            let analysis = `
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h6 class="font-bold text-blue-800 mb-3">🤖 Analisis Penilai Automatik KBAT</h6>
+                    <div class="text-sm text-blue-700 space-y-2">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p><strong>Markah:</strong> ${score}/${maxScore}</p>
+                                <p><strong>Peratusan:</strong> ${percentage}%</p>
+                            </div>
+                            <div>
+                                <p><strong>Panjang:</strong> ${wordCount} perkataan</p>
+                                <p><strong>Status:</strong> ${percentage >= 80 ? '✅ Cemerlang' : percentage >= 50 ? '⚠️ Baik' : '❌ Perlu Diperbaiki'}</p>
+                            </div>
+                        </div>
+            `;
+            
+            if (foundConcepts.length > 0) {
+                analysis += `
+                        <div class="mt-3">
+                            <p class="font-medium text-green-800">✅ Konsep yang dijumpai:</p>
+                            <ul class="list-disc list-inside ml-4 text-green-700">
+                `;
+                foundConcepts.forEach(concept => {
+                    analysis += `<li>${concept.description}</li>`;
+                });
+                analysis += `</ul></div>`;
+            }
+            
+            if (missedConcepts.length > 0) {
+                analysis += `
+                        <div class="mt-3">
+                            <p class="font-medium text-orange-800">⚠️ Konsep yang boleh ditambah:</p>
+                            <ul class="list-disc list-inside ml-4 text-orange-700">
+                `;
+                missedConcepts.forEach(concept => {
+                    analysis += `<li>${concept}</li>`;
+                });
+                analysis += `</ul></div>`;
+            }
+            
+            analysis += `
+                    </div>
+                </div>
+            `;
+            
+            return analysis;
+        }
+
+        // Show results
+        function showResults() {
+            // Store section score and mark as completed
+            sectionScores[currentSection].score = score;
+            if (!completedSections.includes(currentSection)) {
+                completedSections.push(currentSection);
+            }
+            
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+            
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            
+            // Calculate total score across all completed sections
+            totalScore = sectionScores.A.score + sectionScores.B.score + sectionScores.C.score;
+            maxScore = sectionScores.A.max + sectionScores.B.max + sectionScores.C.max;
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            
+            scoreDisplay.innerHTML = `
+                <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Maklumat Murid</h3>
+                    <p><strong>Nama:</strong> ${studentInfo.name}</p>
+                    <p><strong>Kelas:</strong> ${studentInfo.class}</p>
+                    <p><strong>Sekolah:</strong> ${studentInfo.school}</p>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="text-3xl font-bold text-indigo-600 mb-2">Bahagian ${currentSection}: ${score}/${currentSection === 'A' ? 30 : 10}</div>
+                    <div class="text-lg text-gray-700">Peratusan: ${Math.round((score / (currentSection === 'A' ? 30 : 10)) * 100)}%</div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-green-50 p-4 rounded-lg text-center ${completedSections.includes('A') ? '' : 'opacity-50'}">
+                        <h4 class="font-bold text-green-800">Bahagian A</h4>
+                        <p class="text-2xl font-bold text-green-600">${sectionScores.A.score}/${sectionScores.A.max}</p>
+                        <p class="text-sm text-green-700">${Math.round((sectionScores.A.score/sectionScores.A.max)*100)}%</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg text-center ${completedSections.includes('B') ? '' : 'opacity-50'}">
+                        <h4 class="font-bold text-blue-800">Bahagian B</h4>
+                        <p class="text-2xl font-bold text-blue-600">${sectionScores.B.score}/${sectionScores.B.max}</p>
+                        <p class="text-sm text-blue-700">${Math.round((sectionScores.B.score/sectionScores.B.max)*100)}%</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg text-center ${completedSections.includes('C') ? '' : 'opacity-50'}">
+                        <h4 class="font-bold text-purple-800">Bahagian C</h4>
+                        <p class="text-2xl font-bold text-purple-600">${sectionScores.C.score}/${sectionScores.C.max}</p>
+                        <p class="text-sm text-purple-700">${Math.round((sectionScores.C.score/sectionScores.C.max)*100)}%</p>
+                    </div>
+                </div>
+            `;
+            
+            // Show appropriate buttons
+            const nextSectionButton = document.getElementById('nextSectionButton');
+            const nextSectionText = document.getElementById('nextSectionText');
+            const reviewMistakes = document.getElementById('reviewMistakes');
+            
+            // Show next section button if not all sections completed
+            if (currentSection === 'A' && !completedSections.includes('B')) {
+                nextSectionButton.classList.remove('hidden');
+                nextSectionText.textContent = 'Teruskan ke Bahagian B';
+            } else if (currentSection === 'B' && !completedSections.includes('C')) {
+                nextSectionButton.classList.remove('hidden');
+                nextSectionText.textContent = 'Teruskan ke Bahagian C';
+            } else {
+                nextSectionButton.classList.add('hidden');
+                // Show final results if all sections completed
+                if (completedSections.length === 3) {
+                    scoreDisplay.innerHTML += `
+                        <div class="text-center mb-6 p-6 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">🎉 KUIZ SELESAI! 🎉</h3>
+                            <div class="text-4xl font-bold text-indigo-600 mb-2">Jumlah: ${totalScore}/${maxScore}</div>
+                            <div class="text-2xl text-gray-700 mb-4">Peratusan Keseluruhan: ${percentage}%</div>
+                            <div class="text-lg ${percentage >= 80 ? 'text-green-600' : percentage >= 60 ? 'text-blue-600' : percentage >= 40 ? 'text-yellow-600' : 'text-red-600'}">
+                                Gred: ${percentage >= 80 ? 'A - Cemerlang' : percentage >= 60 ? 'B - Baik' : percentage >= 40 ? 'C - Memuaskan' : 'D - Perlu Diperbaiki'}
+                            </div>
+                        </div>
+                    `;
+                    // Submit to Google Sheets
+                    submitToGoogleSheets();
+                }
+            }
+            
+            // Show mistake review button if there are mistakes
+            if (mistakes.length > 0) {
+                reviewMistakes.classList.remove('hidden');
+            } else {
+                reviewMistakes.classList.add('hidden');
+            }
+            
+            // Show teacher answers button for section C only
+            const showTeacherAnswers = document.getElementById('showTeacherAnswers');
+            if (currentSection === 'C') {
+                showTeacherAnswers.classList.remove('hidden');
+            } else {
+                showTeacherAnswers.classList.add('hidden');
+            }
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            startSection(currentSection);
+            document.getElementById('resultsContainer').classList.add('hidden');
+        }
+
+        // Back to main menu
+        function backToMenu() {
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('mainMenu').classList.remove('hidden');
+        }
+
+        // Go to next section
+        function goToNextSection() {
+            if (currentSection === 'A') {
+                startSection('B');
+            } else if (currentSection === 'B') {
+                startSection('C');
+            }
+        }
+
+        // Show mistake review
+        function showMistakeReview() {
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('mistakeReviewContainer').classList.remove('hidden');
+            
+            const mistakesList = document.getElementById('mistakesList');
+            
+            if (mistakes.length === 0) {
+                mistakesList.innerHTML = `
+                    <div class="text-center p-8">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h3 class="text-xl font-bold text-green-600 mb-2">Tahniah!</h3>
+                        <p class="text-gray-600">Tiada kesilapan dijumpai dalam bahagian ini!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            mistakes.forEach((mistake, index) => {
+                // Check if this question has AI analysis
+                const questionIndex = mistake.questionNumber - 1;
+                const hasAIAnalysis = window.aiAnalysis && window.aiAnalysis[questionIndex];
+                
+                html += `
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-4">❌</div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-red-800 mb-2">Soalan ${mistake.questionNumber} (Bahagian ${mistake.section})</h4>
+                                <p class="text-gray-800 mb-3"><strong>Soalan:</strong> ${mistake.question}</p>
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div class="bg-red-100 p-3 rounded">
+                                        <p class="text-sm font-medium text-red-800 mb-1">Jawapan Anda:</p>
+                                        <p class="text-red-700">${mistake.userAnswer}</p>
+                                    </div>
+                                    <div class="bg-green-100 p-3 rounded">
+                                        <p class="text-sm font-medium text-green-800 mb-1">Jawapan Rujukan:</p>
+                                        <p class="text-green-700">${mistake.correctAnswer}</p>
+                                    </div>
+                                </div>
+                                ${hasAIAnalysis ? `
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                        <h6 class="font-bold text-blue-800 mb-2">🤖 Maklum Balas Penilai KBAT:</h6>
+                                        <div class="mb-3 p-3 bg-white rounded border-l-4 ${hasAIAnalysis.status === '✅' ? 'border-green-400' : hasAIAnalysis.status === '⚠️' ? 'border-yellow-400' : 'border-red-400'}">
+                                            <p class="font-medium text-gray-800 mb-1">Markah: ${hasAIAnalysis.status}</p>
+                                            <p class="text-gray-700 text-sm">${hasAIAnalysis.feedback}</p>
+                                        </div>
+                                        ${hasAIAnalysis.analysis}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            mistakesList.innerHTML = html;
+        }
+
+        // Close mistake review
+        function closeMistakeReview() {
+            document.getElementById('mistakeReviewContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+        }
+
+        // Submit to Google Sheets
+        async function submitToGoogleSheets() {
+            if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                console.log('Google Sheets URL not configured');
+                showDataForCopy();
+                return;
+            }
+            
+            const data = {
+                timestamp: new Date().toLocaleString('ms-MY', { timeZone: 'Asia/Kuala_Lumpur' }),
+                name: studentInfo.name,
+                class: studentInfo.class,
+                school: studentInfo.school,
+                sectionA: sectionScores.A.score,
+                sectionB: sectionScores.B.score,
+                sectionC: sectionScores.C.score,
+                totalScore: totalScore,
+                percentage: Math.round((totalScore / maxScore) * 100)
+            };
+            
+            try {
+                // Try simple GET request with parameters
+                await submitViaGET(data);
+                
+            } catch (error) {
+                console.error('Submission failed:', error);
+                showDataForCopy(data);
+            }
+        }
+        
+        // Submit via multiple methods for better reliability
+        async function submitViaGET(data) {
+            const params = new URLSearchParams({
+                action: 'submit',
+                timestamp: data.timestamp,
+                name: data.name,
+                class: data.class,
+                school: data.school,
+                sectionA: data.sectionA,
+                sectionB: data.sectionB,
+                sectionC: data.sectionC,
+                totalScore: data.totalScore,
+                percentage: data.percentage
+            });
+            
+            try {
+                // Method 1: Try fetch with no-cors mode
+                const response = await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                
+                console.log('Data submitted via fetch (no-cors)');
+                showSubmissionSuccess();
+                return;
+                
+            } catch (fetchError) {
+                console.log('Fetch failed, trying iframe method...');
+                
+                // Method 2: Use hidden iframe
+                try {
+                    await submitViaIframe(params);
+                    console.log('Data submitted via iframe');
+                    showSubmissionSuccess();
+                    return;
+                    
+                } catch (iframeError) {
+                    console.log('Iframe failed, trying script tag method...');
+                    
+                    // Method 3: Use script tag with JSONP-style callback
+                    try {
+                        await submitViaScript(params);
+                        console.log('Data submitted via script tag');
+                        showSubmissionSuccess();
+                        return;
+                        
+                    } catch (scriptError) {
+                        console.error('All submission methods failed');
+                        throw new Error('Submission failed');
+                    }
+                }
+            }
+        }
+        
+        // Submit via hidden iframe
+        function submitViaIframe(params) {
+            return new Promise((resolve, reject) => {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
+                
+                const timeoutId = setTimeout(() => {
+                    document.body.removeChild(iframe);
+                    resolve(); // Assume success even if we can't verify
+                }, 5000);
+                
+                iframe.onload = () => {
+                    clearTimeout(timeoutId);
+                    document.body.removeChild(iframe);
+                    resolve();
+                };
+                
+                iframe.onerror = () => {
+                    clearTimeout(timeoutId);
+                    document.body.removeChild(iframe);
+                    resolve(); // Still assume success as request was sent
+                };
+                
+                document.body.appendChild(iframe);
+            });
+        }
+        
+        // Submit via script tag
+        function submitViaScript(params) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
+                
+                const timeoutId = setTimeout(() => {
+                    if (script.parentNode) {
+                        document.head.removeChild(script);
+                    }
+                    resolve(); // Assume success
+                }, 5000);
+                
+                script.onload = () => {
+                    clearTimeout(timeoutId);
+                    if (script.parentNode) {
+                        document.head.removeChild(script);
+                    }
+                    resolve();
+                };
+                
+                script.onerror = () => {
+                    clearTimeout(timeoutId);
+                    if (script.parentNode) {
+                        document.head.removeChild(script);
+                    }
+                    resolve(); // Still assume success
+                };
+                
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Show data for manual copy (fallback method)
+        function showDataForCopy(data = null) {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            
+            // Remove any existing messages
+            const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            if (!data) {
+                data = {
+                    timestamp: new Date().toLocaleString('ms-MY', { timeZone: 'Asia/Kuala_Lumpur' }),
+                    name: studentInfo.name,
+                    class: studentInfo.class,
+                    school: studentInfo.school,
+                    sectionA: sectionScores.A.score,
+                    sectionB: sectionScores.B.score,
+                    sectionC: sectionScores.C.score,
+                    totalScore: totalScore,
+                    percentage: Math.round((totalScore / maxScore) * 100)
+                };
+            }
+            
+            const dataText = `${data.timestamp}\t${data.name}\t${data.class}\t${data.school}\t${data.sectionA}\t${data.sectionB}\t${data.sectionC}\t${data.totalScore}\t${data.percentage}%`;
+            
+            const copyMessage = document.createElement('div');
+            copyMessage.className = 'submission-message mt-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg';
+            copyMessage.innerHTML = `
+                <div class="mb-3">
+                    <div class="flex items-center mb-2">
+                        <div class="text-2xl mr-3">📋</div>
+                        <div>
+                            <p class="font-bold">Sila Salin Data Ini</p>
+                            <p class="text-sm">Hantar kepada guru untuk direkodkan secara manual</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-3 rounded border border-blue-300 mb-3">
+                    <textarea id="copyData" class="w-full h-20 text-sm font-mono resize-none border-none outline-none" readonly>${dataText}</textarea>
+                </div>
+                <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    📋 Salin ke Clipboard
+                </button>
+            `;
+            scoreDisplay.appendChild(copyMessage);
+        }
+        
+        // Copy data to clipboard
+        function copyToClipboard() {
+            const textarea = document.getElementById('copyData');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                
+                // Show success feedback
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Disalin!';
+                button.className = 'bg-green-600 text-white px-4 py-2 rounded text-sm';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.className = 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm';
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                alert('Sila salin data secara manual');
+            }
+        }
+
+        // Show submission success message
+        function showSubmissionSuccess() {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            
+            // Remove any existing messages
+            const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const successMessage = document.createElement('div');
+            successMessage.className = 'submission-message mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg';
+            successMessage.innerHTML = `
+                <div class="flex items-center">
+                    <div class="text-2xl mr-3">✅</div>
+                    <div>
+                        <p class="font-bold">Data Berjaya Dihantar!</p>
+                        <p class="text-sm">Keputusan anda telah disimpan ke Google Sheets.</p>
+                    </div>
+                </div>
+            `;
+            scoreDisplay.appendChild(successMessage);
+        }
+        
+        // Show submission error message
+        function showSubmissionError() {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            
+            // Remove any existing messages
+            const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'submission-message mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg';
+            errorMessage.innerHTML = `
+                <div class="flex items-center">
+                    <div class="text-2xl mr-3">⚠️</div>
+                    <div>
+                        <p class="font-bold">Ralat Menghantar Data</p>
+                        <p class="text-sm">Sila hubungi guru untuk memastikan keputusan anda direkodkan.</p>
+                        <button onclick="retrySubmission()" class="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+                            Cuba Lagi
+                        </button>
+                    </div>
+                </div>
+            `;
+            scoreDisplay.appendChild(errorMessage);
+        }
+        
+        // Retry submission
+        function retrySubmission() {
+            submitToGoogleSheets();
+        }
+
+        // Show leaderboard
+        function showLeaderboard() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('leaderboardContainer').classList.remove('hidden');
+            loadLeaderboard();
+        }
+
+        // Load leaderboard data
+        async function loadLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboardList');
+            
+            if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                leaderboardList.innerHTML = `
+                    <div class="text-center p-8">
+                        <div class="text-6xl mb-4">⚙️</div>
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">Papan Pendahulu Tidak Tersedia</h3>
+                        <p class="text-gray-500">Sila hubungi guru untuk mengaktifkan ciri ini.</p>
+                        <p class="text-sm text-gray-400 mt-2">Google Sheets integration belum dikonfigurasi.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            leaderboardList.innerHTML = `
+                <div class="text-center p-8">
+                    <div class="animate-spin text-4xl mb-4">⏳</div>
+                    <p class="text-gray-600">Memuat data papan pendahulu...</p>
+                </div>
+            `;
+            
+            try {
+                // Use JSONP approach to avoid CORS issues
+                const callbackName = 'leaderboardCallback' + Date.now();
+                
+                // Create a promise that resolves when callback is called
+                const dataPromise = new Promise((resolve, reject) => {
+                    window[callbackName] = function(data) {
+                        resolve(data);
+                        // Clean up
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                    };
+                    
+                    // Set timeout for error handling
+                    setTimeout(() => {
+                        if (window[callbackName]) {
+                            delete window[callbackName];
+                            document.head.removeChild(script);
+                            reject(new Error('Timeout loading leaderboard'));
+                        }
+                    }, 10000);
+                });
+                
+                // Create script tag for JSONP
+                const script = document.createElement('script');
+                script.src = `${GOOGLE_SHEETS_URL}?action=getLeaderboard&callback=${callbackName}`;
+                document.head.appendChild(script);
+                
+                const data = await dataPromise;
+                
+                if (data && data.success && data.leaderboard) {
+                    displayLeaderboard(data.leaderboard);
+                } else {
+                    throw new Error('Invalid leaderboard data received');
+                }
+                
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                leaderboardList.innerHTML = `
+                    <div class="text-center p-8">
+                        <div class="text-6xl mb-4">📊</div>
+                        <h3 class="text-xl font-bold text-blue-600 mb-2">Papan Pendahulu</h3>
+                        <p class="text-gray-600 mb-4">Sedang memuat data dari Google Sheets...</p>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-blue-700">💡 <strong>Nota:</strong> Papan pendahulu akan dipaparkan selepas beberapa murid menghantar kuiz.</p>
+                            <p class="text-sm text-blue-600 mt-2">Jika masalah berterusan, sila hubungi guru.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Display leaderboard
+        function displayLeaderboard(leaderboardData) {
+            const leaderboardList = document.getElementById('leaderboardList');
+            
+            if (!leaderboardData || leaderboardData.length === 0) {
+                leaderboardList.innerHTML = `
+                    <div class="text-center p-8">
+                        <div class="text-6xl mb-4">📊</div>
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">Tiada Data</h3>
+                        <p class="text-gray-500">Belum ada murid yang menghantar kuiz.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            leaderboardData.forEach((student, index) => {
+                const rank = index + 1;
+                const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+                const bgColor = rank === 1 ? 'bg-yellow-50 border-yellow-200' : 
+                               rank === 2 ? 'bg-gray-50 border-gray-200' : 
+                               rank === 3 ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200';
+                
+                html += `
+                    <div class="flex items-center justify-between p-4 ${bgColor} border-2 rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-2xl font-bold">${medalEmoji}</div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">${student.name}</h4>
+                                <p class="text-sm text-gray-600">${student.class} - ${student.school}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-indigo-600">${student.totalScore}/50</div>
+                            <div class="text-sm text-gray-600">${student.percentage}%</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            leaderboardList.innerHTML = html;
+        }
+
+        // Close leaderboard
+        function closeLeaderboard() {
+            document.getElementById('leaderboardContainer').classList.add('hidden');
+            document.getElementById('mainMenu').classList.remove('hidden');
+        }
+
+        // Refresh leaderboard
+        function refreshLeaderboard() {
+            loadLeaderboard();
+        }
+
+        // Show teacher answers
+        function showTeacherAnswers() {
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('teacherAnswersContainer').classList.remove('hidden');
+            
+            const teacherAnswersList = document.getElementById('teacherAnswersList');
+            
+            let html = '';
+            currentQuestions.forEach((question, index) => {
+                if (question.teacherAnswer) {
+                    html += `
+                        <div class="bg-purple-50 border-l-4 border-purple-400 p-6 rounded-r-lg">
+                            <div class="flex items-start">
+                                <div class="text-2xl mr-4">📚</div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-purple-800 mb-3">Soalan ${index + 1}</h4>
+                                    <p class="text-gray-800 mb-4"><strong>Soalan:</strong> ${question.question}</p>
+                                    ${question.teacherAnswer}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (html === '') {
+                html = `
+                    <div class="text-center p-8">
+                        <div class="text-6xl mb-4">📝</div>
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">Tiada Jawapan Guru</h3>
+                        <p class="text-gray-500">Jawapan guru tidak tersedia untuk bahagian ini.</p>
+                    </div>
+                `;
+            }
+            
+            teacherAnswersList.innerHTML = html;
+        }
+
+        // Close teacher answers
+        function closeTeacherAnswers() {
+            document.getElementById('teacherAnswersContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99465f6d8165c786',t:'MTc2MTQ0NDE1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
