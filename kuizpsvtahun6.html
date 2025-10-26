@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz Pendidikan Seni Visual - Tahun 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f3e5f5 50%, #fff9c4 100%);
+        }
+        
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .option-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .correct-answer {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            color: white;
+        }
+        
+        .wrong-answer {
+            background: linear-gradient(135deg, #f87171, #ef4444);
+            color: white;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-full">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-purple-800 mb-2">🎨 Kuiz Pendidikan Seni Visual</h1>
+            <p class="text-lg text-purple-600">Tahun 6 - Mari Uji Pengetahuan Seni Anda!</p>
+            <div class="mt-3 p-3 bg-blue-100 rounded-lg border border-blue-300">
+                <p class="text-sm text-blue-800">
+                    🔀 <strong>Sistem Anti-Peniruan:</strong> Soalan dan jawapan disusun secara rawak untuk setiap murid
+                </p>
+            </div>
+        </header>
+
+        <!-- Student Info Form -->
+        <div id="studentForm" class="quiz-card rounded-xl p-6 md:p-8 shadow-lg mb-6">
+            <h2 class="text-2xl font-bold text-purple-800 mb-6 text-center">📝 Maklumat Murid</h2>
+            <form id="infoForm" class="space-y-4">
+                <div>
+                    <label for="studentName" class="block text-sm font-medium text-purple-700 mb-2">Nama Penuh:</label>
+                    <input type="text" id="studentName" required 
+                           class="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none text-lg">
+                </div>
+                <div>
+                    <label for="studentClass" class="block text-sm font-medium text-purple-700 mb-2">Kelas:</label>
+                    <input type="text" id="studentClass" required placeholder="Contoh: 6A, 6B, 6C"
+                           class="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none text-lg">
+                </div>
+                <div>
+                    <label for="schoolName" class="block text-sm font-medium text-purple-700 mb-2">Nama Sekolah:</label>
+                    <input type="text" id="schoolName" required 
+                           class="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none text-lg">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-4 px-6 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 text-lg">
+                    🚀 Mula Kuiz
+                </button>
+            </form>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quizSection" class="hidden">
+            <!-- Progress Bar -->
+            <div class="quiz-card rounded-xl p-4 mb-6 shadow-lg">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-purple-700">Kemajuan:</span>
+                    <span id="progressText" class="text-sm font-medium text-purple-700">1 / 50</span>
+                </div>
+                <div class="w-full bg-purple-200 rounded-full h-3">
+                    <div id="progressBar" class="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full transition-all duration-300" style="width: 2%"></div>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="quiz-card rounded-xl p-4 mb-6 shadow-lg text-center">
+                <div class="text-lg font-bold text-purple-800">
+                    ⏰ Masa: <span id="timer" class="text-blue-600">00:00</span>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="quiz-card rounded-xl p-6 md:p-8 shadow-lg mb-6">
+                <div id="questionContainer">
+                    <h3 class="text-xl font-bold text-purple-800 mb-4">
+                        Soalan <span id="questionNumber">1</span>:
+                    </h3>
+                    <p id="questionText" class="text-lg text-gray-800 mb-6 leading-relaxed"></p>
+                    <div id="optionsContainer" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between gap-4">
+                <button id="prevBtn" class="bg-gray-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    ← Sebelum
+                </button>
+                <button id="nextBtn" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300">
+                    Seterusnya →
+                </button>
+                <button id="submitBtn" class="hidden bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-300">
+                    ✅ Hantar Jawapan
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="quiz-card rounded-xl p-6 md:p-8 shadow-lg mb-6 text-center">
+                <h2 class="text-3xl font-bold text-purple-800 mb-4">🎉 Tahniah!</h2>
+                <div class="text-6xl mb-4">🏆</div>
+                <div id="finalScore" class="text-2xl font-bold text-blue-600 mb-2"></div>
+                <div id="finalPercentage" class="text-xl text-purple-700 mb-4"></div>
+                <div id="finalTime" class="text-lg text-gray-600 mb-6"></div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="reviewBtn" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300">
+                        📋 Semak Jawapan
+                    </button>
+                    <button id="leaderboardBtn" class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold py-3 px-6 rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-300">
+                        🏅 Papan Markah
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Section -->
+        <div id="reviewSection" class="hidden">
+            <div class="quiz-card rounded-xl p-6 md:p-8 shadow-lg mb-6">
+                <h2 class="text-2xl font-bold text-purple-800 mb-6 text-center">📋 Semakan Jawapan</h2>
+                <div id="reviewContainer"></div>
+                <button id="backToResultsBtn" class="w-full mt-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300">
+                    ← Kembali ke Keputusan
+                </button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <div id="leaderboardSection" class="hidden">
+            <div class="quiz-card rounded-xl p-6 md:p-8 shadow-lg mb-6">
+                <h2 class="text-2xl font-bold text-purple-800 mb-6 text-center">🏅 Papan Markah - 30 Terbaik</h2>
+                <div id="leaderboardContainer" class="space-y-2"></div>
+                <button id="backFromLeaderboardBtn" class="w-full mt-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300">
+                    ← Kembali ke Keputusan
+                </button>
+            </div>
+        </div>
+
+        <!-- Offline Status -->
+        <div id="offlineStatus" class="hidden fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
+            📡 Tiada sambungan internet
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+                <p class="text-purple-800 font-medium">Menghantar keputusan...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data - Real questions for Visual Arts Year 6
+        const quizData = [
+            {
+                question: "Di antara warna berikut, yang manakah bukan warna asas?",
+                options: ["Putih", "Biru", "Merah", "Kuning"],
+                correct: 0
+            },
+            {
+                question: "Campuran dua warna asas akan menghasilkan",
+                options: ["Warna neutral", "Warna tertier", "Warna sekunder", "Warna asas"],
+                correct: 2
+            },
+            {
+                question: "Apakah yang dimaksudkan dengan simetri?",
+                options: ["Objek yang bergerak", "Objek yang mempunyai banyak warna", "Objek yang mempunyai garisan berulang", "Objek yang kelihatan seimbang di kedua-dua belah"],
+                correct: 3
+            },
+            {
+                question: "Dalam teknik kolaj, kita perlu ______________.",
+                options: ["mengukir kayu", "menyapu warna pada kertas", "melakar garisan terlebih dahulu", "memotong dan melekatkan bahan"],
+                correct: 3
+            },
+            {
+                question: "Variasi warna daripada terang kepada gelap dikenali sebagai",
+                options: ["Warna asas", "Ton warna", "Warna harmoni", "Rupa warna"],
+                correct: 1
+            },
+            {
+                question: "Berikut adalah benar tentang prinsip rekaan KECUALI",
+                options: ["ruang", "harmoni", "kepadatan", "kepelbagaian"],
+                correct: 2
+            },
+            {
+                question: "Pilih pernyataan yang benar",
+                options: ["Wau adalah sejenis permainan yang terkenal di negeri Sembilan", "Wau dimainkan di dalam bangunan", "Wau dihasilkan daripada anyaman daun kelapa", "Wau sangat terkenal di negeri-negeri sebelah pantai timur"],
+                correct: 3
+            },
+            {
+                question: "____ terdiri daripada gabungan pelbagai bahan buangan yang disusun menjadi karya seni.",
+                options: ["Arca asemblaj", "Arca mobail", "Arca stabail", "Arca luakan"],
+                correct: 0
+            },
+            {
+                question: "Apakah fungsi ruang dalam karya seni?",
+                options: ["Mengubah bentuk asal", "Menentukan ketebalan warna", "Menunjukkan jarak dan kedalaman", "Menjadikan karya kelihatan lebih bercahaya"],
+                correct: 2
+            },
+            {
+                question: "Apakah fungsi utama warna dalam hasil seni visual?",
+                options: ["Menyusun objek", "Memberi kesan ruang", "Menentukan arah lukisan", "Menarik perhatian dan menunjukkan emosi"],
+                correct: 3
+            },
+            {
+                question: "Apakah tujuan penilaian hasil seni?",
+                options: ["Menilai harga pasaran", "Untuk menghias rumah", "Mendapat markah tinggi semata-mata", "Membaiki kelemahan dan penambahbaikan"],
+                correct: 3
+            },
+            {
+                question: "Apakah elemen yang paling penting dalam proses penghasilan arca stabail?",
+                options: ["Estetik", "Berfungsi", "Keseimbangan", "Tekstur permukaan"],
+                correct: 2
+            },
+            {
+                question: "Rajah di bawah merupakan salah satu penggunaan garisan halus. Garisan halus wujud dalam karya ini melalui teknik lukisan ____________.",
+                options: ["nipis", "zig-zag", "lorekan", "silang pangkah"],
+                correct: 3,
+                image: "https://i.imgur.com/1hZMhh9.png"
+            },
+            {
+                question: "Rajah di bawah menunjukkan corak susunan sisik ikan. Corak ini dikategorikan sebagai",
+                options: ["Susunan corak dam", "Susunan corak terancang", "Susunan corak berpancar", "Susunan corak tidak terancang"],
+                correct: 1,
+                image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEijXMELqawL5PelHWG6TIOY1uNMKffNof9HYdwWUJtLhKejxc03so3SuZ__qKw39WgQHigeUBah2Ek3OXTBVQ6TkKslpCziUBP2pVBwj20yuK-lqICqvdRX5fycSUqzJ8YPIMRI3EMrMykG/s1600/corak+sisik+ikan.PNG"
+            },
+            {
+                question: "Rajah di bawah merupakan salah satu seni kraf warisan Melayu. Apakah nama seni kraf tersebut?",
+                options: ["Dokoh", "Gelang", "Pending", "Cucuk sanggul"],
+                correct: 2,
+                image: "https://i.imgur.com/kAGIUGR.png"
+            },
+            {
+                question: "Hasil seni ini menggunakan gambar lebah dan corak bentuk __________.",
+                options: ["simetri", "geometri", "kontra", "batik"],
+                correct: 1,
+                image: "https://i.imgur.com/nW4z8T3.png"
+            },
+            {
+                question: "Apakah nama susunan ini?",
+                options: ["Susunan cerminan", "Susunan berpancar", "Susunan orgee", "Susunan dam"],
+                correct: 0,
+                image: "https://i.imgur.com/Xrm6hok.png"
+            },
+            {
+                question: "Rajah di atas menunjukkan hasil karya gabungan",
+                options: ["Lukisan dan origami", "Diorama dan capan", "Arca stabail dan catan", "Asemblaj dan capan"],
+                correct: 2,
+                image: "https://imgur.com/M6RRwAD.png"
+            },
+            {
+                question: "Apakah teknik yang digunakan untuk menghasilkan karya kotak di atas?",
+                options: ["Guntingan, capan dan gurisan", "Garisan, guntingan dan lipatan", "Lukisan, guntingan dan capan", "Lukisan, lipatan, cantuman"],
+                correct: 3,
+                image: "https://imgur.com/MxMTJpD.png"
+            },
+            {
+                question: "Corak tidak terancang ini terhasil melalui teknik ___",
+                options: ["renjisan", "titisan", "tiupan", "Lipatan dan guntingan"],
+                correct: 1,
+                image: "https://i.imgur.com/EtgZB7R.png"
+            },
+            {
+                question: "Rajah di atas menunjukkan salah satu kraf seni warisan. Apakah namanya?",
+                options: ["Dokoh", "Gelang", "Pending", "Cucuk sanggul"],
+                correct: 0,
+                image: "https://i.imgur.com/DxLBOpA.png"
+            }
+            // Add more questions here to reach 50 total
+        ];
+
+        // Additional real questions for Visual Arts Year 6
+        const additionalQuestions = [
+            {
+                question: "Antara berikut, bahan manakah yang boleh digunakan untuk menghasilkan karya arca asemblaj?",
+                options: ["Kanvas", "Tanah liat", "Kertas lukisan", "Logam, kayu dan plastik"],
+                correct: 3
+            },
+            {
+                question: "Apakah alat yang sesuai untuk aktiviti catan?",
+                options: ["Pisau dan palet", "Gunting dan pelekat", "Berus dan warna air", "Pensel dan pemadam"],
+                correct: 2
+            },
+            {
+                question: "Teknik montaj melibatkan__________.",
+                options: ["capan dan cap jari", "reka bentuk kraf 3D", "teknik gosokan dan percikan", "gabungan gambar dan imej sedia ada"],
+                correct: 3
+            },
+            {
+                question: "_____ sangat penting dalam proses penghasilan arca stabail.",
+                options: ["Estetik", "Berfungsi", "Keseimbangan", "Tekstur permukaan"],
+                correct: 2
+            },
+            {
+                question: "Selain dari perhiasan diri, Pending juga berfungsi sebagai ________",
+                options: ["alat perlindungan diri", "hiasan dinding", "peralatan memasak", "mainan kanak-kanak"],
+                correct: 0
+            },
+            {
+                question: "Berikut adalah bahan yang sesuai untuk menghasilkan tanjak, KECUALI",
+                options: ["Botol kaca", "Kain felt", "Kad manila", "Kertas krep"],
+                correct: 0
+            },
+            {
+                question: "Berikut merupakan alat perhiasan diri, KECUALI",
+                options: ["Cucuk sanggul", "Dokoh", "Gelang kaki", "Tepak sireh"],
+                correct: 3
+            },
+            {
+                question: "Arca merupakan karya ____________ dimensi.",
+                options: ["satu", "dua", "tiga", "empat"],
+                correct: 2
+            },
+            {
+                question: "Ciri motif yang manakah yang sering digunakan pada Wau Bulan?",
+                options: ["Motif geometri", "Warna hitam putih sahaja", "Garisan lurus tanpa hiasan", "Corak flora seperti daun sirih"],
+                correct: 3
+            },
+            {
+                question: "Apakah ciri-ciri loket tradisional?",
+                options: ["Tanpa ukiran", "Dibuat daripada plastik", "Tiada penggunaan logam berharga", "Motif bunga besar sebagai penegasan"],
+                correct: 3
+            },
+            {
+                question: "Lakaran perkembangan idea dan lakaran idea motif boleh dihasilkan dengan menggunakan ____________.",
+                options: ["akrilik", "krayon", "warna air", "pensil dan pen"],
+                correct: 3
+            },
+            {
+                question: "Apakah yang dimaksudkan dengan \"prinsip ritma dan pergerakan\" dalam rekaan seni visual?",
+                options: ["Susunan elemen yang tampak statik sahaja", "Susunan elemen menghasilkan kesan gerakan atau aliran dalam karya", "Hanya berkaitan warna", "Hanya berkaitan garisan"],
+                correct: 1
+            },
+            {
+                question: "Dalam karya seni visual, garisan selari, garisan silang pangkah, garisan berpusat termasuk dalam unsur…",
+                options: ["warna", "garisan", "bentuk", "ruang"],
+                correct: 1
+            },
+            {
+                question: "Nilai murni dalam aktiviti seni visual termasuk ____",
+                options: ["kerjasama, yakin diri, disiplin", "menyalin kerja rakan tanpa izin", "tidak menjaga alat saat selesai", "mengabaikan keselamatan"],
+                correct: 0
+            },
+            {
+                question: "Apakah tujuan utama mengadakan pameran seni visual di sekolah?",
+                options: ["Menjual karya kepada orang ramai", "Menunjukkan hasil karya dan menghargai usaha murid", "Menilai keputusan peperiksaan seni", "Mengumpul dana untuk sekolah"],
+                correct: 1
+            },
+            {
+                question: "Siapakah yang bertanggungjawab merancang dan menguruskan pameran seni visual di sekolah?",
+                options: ["Guru besar", "Guru PSV dan murid bersama-sama", "Juruteknik komputer", "Murid yang menang pertandingan"],
+                correct: 1
+            },
+            {
+                question: "Apakah perkara pertama yang perlu dibuat sebelum melaksanakan pameran seni?",
+                options: ["Menyusun karya di ruang pameran", "Melantik ahli jawatankuasa", "Menjemput tetamu kehormat", "Menghantar surat penghargaan"],
+                correct: 1
+            },
+            {
+                question: "Apakah contoh tema pameran seni visual yang sesuai untuk murid Tahun 6?",
+                options: ["Dunia Mewah Saya", "Kreativiti Tanpa Batasan", "Perang Dunia Kedua", "Perakaunan Moden"],
+                correct: 1
+            },
+            {
+                question: "Aktiviti promosi pameran seni visual boleh dilakukan melalui:",
+                options: ["Surat rasmi kepada murid sahaja", "Catatan dalam buku latihan", "Notis di papan kenyataan staf", "Poster, sepanduk, media sosial, dan hebahan sekolah"],
+                correct: 3
+            },
+            {
+                question: "Kesan harmoni dalam seni kraf tradisional dihasilkan melalui",
+                options: ["garisan putus-putus", "saiz rawak tanpa perancangan", "warna yang disusun secara bertaburan", "ulangan bentuk dan komposisi yang seimbang"],
+                correct: 3
+            },
+            {
+                question: "'Ukiran timbul dan tampalan batu permata pada kraf tradisional boleh menambah keindahan sesuatu kraf tradisional'. Berdasarkan penyataan di atas, unsur seni manakah yang boleh dikaitkan dengan ini?",
+                options: ["Warna", "Garisan", "Jalinan sentuh", "Jalinan tampak"],
+                correct: 2
+            },
+            {
+                question: "Apakah contoh media kering dalam seni visual?",
+                options: ["Cat air", "Akrilik", "Krayon", "Cat minyak"],
+                correct: 2
+            },
+            {
+                question: "Apakah prinsip rekaan yang diterapkan pada cucuk sanggul melalui susunan bunga seimbang di bahagian kiri dan kanan?",
+                options: ["Ritma", "Kontra", "Pergerakan", "Imbangan simetri"],
+                correct: 3
+            },
+            {
+                question: "Tajuk Si Cilik Koi memberi tumpuan kepada aktiviti seni yang melibatkan…",
+                options: ["Lukisan digital ikan hiasan", "Penghasilan arca atau binaan ikan koi menggunakan bahan terbuang", "Menulis karangan tentang ikan koi", "Menjahit patung ikan daripada kain"],
+                correct: 1
+            },
+            {
+                question: "Apabila menghasilkan karya bertemakan Si Cilik Koi, apakah nilai murni yang boleh diterapkan?",
+                options: ["Keberanian dan ketangkasan", "Kesabaran, ketelitian dan kasih terhadap alam sekitar", "Keangkuhan dan persaingan", "Keghairahan terhadap warna semata-mata"],
+                correct: 1
+            },
+            {
+                question: "Dalam pameran Si Cilik Koi, karya murid boleh disusun dengan cara…",
+                options: ["Diletakkan berselerak atas lantai untuk menarik perhatian", "Disusun mengikut saiz dan warna supaya ruang tampak harmoni dan tersusun", "Digantung di siling bilik darjah", "Diletakkan semua di atas meja guru"],
+                correct: 1
+            },
+            {
+                question: "Tajuk Beg Batik Rekaanku menekankan kemahiran murid dalam",
+                options: ["Menjahit beg menggunakan mesin jahit", "Mereka corak batik sendiri untuk dijadikan rekaan pada beg", "Membeli beg batik di pasar raya", "Mengira kos penghasilan beg"],
+                correct: 1
+            },
+            {
+                question: "Alat utama yang digunakan untuk melukis corak batik dengan lilin panas ialah…",
+                options: ["Berus cat air", "Pisau kecil", "Canting", "Span"],
+                correct: 2
+            },
+            {
+                question: "Mengapa teknik batik sesuai digunakan dalam projek Beg Batik Rekaanku?",
+                options: ["Kerana batik mudah dihasilkan tanpa perancangan", "Corak batik memberi identiti budaya tempatan dan nilai estetika yang tinggi", "Batik hanya menggunakan warna terang yang murah", "Batik digunakan untuk kerja kraf tangan sahaja"],
+                correct: 1
+            }
+        ];
+
+        // Add the additional questions to the main array
+        quizData.push(...additionalQuestions);
+
+        // Add more sample questions to reach 50 total if needed
+        for (let i = quizData.length; i < 50; i++) {
+            quizData.push({
+                question: `Soalan ${i + 1}: Apakah elemen penting dalam seni visual?`,
+                options: ["Garis", "Bentuk", "Warna", "Semua di atas"],
+                correct: 3
+            });
+        }
+
+        // Randomization Functions
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function shuffleQuestionOptions(question) {
+            const originalOptions = [...question.options];
+            const originalCorrect = question.correct;
+            const correctAnswer = originalOptions[originalCorrect];
+            
+            // Create array of indices and shuffle them
+            const indices = Array.from({length: originalOptions.length}, (_, i) => i);
+            const shuffledIndices = shuffleArray(indices);
+            
+            // Reorder options based on shuffled indices
+            const shuffledOptions = shuffledIndices.map(index => originalOptions[index]);
+            
+            // Find new position of correct answer
+            const newCorrectIndex = shuffledIndices.indexOf(originalCorrect);
+            
+            return {
+                ...question,
+                options: shuffledOptions,
+                correct: newCorrectIndex,
+                originalOrder: shuffledIndices // Store for reference
+            };
+        }
+
+        // Shuffle questions and their options
+        let shuffledQuizData = shuffleArray(quizData).map(question => shuffleQuestionOptions(question));
+
+        // Global Variables
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let startTime = null;
+        let timerInterval = null;
+        let studentInfo = {};
+        let isOnline = navigator.onLine;
+        let quizResultData = null; // Store quiz results globally
+
+        // Google Apps Script URL - Updated with your new URL
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8lXO6dLadJT-6MyKN0URRsnL5LxosmUdaRWbBbFYKei9pAOc7Ufnx632Kp3YFUg38/exec";
+
+        // DOM Elements
+        const studentForm = document.getElementById('studentForm');
+        const quizSection = document.getElementById('quizSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const reviewSection = document.getElementById('reviewSection');
+        const leaderboardSection = document.getElementById('leaderboardSection');
+        const offlineStatus = document.getElementById('offlineStatus');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // Initialize Quiz
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize user answers array
+            userAnswers = new Array(shuffledQuizData.length).fill(null);
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Check online status
+            updateOnlineStatus();
+            
+            // Load offline data if exists
+            loadOfflineData();
+        });
+
+        function setupEventListeners() {
+            // Student form submission
+            document.getElementById('infoForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                startQuiz();
+            });
+
+            // Navigation buttons
+            document.getElementById('prevBtn').addEventListener('click', previousQuestion);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+            
+            // Results buttons
+            document.getElementById('reviewBtn').addEventListener('click', showReview);
+            document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
+            document.getElementById('backToResultsBtn').addEventListener('click', function() {
+                console.log('Back to results clicked, quizResultData:', quizResultData);
+                showResults();
+            });
+            document.getElementById('backFromLeaderboardBtn').addEventListener('click', function() {
+                console.log('Back from leaderboard clicked, quizResultData:', quizResultData);
+                showResults();
+            });
+
+            // Online/offline status
+            window.addEventListener('online', function() {
+                isOnline = true;
+                updateOnlineStatus();
+                syncOfflineData();
+            });
+
+            window.addEventListener('offline', function() {
+                isOnline = false;
+                updateOnlineStatus();
+            });
+        }
+
+        function startQuiz() {
+            // Get student info
+            studentInfo = {
+                name: document.getElementById('studentName').value,
+                class: document.getElementById('studentClass').value,
+                school: document.getElementById('schoolName').value
+            };
+
+            // Hide form and show quiz
+            studentForm.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+
+            // Start timer
+            startTime = new Date();
+            startTimer();
+
+            // Load first question
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                const now = new Date();
+                const elapsed = Math.floor((now - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const question = shuffledQuizData[currentQuestion];
+            
+            // Update question number and progress
+            document.getElementById('questionNumber').textContent = currentQuestion + 1;
+            document.getElementById('progressText').textContent = `${currentQuestion + 1} / ${shuffledQuizData.length}`;
+            document.getElementById('progressBar').style.width = `${((currentQuestion + 1) / shuffledQuizData.length) * 100}%`;
+            
+            // Load question text
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Load image if exists
+            const existingImage = document.getElementById('questionImage');
+            if (existingImage) {
+                existingImage.remove();
+            }
+            
+            if (question.image) {
+                const imageElement = document.createElement('img');
+                imageElement.id = 'questionImage';
+                imageElement.src = question.image;
+                imageElement.alt = 'Gambar soalan';
+                imageElement.className = 'w-full max-w-md mx-auto mb-4 rounded-lg shadow-md';
+                imageElement.onerror = function() {
+                    this.style.display = 'none';
+                    console.log('Image failed to load:', question.image);
+                };
+                
+                const questionTextElement = document.getElementById('questionText');
+                questionTextElement.parentNode.insertBefore(imageElement, questionTextElement.nextSibling);
+            }
+            
+            // Load options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = `option-btn w-full text-left p-4 border-2 border-purple-200 rounded-lg hover:border-purple-400 transition-all duration-300 ${userAnswers[currentQuestion] === index ? 'bg-purple-100 border-purple-500' : 'bg-white'}`;
+                button.innerHTML = `<span class="font-medium">${String.fromCharCode(65 + index)}.</span> ${option}`;
+                button.addEventListener('click', () => selectAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            
+            if (currentQuestion === shuffledQuizData.length - 1) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('submitBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('submitBtn').classList.add('hidden');
+            }
+        }
+
+        function selectAnswer(answerIndex) {
+            userAnswers[currentQuestion] = answerIndex;
+            
+            // Update option buttons appearance
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach((btn, index) => {
+                if (index === answerIndex) {
+                    btn.className = 'option-btn w-full text-left p-4 border-2 border-purple-500 bg-purple-100 rounded-lg transition-all duration-300';
+                } else {
+                    btn.className = 'option-btn w-full text-left p-4 border-2 border-purple-200 bg-white rounded-lg hover:border-purple-400 transition-all duration-300';
+                }
+            });
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < shuffledQuizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            // Stop timer
+            clearInterval(timerInterval);
+            const endTime = new Date();
+            const totalTime = Math.floor((endTime - startTime) / 1000);
+            
+            // Calculate score
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === shuffledQuizData[index].correct) {
+                    score++;
+                }
+            });
+            
+            const percentage = Math.round((score / shuffledQuizData.length) * 100);
+            
+            // Prepare result data
+            const resultData = {
+                ...studentInfo,
+                score: score,
+                totalQuestions: shuffledQuizData.length,
+                percentage: percentage,
+                timeSpent: totalTime,
+                timestamp: new Date().toISOString(),
+                answers: userAnswers,
+                questionOrder: shuffledQuizData.map((q, index) => ({
+                    questionIndex: index,
+                    originalQuestion: q.question,
+                    shuffledOptions: q.options,
+                    correctAnswer: q.correct
+                }))
+            };
+            
+            // Store result data globally
+            quizResultData = resultData;
+            console.log('Quiz completed, storing result data:', quizResultData);
+            
+            // Show results
+            showResults(resultData);
+            
+            // Submit to Google Sheets
+            submitToGoogleSheets(resultData);
+        }
+
+        function showResults(data = null) {
+            // Hide other sections
+            quizSection.classList.add('hidden');
+            reviewSection.classList.add('hidden');
+            leaderboardSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            
+            // Use stored data if no data provided
+            const resultData = data || quizResultData;
+            
+            if (resultData && resultData.score !== undefined && resultData.timeSpent !== undefined) {
+                // Calculate and display results
+                const minutes = Math.floor(resultData.timeSpent / 60);
+                const seconds = resultData.timeSpent % 60;
+                
+                document.getElementById('finalScore').textContent = `Markah: ${resultData.score}/${resultData.totalQuestions}`;
+                document.getElementById('finalPercentage').textContent = `Peratusan: ${resultData.percentage}%`;
+                document.getElementById('finalTime').textContent = `Masa: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                // Fallback - display default values if data is missing
+                document.getElementById('finalScore').textContent = `Markah: 0/50`;
+                document.getElementById('finalPercentage').textContent = `Peratusan: 0%`;
+                document.getElementById('finalTime').textContent = `Masa: 0:00`;
+            }
+        }
+
+        function showReview() {
+            resultsSection.classList.add('hidden');
+            reviewSection.classList.remove('hidden');
+            
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+            
+            shuffledQuizData.forEach((question, index) => {
+                const reviewItem = document.createElement('div');
+                reviewItem.className = 'mb-6 p-4 border rounded-lg';
+                
+                const isCorrect = userAnswers[index] === question.correct;
+                const userAnswerText = userAnswers[index] !== null ? question.options[userAnswers[index]] : 'Tidak dijawab';
+                const correctAnswerText = question.options[question.correct];
+                
+                reviewItem.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="font-bold text-purple-800">Soalan ${index + 1}:</span>
+                        <span class="ml-2 px-2 py-1 rounded text-sm font-medium ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${isCorrect ? '✓ Betul' : '✗ Salah'}
+                        </span>
+                    </div>
+                    <p class="text-gray-800 mb-3">${question.question}</p>
+                    ${question.image ? `<img src="${question.image}" alt="Gambar soalan" class="w-full max-w-sm mx-auto mb-3 rounded-lg shadow-md" onerror="this.style.display='none';">` : ''}
+                    <div class="space-y-2">
+                        <p><strong>Jawapan anda:</strong> <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">${userAnswerText}</span></p>
+                        ${!isCorrect ? `<p><strong>Jawapan betul:</strong> <span class="text-green-600">${correctAnswerText}</span></p>` : ''}
+                    </div>
+                `;
+                
+                reviewContainer.appendChild(reviewItem);
+            });
+        }
+
+        function showLeaderboard() {
+            resultsSection.classList.add('hidden');
+            leaderboardSection.classList.remove('hidden');
+            
+            loadLeaderboard();
+        }
+
+        async function submitToGoogleSheets(data) {
+            if (!isOnline) {
+                saveOfflineData(data);
+                return;
+            }
+            
+            try {
+                loadingIndicator.classList.remove('hidden');
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                // Since we're using no-cors, we can't check response status
+                // Assume success and load leaderboard
+                setTimeout(() => {
+                    loadingIndicator.classList.add('hidden');
+                    loadLeaderboard();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error submitting to Google Sheets:', error);
+                loadingIndicator.classList.add('hidden');
+                saveOfflineData(data);
+            }
+        }
+
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getLeaderboard`);
+                const leaderboardData = await response.json();
+                
+                displayLeaderboard(leaderboardData);
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                displayLeaderboard([]);
+            }
+        }
+
+        function displayLeaderboard(data) {
+            const container = document.getElementById('leaderboardContainer');
+            container.innerHTML = '';
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-600">Tiada data papan markah tersedia.</p>';
+                return;
+            }
+            
+            data.slice(0, 30).forEach((entry, index) => {
+                const item = document.createElement('div');
+                item.className = `flex items-center justify-between p-3 rounded-lg ${index < 3 ? 'bg-gradient-to-r from-yellow-100 to-yellow-200' : 'bg-gray-50'}`;
+                
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+                
+                item.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-lg font-bold mr-3">${medal}</span>
+                        <div>
+                            <p class="font-medium text-gray-800">${entry.name}</p>
+                            <p class="text-sm text-gray-600">${entry.class} - ${entry.school}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-purple-600">${entry.score}/${entry.totalQuestions}</p>
+                        <p class="text-sm text-gray-600">${entry.percentage}%</p>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        function saveOfflineData(data) {
+            const offlineData = JSON.parse(localStorage.getItem('quizOfflineData') || '[]');
+            offlineData.push(data);
+            localStorage.setItem('quizOfflineData', JSON.stringify(offlineData));
+        }
+
+        function loadOfflineData() {
+            const offlineData = JSON.parse(localStorage.getItem('quizOfflineData') || '[]');
+            return offlineData;
+        }
+
+        async function syncOfflineData() {
+            const offlineData = loadOfflineData();
+            if (offlineData.length === 0) return;
+            
+            for (const data of offlineData) {
+                try {
+                    await submitToGoogleSheets(data);
+                } catch (error) {
+                    console.error('Error syncing offline data:', error);
+                    break;
+                }
+            }
+            
+            // Clear offline data after successful sync
+            localStorage.removeItem('quizOfflineData');
+        }
+
+        function updateOnlineStatus() {
+            if (isOnline) {
+                offlineStatus.classList.add('hidden');
+            } else {
+                offlineStatus.classList.remove('hidden');
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9949fdd3165fcc5f',t:'MTc2MTQ4MjEwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
