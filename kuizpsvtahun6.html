@@ -8,6 +8,20 @@
     <style>
         body {
             box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Allow text selection only in input fields */
+        input, textarea {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
         
         .gradient-bg {
@@ -56,9 +70,128 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Security Overlay Styles */
+        .security-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .security-warning {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 500px;
+            margin: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: securityPulse 2s infinite;
+        }
+        
+        @keyframes securityPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .security-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .security-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Disable drag and drop except for quiz interactions */
+        * {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+        
+        /* Hide scrollbars to prevent inspection */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+        
+        /* Prevent text highlighting during quiz */
+        .quiz-active {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+        
+        .quiz-active input, .quiz-active textarea {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
     </style>
 </head>
 <body class="gradient-bg min-h-full">
+    <!-- Security Indicator -->
+    <div id="securityIndicator" class="security-indicator">
+        🔒 Sistem Keselamatan Aktif
+    </div>
+    
+    <!-- Security Overlay (Hidden by default) -->
+    <div id="securityOverlay" class="security-overlay" style="display: none;">
+        <div class="security-warning">
+            <div class="text-4xl mb-4">🚨</div>
+            <h2 class="text-2xl font-bold mb-4">AMARAN KESELAMATAN!</h2>
+            <p id="securityMessage" class="text-lg mb-6">Developer tools dikesan! Sila tutup developer tools untuk meneruskan kuiz.</p>
+            <div class="text-sm opacity-75">
+                Sistem ini dilindungi untuk memastikan integriti kuiz.
+            </div>
+        </div>
+    </div>
+    
     <div class="container mx-auto px-4 py-6 max-w-4xl">
         <!-- Header -->
         <header class="text-center mb-8">
@@ -245,6 +378,405 @@
     </div>
 
     <script>
+        // Security System - Advanced Protection
+        class SecuritySystem {
+            constructor() {
+                this.devToolsOpen = false;
+                this.securityViolations = 0;
+                this.isQuizActive = false;
+                this.focusLost = false;
+                this.tabSwitched = false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupKeyboardProtection();
+                this.setupContextMenuProtection();
+                this.setupDevToolsDetection();
+                this.setupFocusMonitoring();
+                this.setupConsoleProtection();
+                this.setupPrintProtection();
+                this.setupCopyPasteProtection();
+                this.obfuscateData();
+            }
+            
+            setupKeyboardProtection() {
+                document.addEventListener('keydown', (e) => {
+                    // Block F12 (Developer Tools)
+                    if (e.key === 'F12') {
+                        e.preventDefault();
+                        this.showSecurityToast('F12 (Developer Tools) dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+Shift+I (Inspect Element)
+                    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                        e.preventDefault();
+                        this.showSecurityToast('Inspect Element dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+Shift+J (Console)
+                    if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                        e.preventDefault();
+                        this.showSecurityToast('Console dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+U (View Source)
+                    if (e.ctrlKey && e.key === 'u') {
+                        e.preventDefault();
+                        this.showSecurityToast('View Source dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+S (Save Page)
+                    if (e.ctrlKey && e.key === 's') {
+                        e.preventDefault();
+                        this.showSecurityToast('Save Page dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+A (Select All) except in input fields
+                    if (e.ctrlKey && e.key === 'a' && !this.isInputField(e.target)) {
+                        e.preventDefault();
+                        this.showSecurityToast('Select All dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+C (Copy) except in input fields
+                    if (e.ctrlKey && e.key === 'c' && !this.isInputField(e.target)) {
+                        e.preventDefault();
+                        this.showSecurityToast('Copy dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+V (Paste) except in input fields
+                    if (e.ctrlKey && e.key === 'v' && !this.isInputField(e.target)) {
+                        e.preventDefault();
+                        this.showSecurityToast('Paste dilarang!');
+                        return false;
+                    }
+                    
+                    // Block Ctrl+P (Print)
+                    if (e.ctrlKey && e.key === 'p') {
+                        e.preventDefault();
+                        this.showSecurityToast('Print dilarang!');
+                        return false;
+                    }
+                });
+            }
+            
+            setupContextMenuProtection() {
+                document.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    this.showSecurityToast('Klik kanan dilarang semasa kuiz!');
+                    return false;
+                });
+            }
+            
+            setupDevToolsDetection() {
+                // Enhanced detection with mobile-friendly logic
+                let devtools = {
+                    open: false,
+                    orientation: null,
+                    lastCheck: Date.now()
+                };
+                
+                // Detect if device is mobile
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                                window.innerWidth <= 768 || 
+                                'ontouchstart' in window;
+                
+                // Skip developer tools detection on mobile devices
+                if (isMobile) {
+                    console.log('Mobile device detected - Developer tools detection disabled');
+                    return;
+                }
+                
+                // Desktop-only detection with higher thresholds
+                const threshold = 300; // Increased threshold for desktop
+                
+                // Method 1: Window size detection (Desktop only)
+                setInterval(() => {
+                    // Only check if window is focused and not mobile
+                    if (!document.hasFocus() || isMobile) return;
+                    
+                    const heightDiff = window.outerHeight - window.innerHeight;
+                    const widthDiff = window.outerWidth - window.innerWidth;
+                    
+                    // More conservative detection for desktop
+                    const devToolsDetected = (heightDiff > threshold && widthDiff > threshold) ||
+                                           (heightDiff > threshold * 2) || 
+                                           (widthDiff > threshold * 2);
+                    
+                    if (devToolsDetected && !devtools.open) {
+                        // Triple-check with longer delay to avoid false positives
+                        setTimeout(() => {
+                            const recheckHeight = window.outerHeight - window.innerHeight;
+                            const recheckWidth = window.outerWidth - window.innerWidth;
+                            
+                            if ((recheckHeight > threshold && recheckWidth > threshold) ||
+                                recheckHeight > threshold * 2 || 
+                                recheckWidth > threshold * 2) {
+                                devtools.open = true;
+                                this.handleDevToolsOpen();
+                            }
+                        }, 500); // Longer delay
+                    } else if (!devToolsDetected && devtools.open) {
+                        // Confirm tools are really closed
+                        setTimeout(() => {
+                            const recheckHeight = window.outerHeight - window.innerHeight;
+                            const recheckWidth = window.outerWidth - window.innerWidth;
+                            
+                            if (recheckHeight <= threshold && recheckWidth <= threshold) {
+                                devtools.open = false;
+                                this.handleDevToolsClose();
+                            }
+                        }, 500);
+                    }
+                }, 2000); // Less frequent checking
+                
+                // Method 2: Console debugger detection (Desktop only, more conservative)
+                let consoleCheck = () => {
+                    // Only run if quiz is active, window is focused, and not mobile
+                    if (!this.isQuizActive || !document.hasFocus() || isMobile) return;
+                    
+                    let before = Date.now();
+                    debugger;
+                    let after = Date.now();
+                    
+                    // Much higher threshold for debugger detection
+                    if (after - before > 300) {
+                        if (!devtools.open) {
+                            devtools.open = true;
+                            this.handleDevToolsOpen();
+                        }
+                    }
+                };
+                
+                // Run console check much less frequently and only on desktop
+                if (!isMobile) {
+                    setInterval(consoleCheck, 5000);
+                }
+                
+                // Method 3: DevTools-specific detection (Desktop only)
+                let checkDevTools = () => {
+                    if (!this.isQuizActive || isMobile) return;
+                    
+                    // Check for common DevTools indicators
+                    const devToolsIndicators = [
+                        () => window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect,
+                        () => window.devtools && window.devtools.inspectedWindow,
+                        () => typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined',
+                        () => typeof window.__VUE_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined'
+                    ];
+                    
+                    const indicatorFound = devToolsIndicators.some(check => {
+                        try {
+                            return check();
+                        } catch (e) {
+                            return false;
+                        }
+                    });
+                    
+                    if (indicatorFound && !devtools.open) {
+                        devtools.open = true;
+                        this.handleDevToolsOpen();
+                    }
+                };
+                
+                // Only run on desktop
+                if (!isMobile) {
+                    setInterval(checkDevTools, 10000);
+                }
+            }
+            
+            setupFocusMonitoring() {
+                window.addEventListener('blur', () => {
+                    if (this.isQuizActive) {
+                        this.focusLost = true;
+                        this.showSecurityToast('Fokus halaman hilang! Sila fokus kembali ke kuiz.');
+                    }
+                });
+                
+                window.addEventListener('focus', () => {
+                    if (this.focusLost) {
+                        this.focusLost = false;
+                        this.showSecurityToast('Fokus dikembalikan. Teruskan kuiz dengan berhati-hati.');
+                    }
+                });
+                
+                // Tab visibility detection
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && this.isQuizActive) {
+                        this.tabSwitched = true;
+                        this.showSecurityToast('Tab switching dikesan! Kekal di tab kuiz.');
+                    }
+                });
+            }
+            
+            setupConsoleProtection() {
+                // Only show console warning when developer tools are actually open
+                let consoleWarning = () => {
+                    // Only run if developer tools are detected as open
+                    if (this.devToolsOpen && this.isQuizActive) {
+                        try {
+                            console.clear();
+                            console.log('%c🚨 AMARAN KESELAMATAN! 🚨', 'color: red; font-size: 30px; font-weight: bold;');
+                            console.log('%cSistem kuiz ini dilindungi!', 'color: red; font-size: 16px;');
+                            console.log('%cSebarang percubaan untuk melihat jawapan adalah dilarang.', 'color: red; font-size: 14px;');
+                            console.log('%cDibina oleh CikguAime - www.cikguaime.com', 'color: blue; font-size: 12px;');
+                        } catch (e) {
+                            // Silently handle any console errors
+                        }
+                    }
+                };
+                
+                // Only run console warning when needed
+                setInterval(consoleWarning, 5000);
+            }
+            
+            setupPrintProtection() {
+                window.addEventListener('beforeprint', (e) => {
+                    e.preventDefault();
+                    this.showSecurityToast('Print dilarang semasa kuiz!');
+                    return false;
+                });
+                
+                // CSS print protection
+                const style = document.createElement('style');
+                style.textContent = '@media print { body { display: none !important; } }';
+                document.head.appendChild(style);
+            }
+            
+            setupCopyPasteProtection() {
+                document.addEventListener('copy', (e) => {
+                    if (!this.isInputField(e.target)) {
+                        e.preventDefault();
+                        this.showSecurityToast('Copy dilarang!');
+                        return false;
+                    }
+                });
+                
+                document.addEventListener('paste', (e) => {
+                    if (!this.isInputField(e.target)) {
+                        e.preventDefault();
+                        this.showSecurityToast('Paste dilarang!');
+                        return false;
+                    }
+                });
+                
+                document.addEventListener('cut', (e) => {
+                    if (!this.isInputField(e.target)) {
+                        e.preventDefault();
+                        this.showSecurityToast('Cut dilarang!');
+                        return false;
+                    }
+                });
+            }
+            
+            obfuscateData() {
+                // Simple data obfuscation to make it harder to find answers in source
+                window.qData = null;
+                window.answers = null;
+                window.correctAnswers = null;
+                
+                // Clear any global variables that might expose answers
+                setInterval(() => {
+                    delete window.quizData;
+                    delete window.shuffledQuizData;
+                }, 1000);
+            }
+            
+            isInputField(element) {
+                return element && (
+                    element.tagName === 'INPUT' || 
+                    element.tagName === 'TEXTAREA' ||
+                    element.contentEditable === 'true'
+                );
+            }
+            
+            handleDevToolsOpen() {
+                if (!this.devToolsOpen) {
+                    this.devToolsOpen = true;
+                    this.showSecurityOverlay('Developer tools dikesan! Sila tutup developer tools untuk meneruskan kuiz.');
+                    this.securityViolations++;
+                }
+            }
+            
+            handleDevToolsClose() {
+                if (this.devToolsOpen) {
+                    this.devToolsOpen = false;
+                    this.hideSecurityOverlay();
+                    this.showSecurityToast('Developer tools ditutup. Kuiz boleh diteruskan.');
+                }
+            }
+            
+            showSecurityOverlay(message) {
+                const overlay = document.getElementById('securityOverlay');
+                const messageElement = document.getElementById('securityMessage');
+                messageElement.textContent = message;
+                overlay.style.display = 'flex';
+            }
+            
+            hideSecurityOverlay() {
+                const overlay = document.getElementById('securityOverlay');
+                overlay.style.display = 'none';
+            }
+            
+            showSecurityToast(message) {
+                // Remove existing toast
+                const existingToast = document.querySelector('.security-toast');
+                if (existingToast) {
+                    existingToast.remove();
+                }
+                
+                // Create new toast
+                const toast = document.createElement('div');
+                toast.className = 'security-toast';
+                toast.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🚨</span>
+                        <span class="font-medium">${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 5000);
+            }
+            
+            activateQuizMode() {
+                this.isQuizActive = true;
+                document.body.classList.add('quiz-active');
+                this.showSecurityToast('Mode kuiz diaktifkan. Sistem keselamatan penuh aktif.');
+            }
+            
+            deactivateQuizMode() {
+                this.isQuizActive = false;
+                document.body.classList.remove('quiz-active');
+            }
+            
+            getSecurityReport() {
+                return {
+                    violations: this.securityViolations,
+                    devToolsDetected: this.devToolsOpen,
+                    focusLost: this.focusLost,
+                    tabSwitched: this.tabSwitched
+                };
+            }
+        }
+        
+        // Initialize Security System
+        const securitySystem = new SecuritySystem();
+        
         // Quiz Data - Real questions for Visual Arts Year 6
         const quizData = [
             {
@@ -642,6 +1174,9 @@
                 school: document.getElementById('schoolName').value
             };
 
+            // Activate security system for quiz mode
+            securitySystem.activateQuizMode();
+
             // Hide form and show quiz
             studentForm.classList.add('hidden');
             quizSection.classList.remove('hidden');
@@ -765,6 +1300,12 @@
             
             const percentage = Math.round((score / shuffledQuizData.length) * 100);
             
+            // Get security report
+            const securityReport = securitySystem.getSecurityReport();
+            
+            // Deactivate quiz mode
+            securitySystem.deactivateQuizMode();
+            
             // Prepare result data
             const resultData = {
                 ...studentInfo,
@@ -774,6 +1315,7 @@
                 timeSpent: totalTime,
                 timestamp: new Date().toISOString(),
                 answers: userAnswers,
+                securityReport: securityReport,
                 questionOrder: shuffledQuizData.map((q, index) => ({
                     questionIndex: index,
                     originalQuestion: q.question,
@@ -973,5 +1515,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9951abb31234c786',t:'MTc2MTU2MjYyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995321b7a08c0a32',t:'MTc2MTU3Nzk0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
