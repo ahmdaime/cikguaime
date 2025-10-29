@@ -5,11 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kuiz Sejarah Tahun 6 - MEGA EDITION</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); min-height: 100vh; padding: 20px; color: #333; transition: background 0.3s, color 0.3s; }
         body.dark-mode { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #e0e0e0; }
         .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); padding: 30px; position: relative; }
         body.dark-mode .container { background: #1e1e1e; color: #e0e0e0; }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1em;
+            z-index: 9999;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .watermark:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+        .watermark::before {
+            content: "⚡";
+            font-size: 1.2em;
+        }
         .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #667eea; position: relative; }
         .header-controls { position: absolute; top: 0; right: 0; display: flex; gap: 10px; }
         .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; padding: 8px; border-radius: 10px; transition: all 0.3s; }
@@ -76,11 +102,197 @@
 </head>
 <body>
     <div class="container" id="app"></div>
+    <a href="https://www.cikguaime.com/" target="_blank" rel="noopener noreferrer" class="watermark">
+        CikguAime
+    </a>
     
     <script>
+        // ===== ADVANCED SECURITY SYSTEM =====
+        (function() {
+            'use strict';
+            
+            // Disable right-click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showSecurityWarning();
+                return false;
+            }, false);
+            
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Ctrl+Shift+I (Inspector)
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.key === 'u') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Ctrl+S (Save)
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Mac: Cmd+Option+I, Cmd+Option+J, Cmd+Option+C
+                if (e.metaKey && e.altKey && (e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                
+                // Mac: Cmd+U
+                if (e.metaKey && e.key === 'u') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+            }, false);
+            
+            // Detect DevTools opening
+            let devtoolsOpen = false;
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    devtoolsOpen = true;
+                    showSecurityWarning();
+                    // Optional: Clear quiz answers
+                    if (state && state.screen === 'quiz') {
+                        state.answers = state.answers.map(() => null);
+                        showToast('⚠️ Aktiviti mencurigakan dikesan!', 'error');
+                    }
+                }
+            });
+            
+            setInterval(function() {
+                devtoolsOpen = false;
+                console.log(element);
+                console.clear();
+            }, 1000);
+            
+            // Disable text selection during quiz
+            document.addEventListener('selectstart', function(e) {
+                if (state && state.screen === 'quiz') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable drag and drop
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Detect window blur (switching tabs)
+            let tabSwitchCount = 0;
+            window.addEventListener('blur', function() {
+                if (state && state.screen === 'quiz') {
+                    tabSwitchCount++;
+                    if (tabSwitchCount >= 3) {
+                        showToast('⚠️ Jangan tukar tab semasa quiz!', 'error');
+                        // Optional: Auto submit or add penalty
+                    }
+                }
+            });
+            
+            // Disable copy-paste during quiz
+            document.addEventListener('copy', function(e) {
+                if (state && state.screen === 'quiz') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+            });
+            
+            document.addEventListener('cut', function(e) {
+                if (state && state.screen === 'quiz') {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+            });
+            
+            // Print protection
+            window.addEventListener('beforeprint', function(e) {
+                e.preventDefault();
+                showSecurityWarning();
+                return false;
+            });
+            
+            // Clear console periodically
+            if (!window.console) window.console = {};
+            const methods = ['log', 'debug', 'warn', 'info', 'error'];
+            for (let i = 0; i < methods.length; i++) {
+                console[methods[i]] = function() {};
+            }
+            
+        })();
+        
+        function showSecurityWarning() {
+            const warning = document.createElement('div');
+            warning.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #ff4444, #cc0000);
+                color: white;
+                padding: 30px 40px;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                z-index: 10000;
+                text-align: center;
+                font-weight: 600;
+                font-size: 1.2em;
+                animation: shake 0.5s;
+            `;
+            warning.innerHTML = `
+                <div style="font-size: 3em; margin-bottom: 15px;">🚫</div>
+                <div style="margin-bottom: 10px;">AMARAN KESELAMATAN!</div>
+                <div style="font-size: 0.8em; opacity: 0.9;">Tindakan ini tidak dibenarkan semasa kuiz.</div>
+                <div style="font-size: 0.7em; margin-top: 15px; opacity: 0.8;">
+                    © CikguAime | www.cikguaime.com
+                </div>
+            `;
+            document.body.appendChild(warning);
+            
+            setTimeout(() => {
+                warning.remove();
+            }, 3000);
+        }
+        
         const CONFIG = {
             QUIZ_ID: "SEJARAH_TAHUN6_2024",
-            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwWlhXsUaQgXlRRdad6_wcjssu4c0iED6udYrT2Zumf4fAX25T3sXNMmYmNjceMXd_a/exec",
+            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0KvthhUv9QrqfZfBofpdVhKfzJnPZg8BSJp8tsWSAuFCAT2aE2gCnZ_qSHjLjuIim/exec",
             TIMER_PER_QUESTION: 30,
             ADMIN_PASSWORD: "admin123"
         };
@@ -243,6 +455,10 @@
                 <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9em;">
                     <strong>Features:</strong> ⏱️ Timer • 🔊 Sounds • 🏅 Badges • 🏆 Leaderboard • 🌙 Dark Mode
                 </p>
+                <div style="text-align: center; margin-top: 20px; padding: 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 10px;">
+                    <div style="font-size: 0.9em; color: #667eea; font-weight: 600; margin-bottom: 5px;">⚡ Dicipta oleh CikguAime</div>
+                    <a href="https://www.cikguaime.com/" target="_blank" style="color: #764ba2; text-decoration: none; font-weight: 600;">www.cikguaime.com</a>
+                </div>
             `;
             
             if (state.darkMode) document.body.classList.add('dark-mode');
@@ -486,6 +702,12 @@
                         <button class="btn" onclick="renderReview()">📝 Semak Jawapan</button>
                         <button class="btn btn-secondary" onclick="renderIntro()">🔄 Cuba Lagi</button>
                         <button class="btn btn-secondary" onclick="state.screen='leaderboard'; renderLeaderboardTabs();">🏆 Papan Markah Malaysia</button>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 10px; border: 2px solid #667eea;">
+                        <div style="font-size: 0.9em; color: #667eea; font-weight: 600;">⚡ Sistem Kuiz Interaktif</div>
+                        <div style="font-size: 0.85em; color: #764ba2; margin-top: 5px;">Dicipta oleh <strong>CikguAime</strong></div>
+                        <a href="https://www.cikguaime.com/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85em; font-weight: 600;">🌐 www.cikguaime.com</a>
                     </div>
                 </div>
             `;
