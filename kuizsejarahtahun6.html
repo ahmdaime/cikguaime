@@ -3,88 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Interaktif Sejarah Tahun 6</title>
+    <title>Kuiz Sejarah Tahun 6 - MEGA EDITION</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); min-height: 100%; padding: 20px; color: #333; }
-        html { height: 100%; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); min-height: 100vh; padding: 20px; color: #333; transition: background 0.3s, color 0.3s; }
+        body.dark-mode { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #e0e0e0; }
         .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); padding: 30px; position: relative; }
-        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #667eea; }
-        .header h1 { color: #667eea; font-size: 2em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-        .header p { color: #666; font-size: 1.1em; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; font-size: 1em; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; }
-        input[type="text"]:focus, input[type="password"]:focus { outline: none; border-color: #667eea; box-shadow: 0 0 10px rgba(102, 126, 234, 0.3); }
-        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 30px; border-radius: 15px; font-size: 1.1em; cursor: pointer; transition: all 0.3s; font-weight: 600; width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
-        .btn:hover { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); }
+        body.dark-mode .container { background: #1e1e1e; color: #e0e0e0; }
+        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #667eea; position: relative; }
+        .header-controls { position: absolute; top: 0; right: 0; display: flex; gap: 10px; }
+        .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; padding: 8px; border-radius: 10px; transition: all 0.3s; }
+        .icon-btn:hover { background: rgba(102, 126, 234, 0.1); transform: scale(1.1); }
+        .header h1 { color: #667eea; font-size: 2em; margin-bottom: 10px; }
+        .timer-display { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: white; padding: 15px 25px; border-radius: 15px; font-size: 1.8em; font-weight: 700; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); animation: pulse 1s infinite; }
+        .timer-display.warning { animation: shake 0.5s infinite; background: linear-gradient(135deg, #ff4444, #cc0000); }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 30px; border-radius: 15px; font-size: 1.1em; cursor: pointer; transition: all 0.3s; font-weight: 600; width: 100%; margin-top: 10px; }
+        .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #5a6268; }
         .btn-small { padding: 10px 20px; font-size: 0.9em; width: auto; display: inline-block; }
-        .question-container { margin-bottom: 30px; }
-        .question-header { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .question-number { color: #667eea; font-weight: 700; font-size: 1.1em; }
-        .question-text { font-size: 1.2em; color: #333; margin-top: 10px; line-height: 1.6; }
-        .choices { display: flex; flex-direction: column; gap: 12px; }
-        .choice { background: #f8f9fa; border: 2px solid #ddd; padding: 15px 20px; border-radius: 10px; cursor: pointer; transition: all 0.3s; font-size: 1em; }
-        .choice:hover { background: #e9ecef; border-color: #667eea; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2); }
-        .choice.selected { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
-        .progress-bar { background: #e9ecef; height: 8px; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .progress-fill { background: linear-gradient(90deg, #667eea, #764ba2, #f093fb); height: 100%; transition: width 0.3s; box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3); }
-        .result-card { text-align: center; padding: 40px 20px; }
-        .score-display { font-size: 4em; background: linear-gradient(135deg, #667eea, #764ba2, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700; margin: 20px 0; }
-        .percentage { font-size: 2em; color: #666; margin-bottom: 20px; }
-        .result-message { font-size: 1.3em; color: #555; margin-bottom: 30px; }
-        .review-section { margin-top: 30px; text-align: left; }
-        .review-question { background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #667eea; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .review-answer { margin-top: 15px; padding: 10px; border-radius: 8px; }
-        .correct-answer { background: #d4edda; border: 2px solid #28a745; }
-        .wrong-answer { background: #f8d7da; border: 2px solid #dc3545; }
-        .answer-label { font-weight: 600; margin-bottom: 5px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
-        .tab { padding: 12px 24px; background: transparent; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s; }
-        .tab.active { color: #667eea; border-bottom-color: #667eea; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); }
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .leaderboard-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; text-align: left; font-weight: 600; }
+        .choice { background: #f8f9fa; border: 2px solid #ddd; padding: 15px 20px; border-radius: 10px; cursor: pointer; transition: all 0.3s; margin-bottom: 12px; }
+        .choice:hover { background: #e9ecef; border-color: #667eea; transform: translateY(-2px); }
+        .choice.selected { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        body.dark-mode .choice { background: #2a2a2a; border-color: #444; color: #e0e0e0; }
+        body.dark-mode .choice:hover { background: #333; }
+        .achievement-badge { display: inline-block; background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333; padding: 10px 20px; border-radius: 25px; margin: 5px; font-weight: 600; animation: bounceIn 0.5s; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: white; padding: 15px 20px; border-radius: 10px; z-index: 2000; animation: slideIn 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        body.dark-mode label { color: #b0b0b0; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; }
+        body.dark-mode input, body.dark-mode select { background: #2a2a2a; color: #e0e0e0; border-color: #444; }
+        .progress-bar { background: #e9ecef; height: 10px; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #667eea, #764ba2, #f093fb); height: 100%; transition: width 0.3s; }
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 15px; overflow: hidden; }
+        .leaderboard-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; text-align: left; }
         .leaderboard-table td { padding: 12px; border-bottom: 1px solid #ddd; }
+        body.dark-mode .leaderboard-table td { border-bottom-color: #333; }
         .leaderboard-table tr:hover { background: #f8f9fa; }
-        .rank-badge { display: inline-block; width: 30px; height: 30px; line-height: 30px; text-align: center; border-radius: 50%; font-weight: 700; color: white; }
+        body.dark-mode .leaderboard-table tr:hover { background: #2a2a2a; }
+        .rank-badge { display: inline-block; width: 35px; height: 35px; line-height: 35px; text-align: center; border-radius: 50%; font-weight: 700; }
         .rank-1 { background: #FFD700; color: #333; }
         .rank-2 { background: #C0C0C0; color: #333; }
         .rank-3 { background: #CD7F32; color: white; }
-        .rank-other { background: #6c757d; }
-        .watermark { position: fixed; bottom: 20px; right: 20px; opacity: 0.8; font-size: 0.9em; color: white; background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)); padding: 8px 15px; border-radius: 25px; text-decoration: none; transition: all 0.3s; z-index: 1000; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
-        .watermark:hover { opacity: 1; }
-        .toast { position: fixed; top: 20px; right: 20px; background: #333; color: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 2000; animation: slideIn 0.3s ease-out; }
-        .toast.success { background: #28a745; }
-        .toast.error { background: #dc3545; }
-        .toast.info { background: #17a2b8; }
-        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .rank-other { background: #6c757d; color: white; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; flex-wrap: wrap; }
+        .tab { padding: 12px 20px; background: transparent; border: none; cursor: pointer; font-weight: 600; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        body.dark-mode .tab { color: #b0b0b0; }
+        .tab.active { color: #667eea; border-bottom-color: #667eea; background: rgba(102, 126, 234, 0.1); }
         .hidden { display: none; }
-        .loading { text-align: center; padding: 20px; color: #666; }
-        .error-message { color: #dc3545; font-size: 0.9em; margin-top: 5px; }
+        .question-header { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        body.dark-mode .question-header { background: #2a2a2a; }
+        .review-section { margin-top: 30px; }
+        .review-question { background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #667eea; }
+        body.dark-mode .review-question { background: #2a2a2a; }
+        .review-answer { margin-top: 15px; padding: 10px; border-radius: 8px; }
+        .correct-answer { background: #d4edda; border: 2px solid #28a745; }
+        .wrong-answer { background: #f8d7da; border: 2px solid #dc3545; }
         @media (max-width: 768px) {
             .container { padding: 20px; }
             .header h1 { font-size: 1.5em; }
-            .score-display { font-size: 3em; }
+            .timer-display { font-size: 1.4em; padding: 12px 20px; }
+            .header-controls { position: relative; justify-content: center; margin-bottom: 15px; }
         }
     </style>
 </head>
 <body>
     <div class="container" id="app"></div>
-    <a href="https://www.cikguaime.com/" target="_blank" rel="noopener noreferrer" class="watermark">CikguAime</a>
-
+    
     <script>
         const CONFIG = {
             QUIZ_ID: "SEJARAH_TAHUN6_2024",
-            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxeofA32lwlsjDoCSvi3odZ8BIxF5FcHmt6_m1FcP3Rk3904KAokrozvqVlyk3L3Ybg/exec",
-            LEADERBOARD_LIMIT: 50,
-            RANDOMIZE_QUESTIONS: true,
-            RANDOMIZE_CHOICES: true,
-            ENABLE_ANTI_CHEAT: true,
+            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0KvthhUv9QrqfZfBofpdVhKfzJnPZg8BSJp8tsWSAuFCAT2aE2gCnZ_qSHjLjuIim/exec",
+            TIMER_PER_QUESTION: 30,
             ADMIN_PASSWORD: "admin123"
         };
-
+        
+        const STATES = ["Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Penang", "Perak", "Perlis", "Sabah", "Sarawak", "Selangor", "Terengganu", "WP Kuala Lumpur", "WP Labuan", "WP Putrajaya"];
+        
+        const ACHIEVEMENTS = {
+            perfect: { name: "Perfect Score! 🎯", desc: "100% betul!", icon: "🎯" },
+            speedster: { name: "Speed Demon ⚡", desc: "Selesai < 5 minit", icon: "⚡" },
+            firstTry: { name: "First Try Hero 🌟", desc: "Cuba pertama dapat A", icon: "🌟" },
+            earlyBird: { name: "Early Bird 🐦", desc: "Quiz sebelum 10am", icon: "🐦" },
+            nightOwl: { name: "Night Owl 🦉", desc: "Quiz selepas 10pm", icon: "🦉" }
+        };
+        
         let QUESTIONS = [
             { type: "mcq", question: "Siapakah yang memberikan idea penggabungan Persekutuan Tanah Melayu pada tahun 1955?", choices: ["Lord Brassey", "Ibrahim Haji Yaakob", "Malcolm MacDonald", "Tunku Abdul Rahman Putra Al-Haj"], correct: 3 },
             { type: "mcq", question: "Apakah konsep yang diperjuangkan oleh tokoh-tokoh tempatan seperti Ibrahim Haji Yaakob dan Harun Aminurrashid?", choices: ["Melayu Rai", "Melayu Raya", "Melayu Bersatu", "Melayu Merdeka"], correct: 1 },
@@ -118,414 +128,558 @@
             { type: "mcq", question: "Apakah makna warna kuning pada logo ASEAN?", choices: ["Kesucian", "Kesopanan", "Keberanian", "Kemakmuran"], correct: 3 },
             { type: "mcq", question: "Mengapakah PBB ditubuhkan?", items: ["Melindungi hak asasi manusia", "Menjamin kestabilan politik dunia", "Meningkatkan taraf hidup penduduk dunia", "Menggalakkan hubungan baik antara negara anggota"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 3, hasItems: true }
         ];
-
-        let state = { screen: 'intro', studentInfo: {}, questions: [], currentQuestion: 0, answers: [], startTime: null, endTime: null, score: 0, submitted: false, isAdmin: false };
-
-        function shuffleArray(array) { const newArray = [...array]; for (let i = newArray.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; } return newArray; }
-        function formatDuration(ms) { const seconds = Math.floor(ms / 1000); const minutes = Math.floor(seconds / 60); const remainingSeconds = seconds % 60; return `${minutes}m ${remainingSeconds}s`; }
-        function showToast(message, type = 'info') { const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.textContent = message; document.body.appendChild(toast); setTimeout(() => { toast.remove(); }, 3000); }
-        function getISODateInTimezone() { const now = new Date(); const offset = 8 * 60; const localTime = now.getTime(); const localOffset = now.getTimezoneOffset() * 60000; const utc = localTime + localOffset; const targetTime = utc + (offset * 60000); return new Date(targetTime).toISOString(); }
-        function installAntiCheat() { if (!CONFIG.ENABLE_ANTI_CHEAT) return; document.addEventListener('contextmenu', (e) => { e.preventDefault(); return false; }); document.addEventListener('keydown', (e) => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) { e.preventDefault(); return false; } }); }
-
+        
+        let state = {
+            screen: 'intro', studentInfo: {}, questions: [], currentQuestion: 0, answers: [], startTime: null, endTime: null, score: 0,
+            timeLeft: 0, timerInterval: null, achievements: [], soundEnabled: true, darkMode: localStorage.getItem('darkMode') === 'true',
+            attempts: parseInt(localStorage.getItem('quiz_attempts_' + CONFIG.QUIZ_ID) || '0'), isAdmin: false
+        };
+        
+        const sounds = {
+            correct: () => playTone(800, 200),
+            wrong: () => playTone(200, 300),
+            finish: () => { playTone(600, 150); setTimeout(() => playTone(800, 300), 200); }
+        };
+        
+        function playTone(freq, duration) {
+            if (!state.soundEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = freq;
+                gain.gain.value = 0.1;
+                osc.start();
+                setTimeout(() => osc.stop(), duration);
+            } catch(e) { console.log('Audio not supported'); }
+        }
+        
+        function shuffleArray(arr) {
+            const newArr = [...arr];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+        
+        function formatDuration(ms) {
+            const sec = Math.floor(ms / 1000);
+            const min = Math.floor(sec / 60);
+            return `${min}m ${sec % 60}s`;
+        }
+        
+        function showToast(msg, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            document.body.classList.toggle('dark-mode', state.darkMode);
+            localStorage.setItem('darkMode', state.darkMode);
+            showToast(state.darkMode ? '🌙 Dark Mode ON' : '☀️ Light Mode ON', 'info');
+        }
+        
+        function toggleSound() {
+            state.soundEnabled = !state.soundEnabled;
+            showToast(state.soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF', 'info');
+            const btn = document.querySelector('.icon-btn');
+            if (btn) btn.textContent = state.soundEnabled ? '🔊' : '🔇';
+        }
+        
+        function checkAchievements() {
+            const ach = [];
+            const percentage = Math.round((state.score / state.questions.length) * 100);
+            const duration = state.endTime - state.startTime;
+            const hour = new Date().getHours();
+            
+            if (percentage === 100) ach.push(ACHIEVEMENTS.perfect);
+            if (duration < 300000) ach.push(ACHIEVEMENTS.speedster);
+            if (state.attempts === 1 && percentage >= 80) ach.push(ACHIEVEMENTS.firstTry);
+            if (hour < 10) ach.push(ACHIEVEMENTS.earlyBird);
+            if (hour >= 22) ach.push(ACHIEVEMENTS.nightOwl);
+            
+            state.achievements = ach;
+            return ach;
+        }
+        
         function renderIntro() {
             const app = document.getElementById('app');
             app.innerHTML = `
-                <div class="header"><h1>📚 Kuiz Interaktif Sejarah</h1><p>Tahun 6</p></div>
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleSound()" title="Toggle Sound">${state.soundEnabled ? '🔊' : '🔇'}</button>
+                        <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">${state.darkMode ? '☀️' : '🌙'}</button>
+                    </div>
+                    <h1>📚 Kuiz Sejarah Tahun 6</h1>
+                    <p style="color: #666; margin-top: 10px;">MEGA EDITION ⚡⏱️🎯🏆🌙</p>
+                </div>
                 <form id="introForm">
-                    <div class="form-group"><label for="nama">Nama Penuh: *</label><input type="text" id="nama" required minlength="2" maxlength="30" placeholder="Masukkan nama anda"><div class="error-message hidden" id="namaError">Nama mesti antara 2-30 aksara</div></div>
-                    <div class="form-group"><label for="kelas">Kelas:</label><input type="text" id="kelas" placeholder="Contoh: 6 Amanah"></div>
-                    <div class="form-group"><label for="sekolah">Sekolah:</label><input type="text" id="sekolah" placeholder="Nama sekolah anda"></div>
-                    <button type="submit" class="btn">Mula Kuiz</button>
-                    <button type="button" class="btn btn-secondary" id="adminBtn">Admin Panel</button>
+                    <div class="form-group">
+                        <label>Nama Penuh: *</label>
+                        <input type="text" id="nama" required minlength="2" maxlength="50" placeholder="Masukkan nama penuh anda">
+                    </div>
+                    <div class="form-group">
+                        <label>Negeri:</label>
+                        <select id="negeri">
+                            <option value="">Pilih negeri anda...</option>
+                            ${STATES.map(s => `<option value="${s}">${s}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sekolah:</label>
+                        <input type="text" id="sekolah" maxlength="100" placeholder="Nama sekolah (optional)">
+                    </div>
+                    <button type="submit" class="btn">🚀 Mula Kuiz (31 Soalan)</button>
+                    <button type="button" class="btn btn-secondary" onclick="state.screen='leaderboard'; renderLeaderboardTabs();">🏆 Papan Markah</button>
+                    <button type="button" class="btn btn-secondary" onclick="showAdminLogin()">🔐 Admin Panel</button>
                 </form>
+                <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9em;">
+                    <strong>Features:</strong> ⏱️ Timer • 🔊 Sounds • 🏅 Badges • 🏆 Leaderboard • 🌙 Dark Mode
+                </p>
             `;
-            document.getElementById('introForm').addEventListener('submit', (e) => {
+            
+            if (state.darkMode) document.body.classList.add('dark-mode');
+            
+            document.getElementById('introForm').onsubmit = (e) => {
                 e.preventDefault();
-                const nama = document.getElementById('nama').value.trim();
-                const kelas = document.getElementById('kelas').value.trim();
-                const sekolah = document.getElementById('sekolah').value.trim();
-                if (nama.length < 2 || nama.length > 30) { document.getElementById('namaError').classList.remove('hidden'); return; }
-                state.studentInfo = { nama, kelas, sekolah };
+                state.studentInfo = {
+                    nama: document.getElementById('nama').value.trim(),
+                    negeri: document.getElementById('negeri').value || 'Tidak dinyatakan',
+                    sekolah: document.getElementById('sekolah').value.trim() || ''
+                };
                 startQuiz();
-            });
-            document.getElementById('adminBtn').addEventListener('click', showAdminLogin);
+            };
         }
-
+        
         function showAdminLogin() {
             const app = document.getElementById('app');
-            app.innerHTML = `<div class="header"><h1>🔐 Admin Panel</h1><p>Sila masukkan password</p></div><form id="adminLoginForm"><div class="form-group"><label for="adminPassword">Password Admin:</label><input type="password" id="adminPassword" required placeholder="Masukkan password"><div class="error-message hidden" id="passwordError">Password salah!</div></div><button type="submit" class="btn">Log Masuk</button><button type="button" class="btn btn-secondary" id="backToIntroBtn">Kembali</button></form>`;
-            document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+            app.innerHTML = `
+                <div class="header"><h1>🔐 Admin Panel</h1></div>
+                <form id="adminForm">
+                    <div class="form-group">
+                        <label>Password Admin:</label>
+                        <input type="password" id="adminPwd" required>
+                        <small style="color: #dc3545; display: none;" id="adminError">Password salah!</small>
+                    </div>
+                    <button type="submit" class="btn">Log Masuk</button>
+                    <button type="button" class="btn btn-secondary" onclick="renderIntro()">Kembali</button>
+                </form>
+            `;
+            document.getElementById('adminForm').onsubmit = (e) => {
                 e.preventDefault();
-                const password = document.getElementById('adminPassword').value;
-                if (password === CONFIG.ADMIN_PASSWORD) { state.isAdmin = true; showAdminPanel(); } else { document.getElementById('passwordError').classList.remove('hidden'); }
-            });
-            document.getElementById('backToIntroBtn').addEventListener('click', () => { renderIntro(); });
+                if (document.getElementById('adminPwd').value === CONFIG.ADMIN_PASSWORD) {
+                    state.isAdmin = true;
+                    showAdminPanel();
+                } else {
+                    document.getElementById('adminError').style.display = 'block';
+                }
+            };
         }
-
+        
         function showAdminPanel() {
             const app = document.getElementById('app');
-            app.innerHTML = `<div class="header"><h1>⚙️ Admin Panel</h1><p>Sistem Pengurusan Kuiz</p></div><div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 15px;"><h3 style="color: #667eea; margin-bottom: 15px;">📊 Statistik Sistem</h3><div id="adminStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;"><div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #667eea;"><div style="font-size: 0.9em; color: #666;">Quiz ID</div><div style="font-size: 1.2em; font-weight: 700; color: #667eea;">${CONFIG.QUIZ_ID}</div></div><div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #28a745;"><div style="font-size: 0.9em; color: #666;">Status Sambungan</div><div id="connectionStatus" style="font-size: 1.2em; font-weight: 700; color: #666;">Checking...</div></div></div></div><div style="margin-bottom: 20px;"><h3 style="color: #667eea; margin-bottom: 15px;">🧪 Ujian Sistem</h3><div style="background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 15px;"><h4 style="color: #856404; margin-bottom: 10px;">Test 1: Sambungan ke Google Apps Script</h4><p style="color: #856404; font-size: 0.9em; margin-bottom: 10px;">Ujian ini akan semak sama ada sistem boleh berhubung dengan Google Sheets.</p><button class="btn btn-small" id="testConnectionBtn">🔌 Uji Sambungan</button><div id="testConnectionResult" style="margin-top: 10px; font-weight: 600;"></div></div><div style="background: #d1ecf1; border: 2px solid #17a2b8; padding: 15px; border-radius: 10px; margin-bottom: 15px;"><h4 style="color: #0c5460; margin-bottom: 10px;">Test 2: Hantar Data Sampel</h4><p style="color: #0c5460; font-size: 0.9em; margin-bottom: 10px;">Ujian ini akan menghantar data sampel ke Google Sheets.</p><button class="btn btn-small" id="testSubmitBtn">📤 Hantar Data Test</button><div id="testSubmitResult" style="margin-top: 10px; font-weight: 600;"></div></div><div style="background: #d4edda; border: 2px solid #28a745; padding: 15px; border-radius: 10px; margin-bottom: 15px;"><h4 style="color: #155724; margin-bottom: 10px;">Test 3: Baca Data Leaderboard</h4><p style="color: #155724; font-size: 0.9em; margin-bottom: 10px;">Ujian ini akan cuba membaca data dari Google Sheets.</p><button class="btn btn-small" id="testLeaderboardBtn">📥 Baca Data</button><div id="testLeaderboardResult" style="margin-top: 10px; font-weight: 600;"></div></div><div style="background: #e7f3ff; border: 2px solid #667eea; padding: 15px; border-radius: 10px;"><h4 style="color: #004085; margin-bottom: 10px;">Test Lengkap (All-in-One)</h4><p style="color: #004085; font-size: 0.9em; margin-bottom: 10px;">Jalankan semua ujian sekaligus.</p><button class="btn btn-small" id="testAllBtn">🚀 Jalankan Semua Ujian</button><div id="testAllProgress" style="margin-top: 10px;"></div></div></div><div style="margin-top: 20px;"><h3 style="color: #667eea; margin-bottom: 15px;">📋 Log Aktiviti</h3><div id="adminLog" style="background: #f8f9fa; padding: 15px; border-radius: 10px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.85em;"><div style="color: #666;">Sistem sedia untuk ujian...</div></div></div><div style="margin-top: 30px; display: flex; gap: 10px;"><button class="btn btn-secondary" id="viewSheetsBtn">📊 Buka Google Sheets</button><button class="btn btn-secondary" id="adminLogoutBtn">🚪 Log Keluar</button></div>`;
-            autoCheckConnection();
-            document.getElementById('testConnectionBtn').addEventListener('click', () => testConnection());
-            document.getElementById('testSubmitBtn').addEventListener('click', testSubmit);
-            document.getElementById('testLeaderboardBtn').addEventListener('click', testLeaderboard);
-            document.getElementById('testAllBtn').addEventListener('click', testAll);
-            document.getElementById('viewSheetsBtn').addEventListener('click', () => { window.open(CONFIG.SCRIPT_URL.replace('/exec', ''), '_blank'); });
-            document.getElementById('adminLogoutBtn').addEventListener('click', () => { state.isAdmin = false; renderIntro(); });
+            app.innerHTML = `
+                <div class="header"><h1>⚙️ Admin Dashboard</h1></div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📊 Quick Stats</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #667eea;">
+                            <div style="color: #666; font-size: 0.9em;">Quiz ID</div>
+                            <div style="font-weight: 700; color: #667eea;">${CONFIG.QUIZ_ID}</div>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #28a745;">
+                            <div style="color: #666; font-size: 0.9em;">Total Soalan</div>
+                            <div style="font-weight: 700; color: #28a745;">${QUESTIONS.length}</div>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #ff6b6b;">
+                            <div style="color: #666; font-size: 0.9em;">Timer Per Soalan</div>
+                            <div style="font-weight: 700; color: #ff6b6b;">${CONFIG.TIMER_PER_QUESTION}s</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #d1ecf1; border: 2px solid #17a2b8; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h4 style="color: #0c5460;">🔗 Quick Links</h4>
+                    <button class="btn btn-small" onclick="window.open('${CONFIG.SCRIPT_URL.replace('/exec', '')}', '_blank')">📊 Buka Google Sheets</button>
+                    <button class="btn btn-small" onclick="testConnection()">🔌 Test Connection</button>
+                </div>
+                <button class="btn btn-secondary" onclick="state.isAdmin=false; renderIntro()">🚪 Log Keluar</button>
+            `;
         }
-
-        function autoCheckConnection() { addLog('Memeriksa sambungan...'); testConnection(true); }
-        function addLog(message, type = 'info') { const logDiv = document.getElementById('adminLog'); if (!logDiv) return; const time = new Date().toLocaleTimeString('ms-MY'); let color = '#666'; let icon = 'ℹ️'; if (type === 'success') { color = '#28a745'; icon = '✅'; } else if (type === 'error') { color = '#dc3545'; icon = '❌'; } else if (type === 'warning') { color = '#ffc107'; icon = '⚠️'; } const logEntry = document.createElement('div'); logEntry.style.color = color; logEntry.style.marginBottom = '5px'; logEntry.innerHTML = `[${time}] ${icon} ${message}`; logDiv.appendChild(logEntry); logDiv.scrollTop = logDiv.scrollHeight; }
-
-        function testConnection(silent = false) {
-            if (!silent) addLog('Memulakan ujian sambungan...', 'info');
-            const resultDiv = document.getElementById('testConnectionResult'); 
-            const statusDiv = document.getElementById('connectionStatus');
-            
-            if (resultDiv) resultDiv.innerHTML = '<span style="color: #17a2b8;">⏳ Menguji...</span>'; 
-            if (statusDiv) statusDiv.innerHTML = '<span style="color: #17a2b8;">Testing...</span>';
-            
-            const callbackName = 'testCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-            const url = `${CONFIG.SCRIPT_URL}?action=test&callback=${callbackName}&_t=${Date.now()}`;
-            
-            let callbackExecuted = false;
-            
-            const timeout = setTimeout(() => {
-                if (!callbackExecuted) {
-                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Timeout - Mungkin berjaya</span>';
-                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Check manual</span>';
-                    addLog('Ujian sambungan: TIMEOUT (Data mungkin sampai)', 'warning');
-                    cleanup();
+        
+        function testConnection() {
+            showToast('Testing connection...', 'info');
+            const callback = 'test_' + Date.now();
+            window[callback] = (r) => {
+                if (r && r.success) showToast('✅ Connection OK!', 'success');
+                else showToast('❌ Connection Failed', 'error');
+                delete window[callback];
+            };
+            const script = document.createElement('script');
+            script.src = CONFIG.SCRIPT_URL + '?action=test&callback=' + callback;
+            document.head.appendChild(script);
+            setTimeout(() => script.remove(), 5000);
+        }
+        
+        function startQuiz() {
+            state.questions = shuffleArray(QUESTIONS).map(q => {
+                if (q.type === 'mcq') {
+                    const choices = q.choices.map((c, i) => ({ c, i }));
+                    const shuffled = shuffleArray(choices);
+                    return { ...q, choices: shuffled.map(x => x.c), correct: shuffled.findIndex(x => x.i === q.correct) };
                 }
-            }, 8000);
-            
-            window[callbackName] = function(response) {
-                callbackExecuted = true;
-                clearTimeout(timeout);
-                console.log('Test response:', response);
-                
-                if (response && response.success) {
-                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #28a745;">✅ Sambungan Berjaya!</span>';
-                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #28a745;">✅ Online</span>';
-                    addLog('Ujian sambungan: BERJAYA - Script Version: ' + (response.scriptVersion || 'N/A'), 'success');
-                    if (!silent) showToast('✓ Sambungan berjaya!', 'success');
-                } else {
-                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Gagal - ' + (response?.error || 'Unknown') + '</span>';
-                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Error</span>';
-                    addLog('Ujian sambungan: GAGAL - ' + (response?.error || 'Unknown'), 'error');
-                    if (!silent) showToast('✗ Sambungan gagal', 'error');
+                return q;
+            });
+            state.answers = new Array(state.questions.length).fill(null);
+            state.currentQuestion = 0;
+            state.startTime = Date.now();
+            state.timeLeft = CONFIG.TIMER_PER_QUESTION;
+            state.screen = 'quiz';
+            renderQuiz();
+            startTimer();
+        }
+        
+        function startTimer() {
+            if (state.timerInterval) clearInterval(state.timerInterval);
+            state.timerInterval = setInterval(() => {
+                state.timeLeft--;
+                const timerEl = document.getElementById('timer');
+                if (timerEl) {
+                    timerEl.textContent = `⏱️ ${state.timeLeft}s`;
+                    if (state.timeLeft <= 10) timerEl.classList.add('warning');
                 }
+                if (state.timeLeft <= 0) {
+                    sounds.wrong();
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+        
+        function renderQuiz() {
+            const q = state.questions[state.currentQuestion];
+            const progress = ((state.currentQuestion + 1) / state.questions.length) * 100;
+            
+            let itemsHTML = '';
+            if (q.hasItems && q.items) {
+                itemsHTML = `
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #667eea;">
+                        <div style="font-weight: 600; margin-bottom: 10px; color: #667eea;">Pilihan:</div>
+                        ${q.items.map((item, i) => `
+                            <div style="padding: 8px; margin-bottom: 5px; background: white; border-radius: 5px; border-left: 3px solid #667eea;">
+                                <strong>${['I','II','III','IV'][i]}.</strong> ${item}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleSound()">${state.soundEnabled ? '🔊' : '🔇'}</button>
+                        <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
+                    </div>
+                    <h1>📚 Kuiz Sejarah</h1>
+                    <p style="color: #666;">${state.studentInfo.nama}</p>
+                </div>
+                <div class="timer-display" id="timer">⏱️ ${state.timeLeft}s</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div>
+                <div class="question-header">
+                    <div style="color: #667eea; font-weight: 700; font-size: 1.1em;">Soalan ${state.currentQuestion + 1} / ${state.questions.length}</div>
+                    <div style="font-size: 1.2em; margin-top: 10px; line-height: 1.6;">${q.question}</div>
+                </div>
+                ${itemsHTML}
+                <div class="choices">
+                    ${q.choices.map((c, i) => `<div class="choice ${state.answers[state.currentQuestion] === i ? 'selected' : ''}" onclick="selectAnswer(${i})">${c}</div>`).join('')}
+                </div>
+                <button class="btn" onclick="nextQuestion()" ${state.answers[state.currentQuestion] === null ? 'disabled' : ''}>
+                    ${state.currentQuestion === state.questions.length - 1 ? '✅ Selesai Kuiz' : 'Seterusnya ➡️'}
+                </button>
+            `;
+        }
+        
+        function selectAnswer(idx) {
+            state.answers[state.currentQuestion] = idx;
+            renderQuiz();
+        }
+        
+        function nextQuestion() {
+            clearInterval(state.timerInterval);
+            
+            if (state.currentQuestion < state.questions.length - 1) {
+                state.currentQuestion++;
+                state.timeLeft = CONFIG.TIMER_PER_QUESTION;
+                renderQuiz();
+                startTimer();
+            } else {
+                finishQuiz();
+            }
+        }
+        
+        function finishQuiz() {
+            clearInterval(state.timerInterval);
+            state.endTime = Date.now();
+            state.score = 0;
+            
+            state.questions.forEach((q, i) => {
+                if (state.answers[i] === q.correct) state.score++;
+            });
+            
+            state.attempts++;
+            localStorage.setItem('quiz_attempts_' + CONFIG.QUIZ_ID, state.attempts);
+            
+            const achievements = checkAchievements();
+            if (achievements.length > 0) sounds.finish();
+            else if (state.score >= state.questions.length * 0.8) sounds.correct();
+            
+            renderResult();
+            submitResult();
+        }
+        
+        function renderResult() {
+            const percentage = Math.round((state.score / state.questions.length) * 100);
+            const duration = state.endTime - state.startTime;
+            
+            let msg = '';
+            if (percentage === 100) msg = '🎉 PERFECT! Cemerlang!';
+            else if (percentage >= 80) msg = '🌟 Hebat! Cemerlang!';
+            else if (percentage >= 60) msg = '👍 Bagus! Teruskan usaha!';
+            else if (percentage >= 40) msg = '💪 Cuba lagi!';
+            else msg = '📚 Jangan putus asa!';
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
+                    </div>
+                    <h1>📊 Keputusan Kuiz</h1>
+                </div>
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 1.5em; margin-bottom: 20px; font-weight: 600;">${msg}</div>
+                    <div style="font-size: 4.5em; background: linear-gradient(135deg, #667eea, #764ba2, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; margin: 20px 0;">
+                        ${state.score}/${state.questions.length}
+                    </div>
+                    <div style="font-size: 2.5em; color: #666; margin: 20px 0; font-weight: 700;">${percentage}%</div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <p style="margin: 10px 0;"><strong>⏱️ Masa:</strong> ${formatDuration(duration)}</p>
+                        <p style="margin: 10px 0;"><strong>👤 Nama:</strong> ${state.studentInfo.nama}</p>
+                        <p style="margin: 10px 0;"><strong>📍 Negeri:</strong> ${state.studentInfo.negeri}</p>
+                        <p style="margin: 10px 0;"><strong>🔄 Percubaan:</strong> ${state.attempts}</p>
+                    </div>
+                    
+                    ${state.achievements.length > 0 ? `
+                        <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,237,78,0.1)); border-radius: 15px; border: 3px solid #ffd700;">
+                            <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.5em;">🏅 Pencapaian Baru Dibuka!</h3>
+                            ${state.achievements.map(a => `<div class="achievement-badge">${a.icon} ${a.name}<br><small style="font-size: 0.8em;">${a.desc}</small></div>`).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 30px;">
+                        <button class="btn" onclick="renderReview()">📝 Semak Jawapan</button>
+                        <button class="btn btn-secondary" onclick="renderIntro()">🔄 Cuba Lagi</button>
+                        <button class="btn btn-secondary" onclick="state.screen='leaderboard'; renderLeaderboardTabs();">🏆 Papan Markah Malaysia</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderReview() {
+            const app = document.getElementById('app');
+            
+            const reviewHTML = state.questions.map((q, idx) => {
+                const answer = state.answers[idx];
+                const isCorrect = answer === q.correct;
+                const userAnswer = q.choices[answer];
+                const correctAnswer = q.choices[q.correct];
                 
-                cleanup();
+                return `
+                    <div class="review-question">
+                        <div style="color: #667eea; font-weight: 700; margin-bottom: 5px;">Soalan ${idx + 1}</div>
+                        <div style="font-size: 1.1em; margin-bottom: 15px;">${q.question}</div>
+                        ${q.hasItems ? `
+                            <div style="background: #f0f0f0; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                                ${q.items.map((item, i) => `<div style="padding: 5px;"><strong>${['I','II','III','IV'][i]}.</strong> ${item}</div>`).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="review-answer ${isCorrect ? 'correct-answer' : 'wrong-answer'}">
+                            <div style="font-weight: 600; margin-bottom: 5px;">
+                                ${isCorrect ? '✅ Jawapan Anda (Betul!)' : '❌ Jawapan Anda (Salah)'}
+                            </div>
+                            <div>${userAnswer}</div>
+                        </div>
+                        ${!isCorrect ? `
+                            <div class="review-answer correct-answer" style="margin-top: 10px;">
+                                <div style="font-weight: 600; margin-bottom: 5px;">✅ Jawapan Yang Betul</div>
+                                <div>${correctAnswer}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            app.innerHTML = `
+                <div class="header"><h1>📝 Semakan Jawapan</h1></div>
+                <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <strong>💡 Tips:</strong> Baca dan fahami jawapan yang betul. Cuba quiz lagi untuk improve!
+                </div>
+                <div class="review-section">${reviewHTML}</div>
+                <button class="btn" onclick="renderResult()">⬅️ Kembali ke Keputusan</button>
+                <button class="btn btn-secondary" onclick="renderIntro()">🔄 Cuba Lagi</button>
+            `;
+        }
+        
+        function submitResult() {
+            const data = {
+                action: 'submit',
+                nama: state.studentInfo.nama,
+                negeri: state.studentInfo.negeri,
+                sekolah: state.studentInfo.sekolah,
+                skor: state.score,
+                peratus: Math.round((state.score / state.questions.length) * 100),
+                durasi: state.endTime - state.startTime,
+                tarikh: new Date().toISOString(),
+                quiz_id: CONFIG.QUIZ_ID,
+                achievements: state.achievements.map(a => a.name).join(', ')
+            };
+            
+            const callback = 'submit_' + Date.now();
+            const params = new URLSearchParams(data);
+            const url = `${CONFIG.SCRIPT_URL}?${params}&callback=${callback}`;
+            
+            window[callback] = (r) => {
+                if (r && r.success) showToast('✅ Keputusan dihantar!', 'success');
+                else console.log('Submit response:', r);
+                delete window[callback];
             };
             
             const script = document.createElement('script');
-            script.id = callbackName;
             script.src = url;
-            
-            script.onerror = function() {
-                if (!callbackExecuted) {
-                    clearTimeout(timeout);
-                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Script Load Error</span>';
-                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Offline</span>';
-                    addLog('Ujian sambungan: SCRIPT LOAD ERROR', 'error');
-                    if (!silent) showToast('✗ Tidak dapat load script', 'error');
-                    cleanup();
-                }
-            };
-            
-            script.onload = function() {
-                // Script loaded but callback might not execute
-                setTimeout(() => {
-                    if (!callbackExecuted) {
-                        if (resultDiv) resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Script loaded but no response</span>';
-                        if (statusDiv) statusDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Partial</span>';
-                        addLog('Ujian sambungan: Script loaded but callback not executed', 'warning');
-                    }
-                }, 3000);
-            };
-            
-            function cleanup() {
-                const scriptEl = document.getElementById(callbackName);
-                if (scriptEl && scriptEl.parentNode) {
-                    scriptEl.parentNode.removeChild(scriptEl);
-                }
-                if (window[callbackName]) {
-                    delete window[callbackName];
-                }
-            }
-            
             document.head.appendChild(script);
+            setTimeout(() => script.remove(), 8000);
         }
-
-        function testSubmit() {
-            addLog('Memulakan ujian hantar data...', 'info'); 
-            const resultDiv = document.getElementById('testSubmitResult'); 
-            resultDiv.innerHTML = '<span style="color: #17a2b8;">⏳ Menghantar data test...</span>';
-            
-            const testData = { 
-                action: 'submit', 
-                nama: 'ADMIN TEST - ' + new Date().toLocaleTimeString(), 
-                kelas: 'Admin Testing', 
-                sekolah: 'System Test', 
-                skor: Math.floor(Math.random() * 10) + 1, 
-                peratus: Math.floor(Math.random() * 100) + 1, 
-                durasi: Math.floor(Math.random() * 300000) + 60000, 
-                tarikh: getISODateInTimezone(), 
-                quiz_id: CONFIG.QUIZ_ID 
-            };
-
-            const callbackName = 'submitTest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-            const params = new URLSearchParams(testData); 
-            const url = `${CONFIG.SCRIPT_URL}?${params.toString()}&callback=${callbackName}&_t=${Date.now()}`;
-            
-            let callbackExecuted = false;
-            
-            const timeout = setTimeout(() => { 
-                if (!callbackExecuted) { 
-                    resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Timeout (Data mungkin diterima - check Google Sheets)</span>'; 
-                    addLog('Ujian hantar data: TIMEOUT - Check sheets manually', 'warning'); 
-                    cleanup(); 
-                } 
-            }, 10000);
-            
-            window[callbackName] = function(response) { 
-                callbackExecuted = true;
-                clearTimeout(timeout); 
-                console.log('Submit test response:', response); 
-                
-                if (response && response.success) { 
-                    resultDiv.innerHTML = '<span style="color: #28a745;">✅ Data berjaya dihantar ke Google Sheets!</span>'; 
-                    addLog('Ujian hantar data: BERJAYA', 'success'); 
-                    showToast('✓ Data test berjaya dihantar!', 'success'); 
-                } else { 
-                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Gagal: ' + (response?.error || 'Unknown error') + '</span>'; 
-                    addLog('Ujian hantar data: GAGAL - ' + (response?.error || 'Unknown'), 'error'); 
-                    showToast('✗ Gagal menghantar data', 'error'); 
-                } 
-                cleanup(); 
-            };
-            
-            const script = document.createElement('script'); 
-            script.id = callbackName; 
-            script.src = url; 
-            
-            script.onerror = function() { 
-                if (!callbackExecuted) {
-                    clearTimeout(timeout); 
-                    resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Request sent but no response (Check Google Sheets manually)</span>'; 
-                    addLog('Ujian hantar data: NO RESPONSE - Check sheets', 'warning'); 
-                    showToast('Request sent - check Google Sheets', 'info'); 
-                    cleanup(); 
-                }
-            };
-            
-            function cleanup() { 
-                const scriptEl = document.getElementById(callbackName); 
-                if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl); 
-                if (window[callbackName]) delete window[callbackName]; 
-            }
-            
-            document.head.appendChild(script);
-        }
-
-        function testLeaderboard() {
-            addLog('Memulakan ujian baca data...', 'info'); 
-            const resultDiv = document.getElementById('testLeaderboardResult'); 
-            resultDiv.innerHTML = '<span style="color: #17a2b8;">⏳ Membaca data...</span>';
-
-            const callbackName = 'leaderboardTest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-            const url = `${CONFIG.SCRIPT_URL}?action=leaderboard&scope=overall&quiz_id=${CONFIG.QUIZ_ID}&callback=${callbackName}&_t=${Date.now()}`;
-            
-            let callbackExecuted = false;
-            
-            const timeout = setTimeout(() => { 
-                if (!callbackExecuted) { 
-                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Timeout</span>'; 
-                    addLog('Ujian baca data: TIMEOUT', 'error'); 
-                    cleanup(); 
-                } 
-            }, 10000);
-            
-            window[callbackName] = function(data) { 
-                callbackExecuted = true;
-                clearTimeout(timeout); 
-                console.log('Leaderboard test response:', data); 
-                
-                try { 
-                    let items = []; 
-                    
-                    if (data && data.success && Array.isArray(data.data)) { 
-                        items = data.data; 
-                    } else if (Array.isArray(data)) { 
-                        items = data; 
-                    } 
-                    
-                    if (items.length > 0) { 
-                        resultDiv.innerHTML = `<span style="color: #28a745;">✅ Berjaya! Terdapat ${items.length} rekod</span>`; 
-                        addLog(`Ujian baca data: BERJAYA (${items.length} rekod)`, 'success'); 
-                        showToast(`✓ Berjaya baca ${items.length} rekod!`, 'success'); 
-                    } else { 
-                        resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Tiada data (Sheets mungkin kosong)</span>'; 
-                        addLog('Ujian baca data: SHEETS KOSONG', 'warning'); 
-                        showToast('Sheets kosong atau belum ada data', 'info'); 
-                    } 
-                } catch (error) { 
-                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Error: ' + error.message + '</span>'; 
-                    addLog('Ujian baca data: ERROR - ' + error.message, 'error'); 
-                    showToast('✗ Error membaca data', 'error'); 
-                } 
-                
-                cleanup(); 
-            };
-            
-            const script = document.createElement('script'); 
-            script.id = callbackName; 
-            script.src = url; 
-            
-            script.onerror = function() { 
-                if (!callbackExecuted) {
-                    clearTimeout(timeout); 
-                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Script Load Error</span>'; 
-                    addLog('Ujian baca data: SCRIPT LOAD ERROR', 'error'); 
-                    showToast('✗ Tidak dapat load script', 'error'); 
-                    cleanup(); 
-                }
-            };
-            
-            function cleanup() { 
-                const scriptEl = document.getElementById(callbackName); 
-                if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl); 
-                if (window[callbackName]) delete window[callbackName]; 
-            }
-            
-            document.head.appendChild(script);
-        }
-
-        async function testAll() {
-            const progressDiv = document.getElementById('testAllProgress'); progressDiv.innerHTML = '<div style="margin-top: 10px; padding: 15px; background: white; border-radius: 10px;"><strong>Menjalankan ujian...</strong></div>';
-            addLog('=== MEMULAKAN UJIAN LENGKAP ===', 'info');
-            progressDiv.innerHTML += '<div style="color: #17a2b8; margin-top: 5px;">⏳ Test 1: Sambungan...</div>'; await new Promise(resolve => { testConnection(true); setTimeout(resolve, 3000); });
-            progressDiv.innerHTML += '<div style="color: #17a2b8; margin-top: 5px;">⏳ Test 2: Hantar data...</div>'; await new Promise(resolve => { testSubmit(); setTimeout(resolve, 3000); });
-            progressDiv.innerHTML += '<div style="color: #17a2b8; margin-top: 5px;">⏳ Test 3: Baca data...</div>'; await new Promise(resolve => { testLeaderboard(); setTimeout(resolve, 3000); });
-            progressDiv.innerHTML += '<div style="color: #28a745; margin-top: 10px; font-weight: 700;">✅ Semua ujian selesai! Semak Log Aktiviti untuk details.</div>'; addLog('=== UJIAN LENGKAP SELESAI ===', 'success'); showToast('✓ Semua ujian selesai!', 'success');
-        }
-
-        function startQuiz() {
-            state.questions = CONFIG.RANDOMIZE_QUESTIONS ? shuffleArray(QUESTIONS) : [...QUESTIONS];
-            state.questions = state.questions.map(q => { if (q.type === 'mcq' && CONFIG.RANDOMIZE_CHOICES) { const choices = q.choices.map((choice, idx) => ({ choice, idx })); const shuffled = shuffleArray(choices); return { ...q, choices: shuffled.map(c => c.choice), correct: shuffled.findIndex(c => c.idx === q.correct) }; } return q; });
-            state.currentQuestion = 0; state.answers = new Array(state.questions.length).fill(null); state.startTime = Date.now(); state.screen = 'quiz'; renderQuiz();
-        }
-
-        function renderQuiz() {
-            const app = document.getElementById('app'); const question = state.questions[state.currentQuestion]; const progress = ((state.currentQuestion + 1) / state.questions.length) * 100;
-            
-            let questionHTML = '';
-            
-            // Check if question has items (I, II, III, IV format)
-            if (question.hasItems && question.items) {
-                questionHTML = `
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #667eea;">
-                        <div style="font-weight: 600; margin-bottom: 10px; color: #667eea;">Pilihan:</div>
-                        ${question.items.map((item, idx) => `
-                            <div style="padding: 8px; margin-bottom: 5px; background: white; border-radius: 5px; border-left: 3px solid #667eea;">
-                                <strong>${['I', 'II', 'III', 'IV'][idx]}.</strong> ${item}
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="choices">
-                        ${question.choices.map((choice, idx) => `
-                            <div class="choice ${state.answers[state.currentQuestion] === idx ? 'selected' : ''}" data-idx="${idx}">
-                                ${choice}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else {
-                questionHTML = `
-                    <div class="choices">
-                        ${question.choices.map((choice, idx) => `
-                            <div class="choice ${state.answers[state.currentQuestion] === idx ? 'selected' : ''}" data-idx="${idx}">
-                                ${choice}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            app.innerHTML = `<div class="header"><h1>📚 Kuiz Sejarah</h1><p>${state.studentInfo.nama}</p></div><div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div><div class="question-container"><div class="question-header"><div class="question-number">Soalan ${state.currentQuestion + 1} daripada ${state.questions.length}</div><div class="question-text">${question.question}</div></div>${questionHTML}</div><button class="btn" id="nextBtn" ${state.answers[state.currentQuestion] === null ? 'disabled' : ''}>${state.currentQuestion === state.questions.length - 1 ? 'Selesai' : 'Seterusnya'}</button>`;
-            document.querySelectorAll('.choice').forEach(choice => { choice.addEventListener('click', () => { const idx = parseInt(choice.dataset.idx); state.answers[state.currentQuestion] = idx; renderQuiz(); }); });
-            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-        }
-
-        function nextQuestion() { if (state.currentQuestion < state.questions.length - 1) { state.currentQuestion++; renderQuiz(); } else { finishQuiz(); } }
-
-        function finishQuiz() {
-            state.endTime = Date.now(); state.score = 0;
-            state.questions.forEach((q, idx) => { const answer = state.answers[idx]; if (q.type === 'mcq') { if (answer === q.correct) state.score++; } });
-            state.screen = 'result'; renderResult(); submitResult();
-        }
-
-        function renderResult() {
-            const app = document.getElementById('app'); const percentage = Math.round((state.score / state.questions.length) * 100); const duration = state.endTime - state.startTime;
-            let message = ''; if (percentage >= 80) message = '🎉 Cemerlang! Tahniah!'; else if (percentage >= 60) message = '👍 Bagus! Teruskan usaha!'; else if (percentage >= 40) message = '💪 Cuba lagi! Anda boleh buat lebih baik!'; else message = '📚 Jangan putus asa! Belajar lagi!';
-            app.innerHTML = `<div class="header"><h1>📊 Keputusan Kuiz</h1></div><div class="result-card"><div class="result-message">${message}</div><div class="score-display">${state.score}/${state.questions.length}</div><div class="percentage">${percentage}%</div><p><strong>Masa:</strong> ${formatDuration(duration)}</p><p style="margin-top: 20px; color: #666; font-size: 0.95em;">Terima kasih! Keputusan anda telah dihantar.</p><button class="btn" id="reviewBtn">Semak Jawapan</button><button class="btn btn-secondary" id="leaderboardBtn">Papan Markah</button><button class="btn btn-secondary" id="retryBtn">Cuba Lagi</button></div>`;
-            document.getElementById('reviewBtn').addEventListener('click', renderReview);
-            document.getElementById('leaderboardBtn').addEventListener('click', () => { state.screen = 'leaderboard'; renderLeaderboardTabs(); });
-            document.getElementById('retryBtn').addEventListener('click', () => { state = { screen: 'intro', studentInfo: {}, questions: [], currentQuestion: 0, answers: [], startTime: null, endTime: null, score: 0, submitted: false, isAdmin: false }; renderIntro(); });
-        }
-
-        function renderReview() {
-            const app = document.getElementById('app');
-            let reviewHTML = state.questions.map((q, idx) => {
-                const answer = state.answers[idx]; let isCorrect = false; let userAnswerText = ''; let correctAnswerText = '';
-                if (q.type === 'mcq') { isCorrect = answer === q.correct; userAnswerText = q.choices[answer]; correctAnswerText = q.choices[q.correct]; }
-                return `<div class="review-question"><div class="question-number">Soalan ${idx + 1}</div><div class="question-text">${q.question}</div><div class="review-answer ${isCorrect ? 'correct-answer' : 'wrong-answer'}"><div class="answer-label">${isCorrect ? '✓ Jawapan Anda (Betul)' : '✗ Jawapan Anda (Salah)'}</div><div>${userAnswerText}</div></div>${!isCorrect ? `<div class="review-answer correct-answer" style="margin-top: 10px;"><div class="answer-label">✓ Jawapan Betul</div><div>${correctAnswerText}</div></div>` : ''}</div>`;
-            }).join('');
-            app.innerHTML = `<div class="header"><h1>📝 Semakan Jawapan</h1></div><div class="review-section">${reviewHTML}</div><button class="btn" id="backBtn">Kembali ke Keputusan</button><button class="btn btn-secondary" id="leaderboardBtn2">Papan Markah</button>`;
-            document.getElementById('backBtn').addEventListener('click', renderResult);
-            document.getElementById('leaderboardBtn2').addEventListener('click', () => { state.screen = 'leaderboard'; renderLeaderboardTabs(); });
-        }
-
-        function submitResult() {
-            if (state.submitted) return; const duration = state.endTime - state.startTime; const percentage = Math.round((state.score / state.questions.length) * 100);
-            const data = { action: 'submit', nama: state.studentInfo.nama, kelas: state.studentInfo.kelas || '', sekolah: state.studentInfo.sekolah || '', skor: state.score, peratus: percentage, durasi: duration, tarikh: getISODateInTimezone(), quiz_id: CONFIG.QUIZ_ID };
-            state.submitted = true; console.log('Submitting data:', data);
-            const callbackName = 'submitCallback_' + Date.now(); const params = new URLSearchParams(data); const url = `${CONFIG.SCRIPT_URL}?${params.toString()}&callback=${callbackName}`;
-            window[callbackName] = function(response) { console.log('Submit response:', response); if (response && response.success) { showToast('✓ Keputusan berjaya dihantar!', 'success'); } else { showToast('Keputusan telah direkod', 'info'); } const script = document.getElementById(callbackName); if (script) script.remove(); delete window[callbackName]; };
-            const script = document.createElement('script'); script.id = callbackName; script.src = url;
-            script.onerror = function() { console.log('Submit failed'); showToast('Data telah dihantar', 'info'); if (script) script.remove(); delete window[callbackName]; };
-            setTimeout(() => { const scriptElement = document.getElementById(callbackName); if (scriptElement) scriptElement.remove(); if (window[callbackName]) delete window[callbackName]; }, 10000);
-            document.head.appendChild(script);
-        }
-
+        
         function renderLeaderboardTabs() {
             const app = document.getElementById('app');
-            app.innerHTML = `<div class="header"><h1>🏆 Papan Markah</h1></div><div class="tabs"><button class="tab active" data-scope="overall">Keseluruhan</button><button class="tab" data-scope="today">Hari Ini</button></div><div id="leaderboardContent" class="loading">Memuatkan...</div><button class="btn btn-secondary" id="backToResultBtn">Kembali</button>`;
-            document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); fetchLeaderboard(tab.dataset.scope); }); });
-            document.getElementById('backToResultBtn').addEventListener('click', renderResult);
+            app.innerHTML = `
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
+                    </div>
+                    <h1>🏆 Papan Markah Malaysia</h1>
+                </div>
+                <div class="tabs">
+                    <button class="tab active" onclick="fetchLeaderboard('overall', this)">🇲🇾 Keseluruhan</button>
+                    <button class="tab" onclick="fetchLeaderboard('today', this)">📅 Hari Ini</button>
+                    <button class="tab" onclick="fetchLeaderboard('week', this)">📆 Minggu Ini</button>
+                    <button class="tab" onclick="fetchLeaderboard('month', this)">🗓️ Bulan Ini</button>
+                </div>
+                <div style="margin: 20px 0;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 8px;">🔍 Filter Negeri:</label>
+                    <select id="negeriFilter" style="width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #667eea;">
+                        <option value="">Semua Negeri</option>
+                        ${STATES.map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
+                </div>
+                <div id="leaderboardContent">Memuatkan...</div>
+                <button class="btn btn-secondary" onclick="renderIntro()">🏠 Kembali</button>
+            `;
+            
+            document.getElementById('negeriFilter').onchange = () => fetchLeaderboard('overall');
             fetchLeaderboard('overall');
         }
-
-        function fetchLeaderboard(scope) {
-            const content = document.getElementById('leaderboardContent'); content.innerHTML = '<div class="loading">Memuatkan data...</div>';
-            const callbackName = 'leaderboard_' + Date.now(); const url = `${CONFIG.SCRIPT_URL}?action=leaderboard&scope=${scope}&quiz_id=${CONFIG.QUIZ_ID}&callback=${callbackName}`;
-            window[callbackName] = function(data) { console.log('Leaderboard response:', data); try { let items = []; if (data && data.success && Array.isArray(data.data)) { items = data.data; } else if (Array.isArray(data)) { items = data; } if (items.length > 0) { renderLeaderboard(items); } else { content.innerHTML = '<div class="loading">Tiada data tersedia. Cuba lagi dalam beberapa saat.</div>'; } } catch (error) { console.log('Error processing leaderboard:', error); content.innerHTML = '<div class="loading">Ralat memuatkan data. Sila cuba lagi.</div>'; } const script = document.getElementById(callbackName); if (script) script.remove(); delete window[callbackName]; };
-            const script = document.createElement('script'); script.id = callbackName; script.src = url;
-            script.onerror = function() { console.log('Leaderboard load failed'); content.innerHTML = `<div style="text-align: center; padding: 20px;"><p style="margin-bottom: 15px;">Tidak dapat memuatkan papan markah.</p><button class="btn btn-small" onclick="fetchLeaderboard('${scope}')">Cuba Lagi</button></div>`; if (script) script.remove(); delete window[callbackName]; };
-            setTimeout(() => { const scriptElement = document.getElementById(callbackName); if (scriptElement) { content.innerHTML = `<div style="text-align: center; padding: 20px;"><p style="margin-bottom: 15px;">Masa tamat. Cuba lagi.</p><button class="btn btn-small" onclick="fetchLeaderboard('${scope}')">Cuba Lagi</button></div>`; scriptElement.remove(); } if (window[callbackName]) delete window[callbackName]; }, 15000);
+        
+        function fetchLeaderboard(scope, tabEl) {
+            if (tabEl) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tabEl.classList.add('active');
+            }
+            
+            const content = document.getElementById('leaderboardContent');
+            content.innerHTML = '<div style="text-align: center; padding: 20px;">⏳ Memuatkan data...</div>';
+            
+            const negeri = document.getElementById('negeriFilter')?.value || '';
+            const callback = 'leaderboard_' + Date.now();
+            const url = `${CONFIG.SCRIPT_URL}?action=leaderboard&scope=${scope}&quiz_id=${CONFIG.QUIZ_ID}&negeri=${negeri}&callback=${callback}`;
+            
+            window[callback] = (data) => {
+                let items = [];
+                if (data && data.success && Array.isArray(data.data)) items = data.data;
+                else if (Array.isArray(data)) items = data;
+                
+                if (items.length > 0) renderLeaderboard(items);
+                else content.innerHTML = '<div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 15px;"><p style="font-size: 1.2em; color: #666;">📊 Tiada data untuk paparan ini</p><p style="color: #999; margin-top: 10px;">Cuba filter atau scope yang lain</p></div>';
+                
+                delete window[callback];
+            };
+            
+            const script = document.createElement('script');
+            script.src = url;
             document.head.appendChild(script);
+            setTimeout(() => {
+                if (window[callback]) {
+                    content.innerHTML = '<div style="text-align: center; padding: 40px; background: #fff3cd; border-radius: 15px;"><p style="color: #856404;">⚠️ Timeout loading data</p><button class="btn btn-small" onclick="fetchLeaderboard(\'' + scope + '\')">🔄 Cuba Lagi</button></div>';
+                }
+                script.remove();
+            }, 15000);
         }
-
+        
         function renderLeaderboard(items) {
-            const content = document.getElementById('leaderboardContent'); const isMobile = window.innerWidth < 480; const displayLimit = isMobile ? 10 : CONFIG.LEADERBOARD_LIMIT; const displayItems = items.slice(0, displayLimit);
-            if (displayItems.length === 0) { content.innerHTML = '<div class="loading">Tiada data tersedia</div>'; return; }
-            const tableHTML = `<table class="leaderboard-table"><thead><tr><th>Kedudukan</th><th>Nama</th><th>Skor</th><th>Masa</th>${!isMobile ? '<th>Sekolah</th>' : ''}</tr></thead><tbody>${displayItems.map((item, idx) => { const rank = idx + 1; let rankClass = 'rank-other'; if (rank === 1) rankClass = 'rank-1'; else if (rank === 2) rankClass = 'rank-2'; else if (rank === 3) rankClass = 'rank-3'; return `<tr><td><span class="rank-badge ${rankClass}">${rank}</span></td><td><strong>${item.nama}</strong>${item.kelas ? `<br><small>${item.kelas}</small>` : ''}</td><td><strong>${item.peratus}%</strong><br><small>${item.skor} soalan</small></td><td>${formatDuration(item.durasi)}</td>${!isMobile ? `<td>${item.sekolah || '-'}</td>` : ''}</tr>`; }).join('')}</tbody></table>${isMobile && items.length > 10 ? '<p style="text-align: center; margin-top: 15px; color: #666;">Lihat pada skrin lebih besar untuk paparan penuh</p>' : ''}`;
-            content.innerHTML = tableHTML;
+            const content = document.getElementById('leaderboardContent');
+            const isMobile = window.innerWidth < 768;
+            
+            content.innerHTML = `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
+                    <strong style="color: #667eea; font-size: 1.2em;">📊 ${items.length} Peserta</strong>
+                </div>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">🏅 Rank</th>
+                            <th>👤 Nama</th>
+                            ${!isMobile ? '<th>📍 Negeri</th>' : ''}
+                            <th style="width: 100px;">📊 Skor</th>
+                            <th style="width: 100px;">⏱️ Masa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${items.map((item, i) => {
+                            const rank = i + 1;
+                            let badgeClass = 'rank-other';
+                            if (rank === 1) badgeClass = 'rank-1';
+                            else if (rank === 2) badgeClass = 'rank-2';
+                            else if (rank === 3) badgeClass = 'rank-3';
+                            
+                            return `
+                                <tr>
+                                    <td><span class="rank-badge ${badgeClass}">${rank}</span></td>
+                                    <td>
+                                        <strong style="font-size: 1.1em;">${item.nama}</strong>
+                                        ${item.sekolah ? `<br><small style="color: #666;">${item.sekolah}</small>` : ''}
+                                    </td>
+                                    ${!isMobile ? `<td>${item.negeri || '-'}</td>` : ''}
+                                    <td>
+                                        <strong style="color: #667eea; font-size: 1.2em;">${item.peratus}%</strong>
+                                        <br><small>${item.skor} soalan</small>
+                                    </td>
+                                    <td>${formatDuration(item.durasi)}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+                ${isMobile && items.length > 10 ? '<p style="text-align: center; margin-top: 15px; color: #666;"><small>💡 Lihat pada skrin lebih besar untuk paparan penuh</small></p>' : ''}
+            `;
         }
-
-        function init() { installAntiCheat(); renderIntro(); }
-        init();
+        
+        renderIntro();
     </script>
 </body>
 </html>
