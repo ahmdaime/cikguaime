@@ -476,12 +476,13 @@
         // ===== KONFIGURASI =====
         const CONFIG = {
             QUIZ_ID: "SEJARAH_TAHUN6_2024",
-            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwkJSQgJzpAkK6D_Ga2s3xG_yQzCwesdti7oqGlw_gSFAlIENRXe8lYjMvYWbzuem5l/exec",
+            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0KvthhUv9QrqfZfBofpdVhKfzJnPZg8BSJp8tsWSAuFCAT2aE2gCnZ_qSHjLjuIim/exec",
             TIMEZONE: "Asia/Kuala_Lumpur",
             LEADERBOARD_LIMIT: 50,
             RANDOMIZE_QUESTIONS: true,
             RANDOMIZE_CHOICES: true,
-            ENABLE_ANTI_CHEAT: true
+            ENABLE_ANTI_CHEAT: true,
+            ADMIN_PASSWORD: "admin123" // Tukar password ini!
         };
 
         // ===== SOALAN KUIZ =====
@@ -561,7 +562,8 @@
             startTime: null,
             endTime: null,
             score: 0,
-            submitted: false
+            submitted: false,
+            isAdmin: false
         };
 
         // ===== FUNGSI UTILITI =====
@@ -647,7 +649,7 @@
                         <input type="text" id="sekolah" placeholder="Nama sekolah anda">
                     </div>
                     <button type="submit" class="btn">Mula Kuiz</button>
-                    <button type="button" class="btn btn-secondary" id="testBtn">Ujian Sambungan</button>
+                    <button type="button" class="btn btn-secondary" id="adminBtn">Admin Panel</button>
                 </form>
             `;
 
@@ -666,10 +668,399 @@
                 startQuiz();
             });
 
-            document.getElementById('testBtn').addEventListener('click', testConnection);
+            document.getElementById('adminBtn').addEventListener('click', showAdminLogin);
+        }
+
+        // ===== ADMIN LOGIN =====
+        function showAdminLogin() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <h1>🔐 Admin Panel</h1>
+                    <p>Sila masukkan password</p>
+                </div>
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="adminPassword">Password Admin:</label>
+                        <input type="password" id="adminPassword" required placeholder="Masukkan password">
+                        <div class="error-message hidden" id="passwordError">Password salah!</div>
+                    </div>
+                    <button type="submit" class="btn">Log Masuk</button>
+                    <button type="button" class="btn btn-secondary" id="backToIntroBtn">Kembali</button>
+                </form>
+            `;
+
+            document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('adminPassword').value;
+
+                if (password === CONFIG.ADMIN_PASSWORD) {
+                    state.isAdmin = true;
+                    showAdminPanel();
+                } else {
+                    document.getElementById('passwordError').classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('backToIntroBtn').addEventListener('click', () => {
+                renderIntro();
+            });
+        }
+
+        // ===== ADMIN PANEL =====
+        function showAdminPanel() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <h1>⚙️ Admin Panel</h1>
+                    <p>Sistem Pengurusan Kuiz</p>
+                </div>
+                
+                <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 15px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📊 Statistik Sistem</h3>
+                    <div id="adminStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #667eea;">
+                            <div style="font-size: 0.9em; color: #666;">Quiz ID</div>
+                            <div style="font-size: 1.2em; font-weight: 700; color: #667eea;">${CONFIG.QUIZ_ID}</div>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #28a745;">
+                            <div style="font-size: 0.9em; color: #666;">Status Sambungan</div>
+                            <div id="connectionStatus" style="font-size: 1.2em; font-weight: 700; color: #666;">Checking...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🧪 Ujian Sistem</h3>
+                    
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">Test 1: Sambungan ke Google Apps Script</h4>
+                        <p style="color: #856404; font-size: 0.9em; margin-bottom: 10px;">Ujian ini akan semak sama ada sistem boleh berhubung dengan Google Sheets.</p>
+                        <button class="btn btn-small" id="testConnectionBtn">🔌 Uji Sambungan</button>
+                        <div id="testConnectionResult" style="margin-top: 10px; font-weight: 600;"></div>
+                    </div>
+
+                    <div style="background: #d1ecf1; border: 2px solid #17a2b8; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #0c5460; margin-bottom: 10px;">Test 2: Hantar Data Sampel</h4>
+                        <p style="color: #0c5460; font-size: 0.9em; margin-bottom: 10px;">Ujian ini akan menghantar data sampel ke Google Sheets untuk memastikan sistem berfungsi.</p>
+                        <button class="btn btn-small" id="testSubmitBtn">📤 Hantar Data Test</button>
+                        <div id="testSubmitResult" style="margin-top: 10px; font-weight: 600;"></div>
+                    </div>
+
+                    <div style="background: #d4edda; border: 2px solid #28a745; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #155724; margin-bottom: 10px;">Test 3: Baca Data Leaderboard</h4>
+                        <p style="color: #155724; font-size: 0.9em; margin-bottom: 10px;">Ujian ini akan cuba membaca data dari Google Sheets.</p>
+                        <button class="btn btn-small" id="testLeaderboardBtn">📥 Baca Data</button>
+                        <div id="testLeaderboardResult" style="margin-top: 10px; font-weight: 600;"></div>
+                    </div>
+
+                    <div style="background: #e7f3ff; border: 2px solid #667eea; padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #004085; margin-bottom: 10px;">Test Lengkap (All-in-One)</h4>
+                        <p style="color: #004085; font-size: 0.9em; margin-bottom: 10px;">Jalankan semua ujian sekaligus.</p>
+                        <button class="btn btn-small" id="testAllBtn">🚀 Jalankan Semua Ujian</button>
+                        <div id="testAllProgress" style="margin-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Log Aktiviti</h3>
+                    <div id="adminLog" style="background: #f8f9fa; padding: 15px; border-radius: 10px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
+                        <div style="color: #666;">Sistem sedia untuk ujian...</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="btn btn-secondary" id="viewSheetsBtn">📊 Buka Google Sheets</button>
+                    <button class="btn btn-secondary" id="adminLogoutBtn">🚪 Log Keluar</button>
+                </div>
+            `;
+
+            // Auto check connection on load
+            autoCheckConnection();
+
+            document.getElementById('testConnectionBtn').addEventListener('click', testConnection);
+            document.getElementById('testSubmitBtn').addEventListener('click', testSubmit);
+            document.getElementById('testLeaderboardBtn').addEventListener('click', testLeaderboard);
+            document.getElementById('testAllBtn').addEventListener('click', testAll);
+            document.getElementById('viewSheetsBtn').addEventListener('click', () => {
+                const sheetsUrl = CONFIG.SCRIPT_URL.replace('/exec', '/edit');
+                window.open(sheetsUrl, '_blank');
+            });
+            document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+                state.isAdmin = false;
+                renderIntro();
+            });
+        }
+
+        // ===== AUTO CHECK CONNECTION =====
+        function autoCheckConnection() {
+            addLog('Memeriksa sambungan...');
+            testConnection(true);
+        }
+
+        // ===== ADD LOG =====
+        function addLog(message, type = 'info') {
+            const logDiv = document.getElementById('adminLog');
+            if (!logDiv) return;
+
+            const time = new Date().toLocaleTimeString('ms-MY');
+            let color = '#666';
+            let icon = 'ℹ️';
+
+            if (type === 'success') {
+                color = '#28a745';
+                icon = '✅';
+            } else if (type === 'error') {
+                color = '#dc3545';
+                icon = '❌';
+            } else if (type === 'warning') {
+                color = '#ffc107';
+                icon = '⚠️';
+            }
+
+            const logEntry = document.createElement('div');
+            logEntry.style.color = color;
+            logEntry.style.marginBottom = '5px';
+            logEntry.innerHTML = `[${time}] ${icon} ${message}`;
+            
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
         }
 
         // ===== TEST CONNECTION =====
+        function testConnection(silent = false) {
+            if (!silent) addLog('Memulakan ujian sambungan...', 'info');
+            
+            const resultDiv = document.getElementById('testConnectionResult');
+            const statusDiv = document.getElementById('connectionStatus');
+            
+            if (resultDiv) resultDiv.innerHTML = '<span style="color: #17a2b8;">⏳ Menguji...</span>';
+            if (statusDiv) statusDiv.innerHTML = '<span style="color: #17a2b8;">Testing...</span>';
+            
+            const callbackName = 'testCallback_' + Date.now();
+            const url = `${CONFIG.SCRIPT_URL}?action=test&callback=${callbackName}`;
+            
+            const timeout = setTimeout(() => {
+                if (window[callbackName]) {
+                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Timeout</span>';
+                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Offline</span>';
+                    addLog('Ujian sambungan: TIMEOUT', 'error');
+                    cleanup();
+                }
+            }, 10000);
+            
+            window[callbackName] = function(response) {
+                clearTimeout(timeout);
+                console.log('Test response:', response);
+                
+                if (response && response.success) {
+                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #28a745;">✅ Sambungan Berjaya!</span>';
+                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #28a745;">✅ Online</span>';
+                    addLog('Ujian sambungan: BERJAYA', 'success');
+                    if (!silent) showToast('✓ Sambungan berjaya!', 'success');
+                } else {
+                    if (resultDiv) resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Gagal</span>';
+                    if (statusDiv) statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Error</span>';
+                    addLog('Ujian sambungan: GAGAL - ' + (response?.error || 'Unknown'), 'error');
+                    if (!silent) showToast('✗ Sambungan gagal', 'error');
+                }
+                
+                cleanup();
+            };
+            
+            const script = document.createElement('script');
+            script.id = callbackName;
+            script.src = url;
+            script.onerror = function() {
+                clearTimeout(timeout);
+                if (resultDiv) resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Network Error</span>';
+                if (statusDiv) statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Offline</span>';
+                addLog('Ujian sambungan: NETWORK ERROR', 'error');
+                if (!silent) showToast('✗ Tidak dapat bersambung', 'error');
+                cleanup();
+            };
+            
+            function cleanup() {
+                const scriptEl = document.getElementById(callbackName);
+                if (scriptEl) scriptEl.remove();
+                delete window[callbackName];
+            }
+            
+            document.head.appendChild(script);
+        }
+
+        // ===== TEST SUBMIT =====
+        function testSubmit() {
+            addLog('Memulakan ujian hantar data...', 'info');
+            
+            const resultDiv = document.getElementById('testSubmitResult');
+            resultDiv.innerHTML = '<span style="color: #17a2b8;">⏳ Menghantar data test...</span>';
+            
+            const testData = {
+                action: 'submit',
+                nama: 'ADMIN TEST - ' + new Date().toLocaleTimeString(),
+                kelas: 'Admin Testing',
+                sekolah: 'System Test',
+                skor: Math.floor(Math.random() * 10) + 1,
+                peratus: Math.floor(Math.random() * 100) + 1,
+                durasi: Math.floor(Math.random() * 300000) + 60000,
+                tarikh: getISODateInTimezone(),
+                quiz_id: CONFIG.QUIZ_ID
+            };
+
+            const callbackName = 'submitTest_' + Date.now();
+            const params = new URLSearchParams(testData);
+            const url = `${CONFIG.SCRIPT_URL}?${params.toString()}&callback=${callbackName}`;
+            
+            const timeout = setTimeout(() => {
+                if (window[callbackName]) {
+                    resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Timeout (Data mungkin diterima)</span>';
+                    addLog('Ujian hantar data: TIMEOUT', 'warning');
+                    cleanup();
+                }
+            }, 10000);
+            
+            window[callbackName] = function(response) {
+                clearTimeout(timeout);
+                console.log('Submit test response:', response);
+                
+                if (response && response.success) {
+                    resultDiv.innerHTML = '<span style="color: #28a745;">✅ Data berjaya dihantar ke Google Sheets!</span>';
+                    addLog('Ujian hantar data: BERJAYA', 'success');
+                    showToast('✓ Data test berjaya dihantar!', 'success');
+                } else {
+                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Gagal: ' + (response?.error || 'Unknown error') + '</span>';
+                    addLog('Ujian hantar data: GAGAL - ' + (response?.error || 'Unknown'), 'error');
+                    showToast('✗ Gagal menghantar data', 'error');
+                }
+                
+                cleanup();
+            };
+            
+            const script = document.createElement('script');
+            script.id = callbackName;
+            script.src = url;
+            script.onerror = function() {
+                clearTimeout(timeout);
+                resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Request sent (Check sheets manually)</span>';
+                addLog('Ujian hantar data: REQUEST SENT (perlu semak sheets)', 'warning');
+                showToast('Request sent - check Google Sheets', 'info');
+                cleanup();
+            };
+            
+            function cleanup() {
+                const scriptEl = document.getElementById(callbackName);
+                if (scriptEl) scriptEl.remove();
+                delete window[callbackName];
+            }
+            
+            document.head.appendChild(script);
+        }
+
+        // ===== TEST LEADERBOARD =====
+        function testLeaderboard() {
+            addLog('Memulakan ujian baca data...', 'info');
+            
+            const resultDiv = document.getElementById('testLeaderboardResult');
+            resultDiv.innerHTML = '<span style="color: #17a2b8;">⏳ Membaca data...</span>';
+
+            const callbackName = 'leaderboardTest_' + Date.now();
+            const url = `${CONFIG.SCRIPT_URL}?action=leaderboard&scope=overall&quiz_id=${CONFIG.QUIZ_ID}&callback=${callbackName}`;
+            
+            const timeout = setTimeout(() => {
+                if (window[callbackName]) {
+                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Timeout</span>';
+                    addLog('Ujian baca data: TIMEOUT', 'error');
+                    cleanup();
+                }
+            }, 10000);
+            
+            window[callbackName] = function(data) {
+                clearTimeout(timeout);
+                console.log('Leaderboard test response:', data);
+                
+                try {
+                    let items = [];
+                    
+                    if (data && data.success && Array.isArray(data.data)) {
+                        items = data.data;
+                    } else if (Array.isArray(data)) {
+                        items = data;
+                    }
+                    
+                    if (items.length > 0) {
+                        resultDiv.innerHTML = `<span style="color: #28a745;">✅ Berjaya! Terdapat ${items.length} rekod</span>`;
+                        addLog(`Ujian baca data: BERJAYA (${items.length} rekod)`, 'success');
+                        showToast(`✓ Berjaya baca ${items.length} rekod!`, 'success');
+                    } else {
+                        resultDiv.innerHTML = '<span style="color: #ffc107;">⚠️ Tiada data (Sheets mungkin kosong)</span>';
+                        addLog('Ujian baca data: SHEETS KOSONG', 'warning');
+                        showToast('Sheets kosong atau belum ada data', 'info');
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Error: ' + error.message + '</span>';
+                    addLog('Ujian baca data: ERROR - ' + error.message, 'error');
+                    showToast('✗ Error membaca data', 'error');
+                }
+                
+                cleanup();
+            };
+            
+            const script = document.createElement('script');
+            script.id = callbackName;
+            script.src = url;
+            script.onerror = function() {
+                clearTimeout(timeout);
+                resultDiv.innerHTML = '<span style="color: #dc3545;">❌ Network Error</span>';
+                addLog('Ujian baca data: NETWORK ERROR', 'error');
+                showToast('✗ Network error', 'error');
+                cleanup();
+            };
+            
+            function cleanup() {
+                const scriptEl = document.getElementById(callbackName);
+                if (scriptEl) scriptEl.remove();
+                delete window[callbackName];
+            }
+            
+            document.head.appendChild(script);
+        }
+
+        // ===== TEST ALL =====
+        async function testAll() {
+            const progressDiv = document.getElementById('testAllProgress');
+            progressDiv.innerHTML = '<div style="margin-top: 10px; padding: 15px; background: white; border-radius: 10px;"><strong>Menjalankan ujian...</strong></div>';
+            
+            addLog('=== MEMULAKAN UJIAN LENGKAP ===', 'info');
+            
+            // Test 1
+            progressDiv.innerHTML += '<div style="color: #17a2b8; margin-top: 5px;">⏳ Test 1: Sambungan...</div>';
+            await new Promise(resolve => {
+                const original = window.testCallback = window['testCallback_' + Date.now()];
+                testConnection(true);
+                setTimeout(resolve, 3000);
+            });
+            
+            // Test 2
+            progressDiv.innerHTML += '<div style="color: #17a2b8; margin-top: 5px;">⏳ Test 2: Hantar data...</div>';
+            await new Promise(resolve => {
+                testSubmit();
+                setTimeout(resolve, 3000);
+            });
+            
+            // Test 3
+            progressDiv.innerHTML += '<div style="color: #17a2b8; margin-top: 5px;">⏳ Test 3: Baca data...</div>';
+            await new Promise(resolve => {
+                testLeaderboard();
+                setTimeout(resolve, 3000);
+            });
+            
+            progressDiv.innerHTML += '<div style="color: #28a745; margin-top: 10px; font-weight: 700;">✅ Semua ujian selesai! Semak Log Aktiviti untuk details.</div>';
+            addLog('=== UJIAN LENGKAP SELESAI ===', 'success');
+            showToast('✓ Semua ujian selesai!', 'success');
+        }
+
+        // ===== TEST CONNECTION (ORIGINAL - KEEP FOR BACKWARD COMPATIBILITY) =====
         function testConnection() {
             showToast('Menguji sambungan...', 'info');
             
@@ -941,7 +1332,8 @@
                     startTime: null,
                     endTime: null,
                     score: 0,
-                    submitted: false
+                    submitted: false,
+                    isAdmin: false
                 };
                 renderIntro();
             });
