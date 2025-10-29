@@ -476,7 +476,7 @@
         // ===== KONFIGURASI =====
         const CONFIG = {
             QUIZ_ID: "SEJARAH_TAHUN6_2024",
-            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzBZNlE3biMY38ZhFxsKycm36mLwfh_Czyt3ePdGRhpmUBoLMSbWd5YpdqaFbhwrS35/exec",
+            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0KvthhUv9QrqfZfBofpdVhKfzJnPZg8BSJp8tsWSAuFCAT2aE2gCnZ_qSHjLjuIim/exec",
             TIMEZONE: "Asia/Kuala_Lumpur",
             LEADERBOARD_LIMIT: 50,
             RANDOMIZE_QUESTIONS: true,
@@ -489,66 +489,189 @@
         let QUESTIONS = [
             {
                 type: "mcq",
-                question: "Siapakah yang digelar sebagai 'Bapa Kemerdekaan Malaysia'?",
-                choices: ["Tunku Abdul Rahman", "Tun Abdul Razak", "Tun Hussein Onn", "Tun Dr. Mahathir"],
-                correct: 0
+                question: "Siapakah yang memberikan idea penggabungan Persekutuan Tanah Melayu pada tahun 1955?",
+                choices: ["Lord Brassey", "Ibrahim Haji Yaakob", "Malcolm MacDonald", "Tunku Abdul Rahman Putra Al-Haj"],
+                correct: 3
             },
             {
                 type: "mcq",
-                question: "Pada tahun berapakah Malaysia mencapai kemerdekaan?",
-                choices: ["1955", "1957", "1963", "1965"],
+                question: "Apakah konsep yang diperjuangkan oleh tokoh-tokoh tempatan seperti Ibrahim Haji Yaakob dan Harun Aminurrashid?",
+                choices: ["Melayu Rai", "Melayu Raya", "Melayu Bersatu", "Melayu Merdeka"],
                 correct: 1
             },
             {
-                type: "truefalse",
-                question: "Perjanjian Persekutuan Tanah Melayu 1948 telah memberikan kemerdekaan kepada Tanah Melayu.",
-                correct: false
-            },
-            {
-                type: "truefalse",
-                question: "Rukun Negara diisytiharkan pada 31 Ogos 1970.",
-                correct: true
-            },
-            {
                 type: "mcq",
-                question: "Apakah nama perjanjian yang membawa kepada pembentukan Malaysia pada 1963?",
-                choices: ["Perjanjian London", "Perjanjian Pangkor", "Perjanjian Malaysia", "Perjanjian Persekutuan"],
-                correct: 2
-            },
-            {
-                type: "match",
-                question: "Padankan tokoh dengan peranan mereka:",
-                pairs: [
-                    { left: "Tunku Abdul Rahman", right: "Perdana Menteri Pertama" },
-                    { left: "Tun Abdul Razak", right: "Bapa Pembangunan" },
-                    { left: "Tun Dr. Ismail", right: "Timbalan Perdana Menteri" }
-                ]
-            },
-            {
-                type: "mcq",
-                question: "Apakah maksud 'Merdeka'?",
-                choices: ["Kebebasan", "Kemajuan", "Keamanan", "Kesatuan"],
+                question: "Pembangunan Malaysia akan mempercepat pembangunan infrastruktur, sosial dan ekonomi. Apakah sebab yang bertepatan dengan pernyataan tersebut?",
+                choices: ["Membangunan sosioekonomi", "Mencapai keseimbangan kaum", "Menjamin keselamatan negara", "Mempercepat kemerdekaan"],
                 correct: 0
             },
             {
-                type: "truefalse",
-                question: "Sabah dan Sarawak menyertai Malaysia pada tahun yang sama dengan kemerdekaan Tanah Melayu.",
-                correct: false
+                type: "mcq",
+                question: "Mengapakah Indonesia mengisytiharkan konfrontasi terhadap Malaysia?",
+                choices: ["Indonesia mahu kekal di bawah pemerintahan Belanda", "Menganggap Malaysia mahu menguasai hasil bumi Indonesia", "Anggapan pembentukan Malaysia menyebabkan rakyatnya berhijrah", "Anggapan pembentukan Malaysia mengancam kedudukan negaranya"],
+                correct: 3
             },
             {
                 type: "mcq",
-                question: "Di manakah kemerdekaan Tanah Melayu diisytiharkan?",
-                choices: ["Stadium Merdeka", "Istana Negara", "Dataran Merdeka", "Parlimen"],
+                question: "Asal usul nama negeri Kedah dikatakan berasal daripada perkataan Arab yang bermaksud cawan atau gelas berkaki. Apakah perkataan Arab tersebut?",
+                choices: ["Qadah", "Malakat", "Kheddah", "prow-lowy"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "Negeri Sembilan merupakan negeri yang mempunyai keunikan tersendiri dalam penentuan pemimpin negeri. Apakah gelaran ketua negeri bagi Negeri Sembilan?",
+                choices: ["Sultan atau raja", "Yang di-Pertuan Besar", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Bandar apakah yang terdapat warisan sejarah seperti istana, galeri dan monumen?",
+                choices: ["Bandar besar", "Bandar diraja", "Bandar bersejarah", "Bandar pentadbiran"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Apakah jawatankuasa yang telah merangka dan memperkenalkan Rukun Negara?",
+                choices: ["Jawatankuasa Rukun Negara", "Jawatankuasa Antara Kerajaan", "Jawatankuasa Perpaduan Negara", "Jawatankuasa Setia Kawan Malaysia"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "Mengapakah pengasingan tempat tinggal menjadi salah satu sebab pengenalan kepada pembentukan Rukun Negara?",
+                choices: ["Keharmonian semua kaum", "Permuafakatan antara kaum", "Kurangnya peluang berinteraksi", "Perpaduan yang kukuh antara kaum"],
                 correct: 2
             },
             {
-                type: "match",
-                question: "Padankan negeri dengan tahun penyertaan dalam Malaysia:",
-                pairs: [
-                    { left: "Malaya", right: "1957" },
-                    { left: "Sabah", right: "1963" },
-                    { left: "Sarawak", right: "1963" }
-                ]
+                type: "mcq",
+                question: "Apakah yang akan terjadi jika Rukun Negara yang diperkenalkan tidak diterima oleh masyarakat?",
+                choices: ["Memupuk kerjasama antara kaum", "Memecahbelahkan hubungan kaum", "Mewujudkan suasana aman dan harmoni", "Menggalakkan perpaduan antara pelbagai kaum"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Antara berikut, permainan tradisional yang manakah yang dikategorikan sebagai permainan laman? I. Congkak II. Kabaddi III. Sepak raga IV. Paramapadham",
+                choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                question: "Apakah kaum yang mengenakan sari dan doti sebagai pakaian tradisional kaum mereka?",
+                choices: ["Iban", "Cina", "India", "Baba dan Nyonya"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                question: "Di manakah kawasan tempat tinggal masyarakat Cina ketika awal kedatangan mereka ke Tanah Melayu?",
+                choices: ["Bandar", "Pedalaman", "Kawasan ladang", "Persisiran pantai"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "Apakah cara penyebaran agama yang berlaku di Malaysia?",
+                choices: ["Paksaan", "Pengembara", "Pengaruh rakan", "Golongan agama"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                question: "Apakah kitab suci bagi penganut beragama Sikh?",
+                choices: ["Veda", "Tipitaka", "Al-Quran dan Hadis", "Sri Guru Granth Sahib"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                question: "Apakah yang terkandung dalam Perkara 11(1) dalam Perlembagaan Persekutuan?",
+                choices: ["Peranan Yang di-Pertuan Agong", "Hak menganuti agama masing-masing", "Ketua Agama Islam bagi negeri tiada raja", "Menguruskan hal ehwal agamanya sendiri"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Apakah perayaan yang disambut oleh penganut agama Islam?",
+                choices: ["Deepavali", "Tahun Baru Cina", "Tadau Kaamatan", "Hari Raya Aidiladha"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                question: "Bagaimanakah cara setiap masyarakat memberikan ucapan semasa perayaan suatu masa dahulu?",
+                choices: ["Menggunakan telefon bimbit", "Memuat naik di media sosial", "Menggunakan media elektronik", "Melalui pos atau serahan tangan"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                question: "Bagaimanakah pemenang Unduk Ngadau dipilih pada masa kini?",
+                choices: ["Upacara ritual antara peserta", "Berdasarkan semangat Huminodun", "Sesi soal jawab tentang kecantikan peserta", "Sesi soal jawab tentang sejarah masyarakat lampau"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                question: "Siapakah ketua kerajaan yang mengetuai pentadbiran negara?",
+                choices: ["Menteri Besar", "Perdana Menteri", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Siapakah yang digelar sebagai Bapa Pemodenan atas sumbangan beliau kepada negara?",
+                choices: ["Dato' Seri Ismail Sabri bin Yaakob", "Tunku Abdul Rahman Putra Al-Hajj", "Tun Dr. Mahathir bin Mohamad", "Tun Abdul Razak bin Hussein"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                question: "Antara berikut, yang manakah pencapaian Tun Hussein Onn yang dikenang sehingga kini? I. Mengembalikan keamanan selepas peristiwa 13 Mei II. Memperkenalkan Amanah Saham Nasional Berhad III. Memperkenalkan Program Rukun Tetangga IV. Pengenalan Dasar Ekonomi Baru (DEB)",
+                choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                question: "Meningkatkan pengeluaran bahan makanan tempatan. Apakah industri yang dimaksudkan dengan pernyataan tersebut?",
+                choices: ["Industri hiliran", "Industri asas tani", "Industri perhotelan", "Industri pembuatan"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Apakah keistimewaan Malaysia sehingga menjadi tarikan pelancong ke negara ini? I. Keindahan alam semula jadi II. Tapak dan bangunan bersejarah III. Pemimpin yang berbilang kaum IV. Kesesakan lalu lintas",
+                choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "Apakah contoh produk pertanian yang merupakan antara barangan buatan Malaysia? I. Sabun II. Minyak masak III. Minyak pelincir IV. Gas untuk memasak",
+                choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "BAM merupakan akronim bagi persatuan sukan ________?",
+                choices: ["Konfederasi Hoki Malaysia", "Persatuan Badminton Malaysia", "Persatuan Bola Sepak Malaysia", "Kesatuan Olahraga Amatur Malaysia"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                question: "Apakah dasar yang menggalakkan murid terlibat dalam sekurang-kurangnya satu bidang sukan bermula tahun 2011?",
+                choices: ["1M1S", "MSSM", "RIMUP", "MBMMBI"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "Apakah sukan yang sinonim dengan penganjuran kejohanan Le Tour de Langkawi?",
+                choices: ["Lumba basikal", "Permotoran", "Bola sepak", "Badminton"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                question: "Apakah pertubuhan antarabangsa yang keahliannya terbuka kepada semua negara?",
+                choices: ["Komanwel", "Pertubuhan Kerjasama Islam (OIC)", "Pertubuhan Bangsa-Bangsa Bersatu (PBB)", "Pergerakan Negara-negara Berkecuali (NAM)"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                question: "Apakah makna warna kuning pada logo ASEAN?",
+                choices: ["Kesucian", "Kesopanan", "Keberanian", "Kemakmuran"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                question: "Mengapakah PBB ditubuhkan? I. Melindungi hak asasi manusia II. Menjamin kestabilan politik dunia III. Meningkatkan taraf hidup penduduk dunia IV. Menggalakkan hubungan baik antara negara anggota",
+                choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"],
+                correct: 3
             }
         ];
 
