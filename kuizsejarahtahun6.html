@@ -292,7 +292,7 @@
         
         const CONFIG = {
             QUIZ_ID: "SEJARAH_TAHUN6_2024",
-            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0KvthhUv9QrqfZfBofpdVhKfzJnPZg8BSJp8tsWSAuFCAT2aE2gCnZ_qSHjLjuIim/exec",
+            SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyQ1KKzZc5S2L9iR_vu_47nWkBDvF_WUT_vci8rbAKyILuDPwAkndhrptu4jObcwOKx/exec",
             TIMER_PER_QUESTION: 30,
             ADMIN_PASSWORD: "admin123"
         };
@@ -530,17 +530,84 @@
         }
         
         function testConnection() {
-            showToast('Testing connection...', 'info');
-            const callback = 'test_' + Date.now();
-            window[callback] = (r) => {
-                if (r && r.success) showToast('✅ Connection OK!', 'success');
-                else showToast('❌ Connection Failed', 'error');
-                delete window[callback];
+            showToast('🔄 Testing connection...', 'info');
+            
+            const callback = 'testConnection_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            const url = CONFIG.SCRIPT_URL + '?action=test&callback=' + callback + '&_t=' + Date.now();
+            
+            console.log('Testing URL:', url);
+            
+            let responded = false;
+            
+            // Timeout after 10 seconds
+            const timeout = setTimeout(() => {
+                if (!responded) {
+                    showToast('❌ Connection TIMEOUT - Check URL!', 'error');
+                    alert('RALAT SAMBUNGAN!\n\n' + 
+                          'Kemungkinan masalah:\n' +
+                          '1. SCRIPT_URL salah\n' +
+                          '2. Deployment belum set "Anyone" access\n' +
+                          '3. Internet connection issue\n\n' +
+                          'Current URL:\n' + CONFIG.SCRIPT_URL);
+                    cleanup();
+                }
+            }, 10000);
+            
+            window[callback] = function(response) {
+                responded = true;
+                clearTimeout(timeout);
+                
+                console.log('Connection test response:', response);
+                
+                if (response && response.success) {
+                    showToast('✅ Connection SUCCESS! ' + response.message, 'success');
+                    alert('✅ CONNECTION BERJAYA!\n\n' +
+                          'Status: ' + response.status + '\n' +
+                          'Version: ' + response.scriptVersion + '\n' +
+                          'Timestamp: ' + response.timestamp + '\n\n' +
+                          'System ready to submit data!');
+                } else {
+                    showToast('❌ Connection FAILED: ' + (response?.error || 'Unknown'), 'error');
+                    alert('❌ CONNECTION GAGAL!\n\nError: ' + (response?.error || 'Unknown error'));
+                }
+                
+                cleanup();
             };
+            
             const script = document.createElement('script');
-            script.src = CONFIG.SCRIPT_URL + '?action=test&callback=' + callback;
+            script.id = callback;
+            script.src = url;
+            
+            script.onerror = function() {
+                if (!responded) {
+                    responded = true;
+                    clearTimeout(timeout);
+                    showToast('❌ Script Load ERROR!', 'error');
+                    alert('❌ SCRIPT LOAD ERROR!\n\n' +
+                          'Tidak dapat load script dari:\n' + CONFIG.SCRIPT_URL + '\n\n' +
+                          'Pastikan:\n' +
+                          '1. URL betul\n' +
+                          '2. Deployment active\n' +
+                          '3. Access set to "Anyone"');
+                    cleanup();
+                }
+            };
+            
+            script.onload = function() {
+                console.log('Script loaded successfully');
+            };
+            
+            function cleanup() {
+                const scriptEl = document.getElementById(callback);
+                if (scriptEl && scriptEl.parentNode) {
+                    scriptEl.parentNode.removeChild(scriptEl);
+                }
+                if (window[callback]) {
+                    delete window[callback];
+                }
+            }
+            
             document.head.appendChild(script);
-            setTimeout(() => script.remove(), 5000);
         }
         
         function startQuiz() {
