@@ -960,6 +960,7 @@
                             ${!isMobile ? '<th>📍 Negeri</th>' : ''}
                             <th style="width: 100px;">📊 Skor</th>
                             <th style="width: 100px;">⏱️ Masa</th>
+                            ${!isMobile ? '<th style="width: 150px;">🏆 Badges</th>' : ''}
                         </tr>
                     </thead>
                     <tbody>
@@ -969,13 +970,29 @@
                             if (rank === 1) badgeClass = 'rank-1';
                             else if (rank === 2) badgeClass = 'rank-2';
                             else if (rank === 3) badgeClass = 'rank-3';
-                            
+
+                            // Parse achievements
+                            let achievementIcons = '';
+                            if (item.achievements && item.achievements.trim() !== '') {
+                                const achievements = item.achievements.split(',').map(a => a.trim());
+                                achievementIcons = achievements.map(ach => {
+                                    let icon = '';
+                                    if (ach.includes('Perfect')) icon = '🎯';
+                                    else if (ach.includes('Speed')) icon = '⚡';
+                                    else if (ach.includes('First Try')) icon = '🌟';
+                                    else if (ach.includes('Early Bird')) icon = '🐦';
+                                    else if (ach.includes('Night Owl')) icon = '🦉';
+                                    return icon ? `<span style="font-size: 1.3em; margin: 0 2px;" title="${ach}">${icon}</span>` : '';
+                                }).join('');
+                            }
+
                             return `
                                 <tr>
                                     <td><span class="rank-badge ${badgeClass}">${rank}</span></td>
                                     <td>
                                         <strong style="font-size: 1.1em;">${item.nama}</strong>
                                         ${item.sekolah ? `<br><small style="color: #666;">${item.sekolah}</small>` : ''}
+                                        ${isMobile && achievementIcons ? `<br><div style="margin-top: 5px;">${achievementIcons}</div>` : ''}
                                     </td>
                                     ${!isMobile ? `<td>${item.negeri || '-'}</td>` : ''}
                                     <td>
@@ -983,6 +1000,7 @@
                                         <br><small>${item.skor} soalan</small>
                                     </td>
                                     <td>${formatDuration(item.durasi)}</td>
+                                    ${!isMobile ? `<td style="text-align: center;">${achievementIcons || '<span style="color: #ccc;">-</span>'}</td>` : ''}
                                 </tr>
                             `;
                         }).join('')}
