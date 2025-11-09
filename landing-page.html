@@ -606,6 +606,250 @@
             background-position: 0 88%;
             padding: 0 0.2rem;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group input.error {
+            border-color: var(--danger);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--primary);
+            background: #f8f9fa;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .payment-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .payment-info h4 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .payment-info p {
+            margin: 0.5rem 0;
+            color: var(--dark);
+        }
+
+        .payment-info strong {
+            color: var(--primary);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -629,7 +873,7 @@
         <h1>Automasi PBD/UASA untuk Guru Malaysia</h1>
         <p>Jimat masa <span class="highlight">berjam-jam</span> setiap bulan dengan automation penuh</p>
         <div class="hero-buttons">
-            <a href="#pricing" class="btn btn-primary">🚀 Cuba Sekarang (FREE)</a>
+            <a href="https://chromewebstore.google.com/detail/idme-pbd-helper/YOUR_EXTENSION_ID" target="_blank" class="btn btn-primary">🚀 Download FREE</a>
             <a href="#features" class="btn btn-secondary">📖 Ketahui Lebih Lanjut</a>
         </div>
     </section>
@@ -751,7 +995,7 @@
                     <li class="disabled">Custom Usaha</li>
                     <li class="disabled">Kemahiran Automation</li>
                 </ul>
-                <a href="#" class="btn btn-secondary" style="width: 100%;">Install FREE</a>
+                <a href="https://chromewebstore.google.com/detail/idme-pbd-helper/YOUR_EXTENSION_ID" target="_blank" class="btn btn-secondary" style="width: 100%;">📥 Download FREE dari Chrome Store</a>
             </div>
 
             <!-- PRO Plan -->
@@ -770,7 +1014,7 @@
                     <li>Priority Support (24h) ⭐</li>
                     <li>Early Access Features ⭐</li>
                 </ul>
-                <a href="#how-to-buy" class="btn btn-primary" style="width: 100%;">Beli PRO Sekarang</a>
+                <button onclick="openLicenseModal()" class="btn btn-primary" style="width: 100%; cursor: pointer; border: none;">💎 Beli License PRO</button>
             </div>
         </div>
 
@@ -879,7 +1123,7 @@
                         <span class="faq-icon">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Refund <strong>dalam 7 hari</strong> jika ada technical issue yang tak dapat diselesaikan atau tidak puas hati (with valid reason). Email ke: support@cikguaime.com</p>
+                        <p>Refund <strong>dalam 7 hari</strong> jika ada technical issue yang tak dapat diselesaikan atau tidak puas hati (with valid reason). Email ke: aimansic97@gmail.com</p>
                     </div>
                 </div>
 
@@ -889,7 +1133,7 @@
                         <span class="faq-icon">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Waktu bekerja: <strong>1-4 jam</strong> (average 2 jam). Weekend/cuti: 24 jam. Jika lebih 24 jam tak dapat, email support@cikguaime.com</p>
+                        <p>Waktu bekerja: <strong>1-4 jam</strong> (average 2 jam). Weekend/cuti: 24 jam. Jika lebih 24 jam tak dapat, email aimansic97@gmail.com</p>
                     </div>
                 </div>
             </div>
@@ -901,10 +1145,85 @@
         <h2>Ready to Save Time?</h2>
         <p>Join 100+ guru yang dah jimat berjam-jam dengan IDME PBD Helper!</p>
         <div class="hero-buttons">
-            <a href="#pricing" class="btn btn-primary">🚀 Mula Sekarang - FREE</a>
-            <a href="https://www.cikguaime.com/p/license-keys-untuk-idme-helper-pro.html" class="btn btn-secondary">💎 Upgrade ke PRO - RM10/bulan</a>
+            <a href="https://chromewebstore.google.com/detail/idme-pbd-helper/YOUR_EXTENSION_ID" target="_blank" class="btn btn-primary">🚀 Download FREE</a>
+            <button onclick="openLicenseModal()" class="btn btn-secondary" style="cursor: pointer; border: none;">💎 Beli License PRO - RM10/bulan</button>
         </div>
     </section>
+
+    <!-- License Purchase Modal -->
+    <div id="licenseModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLicenseModal()">&times;</button>
+
+            <div id="formContainer">
+                <div class="modal-header">
+                    <h2>💎 Beli License PRO</h2>
+                    <p>Sila isi maklumat dan upload resit pembayaran</p>
+                </div>
+
+                <div class="payment-info">
+                    <h4>📋 Maklumat Pembayaran</h4>
+                    <p><strong>Jumlah:</strong> RM10.00</p>
+                    <p><strong>Bank:</strong> Maybank</p>
+                    <p><strong>Akaun:</strong> 123456789012 (Contoh)</p>
+                    <p><strong>Nama:</strong> CikguAime Sdn Bhd</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                        <em>Sila buat pembayaran terlebih dahulu sebelum isi borang</em>
+                    </p>
+                </div>
+
+                <form id="licenseForm" onsubmit="submitLicenseForm(event)">
+                    <div class="form-group">
+                        <label for="fullName">Nama Penuh *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Contoh: Ahmad bin Ali">
+                        <div class="error-message" id="nameError">Sila masukkan nama penuh</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="contoh@email.com">
+                        <div class="error-message" id="emailError">Sila masukkan email yang sah</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">No. Telefon *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="012-3456789">
+                        <div class="error-message" id="phoneError">Sila masukkan no. telefon</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Resit Pembayaran *</label>
+                        <div class="file-upload-wrapper" onclick="document.getElementById('receiptFile').click()">
+                            <input type="file" id="receiptFile" name="receipt" accept="image/*,.pdf" required onchange="handleFileSelect(event)">
+                            <label for="receiptFile" class="file-upload-label">
+                                <div class="file-upload-icon">📎</div>
+                                <div>
+                                    <strong>Klik untuk pilih fail</strong>
+                                    <div style="font-size: 0.875rem; color: #999; margin-top: 0.25rem;">
+                                        JPG, PNG atau PDF (Max 5MB)
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="file-name" id="fileName"></div>
+                        <div class="error-message" id="fileError">Sila upload resit pembayaran</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        🚀 Hantar Permohonan
+                    </button>
+                </form>
+            </div>
+
+            <div id="successContainer" class="success-message">
+                <div class="success-icon">✅</div>
+                <h3 style="color: var(--success); margin-bottom: 1rem;">Berjaya!</h3>
+                <p style="margin-bottom: 1rem;">Permohonan anda telah diterima.</p>
+                <p style="color: #666;">License key akan dihantar ke email anda dalam masa 1-4 jam (waktu bekerja).</p>
+                <button onclick="closeLicenseModal()" class="btn btn-primary" style="margin-top: 2rem;">Tutup</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -927,14 +1246,14 @@
                 <h3>Support</h3>
                 <ul>
                     <li><a href="https://www.cikguaime.com">Website</a></li>
-                    <li><a href="mailto:support@cikguaime.com">Email Support</a></li>
+                    <li><a href="mailto:aimansic97@gmail.com">Email Support</a></li>
                     <li><a href="https://www.cikguaime.com/privacy-policy">Privacy Policy</a></li>
                     <li><a href="#">Terms of Service</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Contact</h3>
-                <p>Email: support@cikguaime.com</p>
+                <p>Email: aimansic97@gmail.com</p>
                 <p>Response Time:</p>
                 <p>PRO: 24 jam<br>FREE: 48 jam</p>
             </div>
@@ -1005,6 +1324,163 @@
             el.style.opacity = '0';
             observer.observe(el);
         });
+
+        // License Modal Functions
+        function openLicenseModal() {
+            document.getElementById('licenseModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeLicenseModal() {
+            document.getElementById('licenseModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            // Reset form
+            document.getElementById('licenseForm').reset();
+            document.getElementById('fileName').textContent = '';
+            document.getElementById('formContainer').style.display = 'block';
+            document.getElementById('successContainer').classList.remove('show');
+            // Clear all error messages
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.form-group input').forEach(el => el.classList.remove('error'));
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('licenseModal');
+            if (event.target === modal) {
+                closeLicenseModal();
+            }
+        }
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const fileNameDisplay = document.getElementById('fileName');
+            const fileError = document.getElementById('fileError');
+
+            if (file) {
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    fileError.textContent = 'Saiz fail melebihi 5MB';
+                    fileError.classList.add('show');
+                    event.target.value = '';
+                    fileNameDisplay.textContent = '';
+                    return;
+                }
+
+                // Check file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                if (!allowedTypes.includes(file.type)) {
+                    fileError.textContent = 'Format fail tidak disokong. Sila upload JPG, PNG atau PDF';
+                    fileError.classList.add('show');
+                    event.target.value = '';
+                    fileNameDisplay.textContent = '';
+                    return;
+                }
+
+                fileNameDisplay.textContent = '✅ ' + file.name;
+                fileError.classList.remove('show');
+            }
+        }
+
+        // Submit form to Google Sheets
+        async function submitLicenseForm(event) {
+            event.preventDefault();
+
+            // Validate form
+            let isValid = true;
+            const fullName = document.getElementById('fullName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            const receiptFile = document.getElementById('receiptFile');
+
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.form-group input').forEach(el => el.classList.remove('error'));
+
+            if (!fullName.value.trim()) {
+                document.getElementById('nameError').classList.add('show');
+                fullName.classList.add('error');
+                isValid = false;
+            }
+
+            if (!email.value.trim() || !email.validity.valid) {
+                document.getElementById('emailError').classList.add('show');
+                email.classList.add('error');
+                isValid = false;
+            }
+
+            if (!phone.value.trim()) {
+                document.getElementById('phoneError').classList.add('show');
+                phone.classList.add('error');
+                isValid = false;
+            }
+
+            if (!receiptFile.files[0]) {
+                document.getElementById('fileError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Disable submit button and show loading
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Menghantar... <span class="loading-spinner"></span>';
+
+            try {
+                // Convert file to base64
+                const file = receiptFile.files[0];
+                const base64File = await fileToBase64(file);
+
+                // Prepare form data
+                const formData = {
+                    timestamp: new Date().toISOString(),
+                    fullName: fullName.value.trim(),
+                    email: email.value.trim(),
+                    phone: phone.value.trim(),
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileData: base64File
+                };
+
+                // IMPORTANT: Ganti URL ini dengan Google Apps Script Web App URL anda
+                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRyrNZeQPFTMMC3WCy5W0j-WXY3H-yPeAUx5WtyctfoUFfMK48Mx0tefj9DsWga_O-/exec';
+
+                // Send to Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Important for Google Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // Show success message
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('successContainer').classList.add('show');
+
+                // Optional: Send confirmation email or notification here
+                console.log('Form submitted successfully:', formData);
+
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('Maaf, terdapat masalah semasa menghantar borang. Sila cuba lagi atau hubungi aimansic97@gmail.com');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '🚀 Hantar Permohonan';
+            }
+        }
+
+        // Convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
     </script>
 </body>
 </html>
