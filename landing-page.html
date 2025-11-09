@@ -978,7 +978,7 @@
 
     <!-- Pricing Section -->
     <section id="pricing" class="pricing">
-        <h2 class="section-title">💰 Pilih Plan Anda</h2>
+        <h2 class="section-title" style="color: var(--dark);">💰 Pilih Plan Anda</h2>
         <div class="pricing-grid">
             <!-- FREE Plan -->
             <div class="pricing-card">
@@ -1066,9 +1066,9 @@
         </div>
 
         <div style="text-align: center; margin-top: 3rem;">
-            <a href="https://www.cikguaime.com/p/license-keys-untuk-idme-helper-pro.html" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 2.5rem;">
+            <button onclick="openLicenseModal()" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 2.5rem; border: none; cursor: pointer;">
                 💳 Beli License Sekarang
-            </a>
+            </button>
         </div>
     </section>
 
@@ -1123,7 +1123,7 @@
                         <span class="faq-icon">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Refund <strong>dalam 7 hari</strong> jika ada technical issue yang tak dapat diselesaikan atau tidak puas hati (with valid reason). Email ke: aimansic97@gmail.com</p>
+                        <p>Refund <strong>dalam 7 hari</strong> jika ada technical issue yang tak dapat diselesaikan atau tidak puas hati (with valid reason). Email ke: support@cikguaime.com</p>
                     </div>
                 </div>
 
@@ -1133,7 +1133,7 @@
                         <span class="faq-icon">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Waktu bekerja: <strong>1-4 jam</strong> (average 2 jam). Weekend/cuti: 24 jam. Jika lebih 24 jam tak dapat, email aimansic97@gmail.com</p>
+                        <p>Waktu bekerja: <strong>1-4 jam</strong> (average 2 jam). Weekend/cuti: 24 jam. Jika lebih 24 jam tak dapat, email support@cikguaime.com</p>
                     </div>
                 </div>
             </div>
@@ -1246,14 +1246,14 @@
                 <h3>Support</h3>
                 <ul>
                     <li><a href="https://www.cikguaime.com">Website</a></li>
-                    <li><a href="mailto:aimansic97@gmail.com">Email Support</a></li>
+                    <li><a href="mailto:support@cikguaime.com">Email Support</a></li>
                     <li><a href="https://www.cikguaime.com/privacy-policy">Privacy Policy</a></li>
                     <li><a href="#">Terms of Service</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Contact</h3>
-                <p>Email: aimansic97@gmail.com</p>
+                <p>Email: support@cikguaime.com</p>
                 <p>Response Time:</p>
                 <p>PRO: 24 jam<br>FREE: 48 jam</p>
             </div>
@@ -1342,6 +1342,11 @@
             // Clear all error messages
             document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
             document.querySelectorAll('.form-group input').forEach(el => el.classList.remove('error'));
+            // Reset file upload border color
+            const uploadWrapper = document.querySelector('.file-upload-wrapper');
+            if (uploadWrapper) {
+                uploadWrapper.style.borderColor = '#e0e0e0';
+            }
         }
 
         // Close modal when clicking outside
@@ -1357,29 +1362,41 @@
             const file = event.target.files[0];
             const fileNameDisplay = document.getElementById('fileName');
             const fileError = document.getElementById('fileError');
+            const uploadWrapper = document.querySelector('.file-upload-wrapper');
 
             if (file) {
                 // Check file size (5MB max)
                 if (file.size > 5 * 1024 * 1024) {
-                    fileError.textContent = 'Saiz fail melebihi 5MB';
+                    fileError.textContent = 'Saiz fail melebihi 5MB. Sila pilih fail yang lebih kecil.';
                     fileError.classList.add('show');
                     event.target.value = '';
                     fileNameDisplay.textContent = '';
+                    uploadWrapper.style.borderColor = '#f44336';
                     return;
                 }
 
                 // Check file type
                 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
                 if (!allowedTypes.includes(file.type)) {
-                    fileError.textContent = 'Format fail tidak disokong. Sila upload JPG, PNG atau PDF';
+                    fileError.textContent = 'Format fail tidak disokong. Sila upload JPG, PNG atau PDF sahaja.';
                     fileError.classList.add('show');
                     event.target.value = '';
                     fileNameDisplay.textContent = '';
+                    uploadWrapper.style.borderColor = '#f44336';
                     return;
                 }
 
-                fileNameDisplay.textContent = '✅ ' + file.name;
+                // File is valid
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+                fileNameDisplay.textContent = `✅ ${file.name} (${fileSize} MB)`;
                 fileError.classList.remove('show');
+                uploadWrapper.style.borderColor = '#4caf50';
+
+                console.log('File selected successfully:', {
+                    name: file.name,
+                    size: fileSize + ' MB',
+                    type: file.type
+                });
             }
         }
 
@@ -1445,28 +1462,47 @@
                 };
 
                 // IMPORTANT: Ganti URL ini dengan Google Apps Script Web App URL anda
-                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRyrNZeQPFTMMC3WCy5W0j-WXY3H-yPeAUx5WtyctfoUFfMK48Mx0tefj9DsWga_O-/exec';
+                const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
 
-                // Send to Google Sheets
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Important for Google Apps Script
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
+                // Check if Google Apps Script URL is configured
+                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                    // Fallback: Show success message without actually sending
+                    // In production, you MUST configure the Google Apps Script URL
+                    console.warn('Google Apps Script URL not configured. Data will be logged to console only.');
+                    console.log('Form Data (not sent to server):', formData);
 
-                // Show success message
-                document.getElementById('formContainer').style.display = 'none';
-                document.getElementById('successContainer').classList.add('show');
+                    // Show success message
+                    document.getElementById('formContainer').style.display = 'none';
+                    document.getElementById('successContainer').classList.add('show');
 
-                // Optional: Send confirmation email or notification here
-                console.log('Form submitted successfully:', formData);
+                    // Alert admin to configure
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        setTimeout(() => {
+                            alert('⚠️ NOTA UNTUK ADMIN: Google Apps Script URL belum dikonfigurasi!\n\nSila rujuk google-apps-script-setup.md untuk setup.\n\nData submission telah dilog ke browser console.');
+                        }, 1000);
+                    }
+                } else {
+                    // Send to Google Sheets
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Important for Google Apps Script
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    // Show success message
+                    document.getElementById('formContainer').style.display = 'none';
+                    document.getElementById('successContainer').classList.add('show');
+
+                    // Log success
+                    console.log('Form submitted successfully to Google Sheets');
+                }
 
             } catch (error) {
                 console.error('Error submitting form:', error);
-                alert('Maaf, terdapat masalah semasa menghantar borang. Sila cuba lagi atau hubungi aimansic97@gmail.com');
+                alert('Maaf, terdapat masalah semasa menghantar borang. Sila cuba lagi atau hubungi support@cikguaime.com');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '🚀 Hantar Permohonan';
             }
