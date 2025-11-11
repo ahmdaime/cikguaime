@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDME License Key Generator - CikguAimeDotCom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            color: #1565c0;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .generator-section {
+            background: #f5f7ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .generated-keys {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .key-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .key-text {
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 1px;
+            flex: 1;
+        }
+
+        .key-status {
+            font-size: 11px;
+            color: #4caf50;
+            margin-left: 10px;
+        }
+
+        .btn-copy {
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .btn-copy:hover {
+            background: #764ba2;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .watermark {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .watermark strong {
+            color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 IDME License Key Generator</h1>
+        <p class="subtitle">Tool untuk generate license keys untuk IDME PBD Helper PRO</p>
+
+        <div class="info-box">
+            <strong>📖 Cara Guna:</strong>
+            1. Masukkan berapa banyak keys yang nak generate (atau biarkan 1 untuk single key)<br>
+            2. (Optional) Masukkan customer name untuk tracking<br>
+            3. Klik "Generate Keys"<br>
+            4. Copy keys dan hantar kepada pembeli<br>
+            5. Save list untuk rekod anda
+        </div>
+
+        <div class="generator-section">
+            <div class="section-title">⚙️ Generator Settings</div>
+
+            <div class="controls">
+                <div class="input-group">
+                    <label>Bilangan Keys</label>
+                    <input type="number" id="keyCount" value="1" min="1" max="100">
+                </div>
+                <div class="input-group">
+                    <label>Customer Name (Optional)</label>
+                    <input type="text" id="customerName" placeholder="e.g., Cikgu Ahmad">
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateKeys()">
+                    ✨ Generate Keys
+                </button>
+                <button class="btn btn-secondary" onclick="clearKeys()">
+                    🗑️ Clear List
+                </button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalKeys">0</div>
+                <div class="stat-label">Total Keys</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="sessionKeys">0</div>
+                <div class="stat-label">Session Generated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Valid Keys</div>
+            </div>
+        </div>
+
+        <div class="generator-section">
+            <div class="section-title">📋 Generated Keys</div>
+            <div class="generated-keys" id="keysList">
+                <div class="empty-state">
+                    <p>🔐 Tiada keys dijana lagi</p>
+                    <p style="font-size: 12px; margin-top: 10px;">Klik "Generate Keys" untuk mula</p>
+                </div>
+            </div>
+            <div class="action-buttons" style="margin-top: 15px;">
+                <button class="btn btn-secondary" onclick="copyAllKeys()">
+                    📋 Copy All Keys
+                </button>
+                <button class="btn btn-secondary" onclick="downloadKeys()">
+                    💾 Download as TXT
+                </button>
+            </div>
+        </div>
+
+        <div class="watermark">
+            Direka oleh <strong>CikguAimeDotCom</strong> 🎓<br>
+            <small style="font-size: 11px; color: #999;">v2.6.0 License Generator</small>
+        </div>
+    </div>
+
+    <script>
+        let allKeys = [];
+        let sessionCount = 0;
+
+        // Validation function (SAME as in popup.js)
+        function validateLicenseKey(key) {
+            if (!key) return false;
+
+            // Format: IDME-XXXX-XXXX-XXXX
+            const pattern = /^IDME-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+
+            if (!pattern.test(key)) {
+                return false;
+            }
+
+            // Simple checksum validation
+            const parts = key.split('-');
+            const sum = parts[1].charCodeAt(0) + parts[2].charCodeAt(0) + parts[3].charCodeAt(0);
+
+            // Valid if checksum is even
+            return sum % 2 === 0;
+        }
+
+        // Generate random alphanumeric string
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        // Generate a single valid license key
+        function generateSingleKey() {
+            let key = '';
+            let isValid = false;
+
+            // Keep generating until we get a valid key
+            while (!isValid) {
+                const part1 = generateRandomString(4);
+                const part2 = generateRandomString(4);
+                const part3 = generateRandomString(4);
+
+                key = `IDME-${part1}-${part2}-${part3}`;
+
+                // Validate the key
+                isValid = validateLicenseKey(key);
+
+                // If not valid, adjust the last part to make checksum even
+                if (!isValid) {
+                    const parts = key.split('-');
+                    const sum = parts[1].charCodeAt(0) + parts[2].charCodeAt(0) + parts[3].charCodeAt(0);
+
+                    if (sum % 2 !== 0) {
+                        // Make it even by changing the last character
+                        const lastPart = parts[3];
+                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+                        // Find a character that makes the sum even
+                        for (let char of chars) {
+                            const newPart = lastPart.substring(0, 3) + char;
+                            const newKey = `IDME-${parts[1]}-${parts[2]}-${newPart}`;
+                            if (validateLicenseKey(newKey)) {
+                                key = newKey;
+                                isValid = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return key;
+        }
+
+        // Generate multiple keys
+        function generateKeys() {
+            const count = parseInt(document.getElementById('keyCount').value) || 1;
+            const customerName = document.getElementById('customerName').value.trim();
+
+            if (count < 1 || count > 100) {
+                alert('Sila masukkan bilangan antara 1 hingga 100');
+                return;
+            }
+
+            const newKeys = [];
+
+            for (let i = 0; i < count; i++) {
+                const key = generateSingleKey();
+                newKeys.push({
+                    key: key,
+                    customer: customerName || 'N/A',
+                    date: new Date().toLocaleString('ms-MY'),
+                    index: allKeys.length + i + 1
+                });
+            }
+
+            allKeys = allKeys.concat(newKeys);
+            sessionCount += count;
+
+            updateDisplay();
+
+            // Show success message
+            const msg = count === 1 ? '1 key berjaya dijana!' : `${count} keys berjaya dijana!`;
+            alert(`✅ ${msg}`);
+        }
+
+        // Update the display
+        function updateDisplay() {
+            const keysList = document.getElementById('keysList');
+
+            if (allKeys.length === 0) {
+                keysList.innerHTML = `
+                    <div class="empty-state">
+                        <p>🔐 Tiada keys dijana lagi</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Klik "Generate Keys" untuk mula</p>
+                    </div>
+                `;
+            } else {
+                let html = '';
+
+                // Show in reverse order (newest first)
+                for (let i = allKeys.length - 1; i >= 0; i--) {
+                    const item = allKeys[i];
+                    html += `
+                        <div class="key-item">
+                            <div style="flex: 1;">
+                                <div class="key-text">${item.key}</div>
+                                <div style="font-size: 11px; color: #666; margin-top: 4px;">
+                                    ${item.customer !== 'N/A' ? `👤 ${item.customer} • ` : ''}📅 ${item.date}
+                                </div>
+                            </div>
+                            <span class="key-status">✅ VALID</span>
+                            <button class="btn-copy" onclick="copyKey('${item.key}')">Copy</button>
+                        </div>
+                    `;
+                }
+
+                keysList.innerHTML = html;
+            }
+
+            // Update stats
+            document.getElementById('totalKeys').textContent = allKeys.length;
+            document.getElementById('sessionKeys').textContent = sessionCount;
+        }
+
+        // Copy single key
+        function copyKey(key) {
+            navigator.clipboard.writeText(key).then(() => {
+                alert(`✅ Key copied: ${key}`);
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = key;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert(`✅ Key copied: ${key}`);
+            });
+        }
+
+        // Copy all keys
+        function copyAllKeys() {
+            if (allKeys.length === 0) {
+                alert('⚠️ Tiada keys untuk dicopy!');
+                return;
+            }
+
+            const text = allKeys.map(item => {
+                const customer = item.customer !== 'N/A' ? ` - ${item.customer}` : '';
+                return `${item.key}${customer}`;
+            }).join('\n');
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`✅ ${allKeys.length} keys copied to clipboard!`);
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert(`✅ ${allKeys.length} keys copied to clipboard!`);
+            });
+        }
+
+        // Download keys as TXT file
+        function downloadKeys() {
+            if (allKeys.length === 0) {
+                alert('⚠️ Tiada keys untuk didownload!');
+                return;
+            }
+
+            let content = '===========================================\n';
+            content += 'IDME PBD HELPER PRO - LICENSE KEYS\n';
+            content += 'Generated by CikguAimeDotCom License Generator\n';
+            content += '===========================================\n\n';
+            content += `Total Keys: ${allKeys.length}\n`;
+            content += `Generated: ${new Date().toLocaleString('ms-MY')}\n\n`;
+            content += '-------------------------------------------\n\n';
+
+            allKeys.forEach(item => {
+                content += `LICENSE KEY: ${item.key}\n`;
+                if (item.customer !== 'N/A') {
+                    content += `Customer: ${item.customer}\n`;
+                }
+                content += `Date: ${item.date}\n`;
+                content += `-------------------------------------------\n\n`;
+            });
+
+            content += '\n⚠️ IMPORTANT:\n';
+            content += '1. Simpan fail ini dengan selamat\n';
+            content += '2. Jangan share keys ini dengan orang lain\n';
+            content += '3. Setiap key hanya untuk 1 pengguna\n';
+            content += '\nDireka oleh CikguAimeDotCom 🎓\n';
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `IDME_LICENSE_KEYS_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`✅ ${allKeys.length} keys downloaded successfully!`);
+        }
+
+        // Clear all keys
+        function clearKeys() {
+            if (allKeys.length === 0) {
+                alert('⚠️ Tiada keys untuk di-clear!');
+                return;
+            }
+
+            if (confirm(`⚠️ Adakah anda pasti untuk clear semua ${allKeys.length} keys?\n\nSila pastikan anda dah save/download keys dahulu!`)) {
+                allKeys = [];
+                sessionCount = 0;
+                updateDisplay();
+                alert('✅ Semua keys telah di-clear!');
+            }
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
