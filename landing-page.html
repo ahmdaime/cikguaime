@@ -726,7 +726,6 @@
 
         .file-upload-wrapper {
             position: relative;
-            overflow: hidden;
             border: 2px dashed #e0e0e0;
             border-radius: 10px;
             padding: 2rem;
@@ -742,7 +741,13 @@
 
         .file-upload-wrapper input[type="file"] {
             position: absolute;
-            left: -9999px;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 5;
         }
 
         .file-upload-label {
@@ -750,7 +755,7 @@
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
-            cursor: pointer;
+            pointer-events: none;
         }
 
         .file-upload-icon {
@@ -1136,6 +1141,37 @@
                         <p>Waktu bekerja: <strong>1-4 jam</strong> (average 2 jam). Weekend/cuti: 24 jam. Jika lebih 24 jam tak dapat, email support@cikguaime.com</p>
                     </div>
                 </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Ada group support atau community?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>YA!</strong> Join Telegram Support Group kami untuk:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>✅ Bantuan lebih pantas dari developer & community</li>
+                            <li>✅ Tips & tricks menggunakan extension</li>
+                            <li>✅ Update & features terkini</li>
+                            <li>✅ Share pengalaman dengan guru-guru lain</li>
+                        </ul>
+                        <a href="https://t.me/+w2Ri8NTkpyZhOTU9" target="_blank" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--primary); color: white; text-decoration: none; border-radius: 50px; font-weight: 600;">
+                            💬 Join Telegram Group Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telegram CTA Box -->
+            <div style="max-width: 600px; margin: 3rem auto; padding: 2rem; background: linear-gradient(135deg, #0088cc 0%, #005f8f 100%); border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+                <h3 style="color: white; margin-bottom: 1rem; font-size: 1.5rem;">Join Telegram Support Group!</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; line-height: 1.6;">
+                    Dapatkan bantuan lebih pantas, tips & tricks, update terkini, dan connect dengan 100+ guru yang guna IDME PBD Helper!
+                </p>
+                <a href="https://t.me/+w2Ri8NTkpyZhOTU9" target="_blank" style="display: inline-block; padding: 1rem 2rem; background: white; color: #0088cc; text-decoration: none; border-radius: 50px; font-weight: 700; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    📱 Join Sekarang (PERCUMA)
+                </a>
             </div>
         </div>
     </section>
@@ -1193,8 +1229,8 @@
 
                     <div class="form-group">
                         <label>Upload Resit Pembayaran *</label>
-                        <div class="file-upload-wrapper" onclick="document.getElementById('receiptFile').click()">
-                            <input type="file" id="receiptFile" name="receipt" accept="image/*,.pdf" required onchange="handleFileSelect(event)">
+                        <div class="file-upload-wrapper" id="fileUploadWrapper">
+                            <input type="file" id="receiptFile" name="receipt" accept="image/*,.pdf" required>
                             <label for="receiptFile" class="file-upload-label">
                                 <div class="file-upload-icon">📎</div>
                                 <div>
@@ -1219,8 +1255,17 @@
                 <div class="success-icon">✅</div>
                 <h3 style="color: var(--success); margin-bottom: 1rem;">Berjaya!</h3>
                 <p style="margin-bottom: 1rem;">Permohonan anda telah diterima.</p>
-                <p style="color: #666;">License key akan dihantar ke email anda dalam masa 1-4 jam (waktu bekerja).</p>
-                <button onclick="closeLicenseModal()" class="btn btn-primary" style="margin-top: 2rem;">Tutup</button>
+                <p style="color: #666; margin-bottom: 1.5rem;">License key akan dihantar ke email anda dalam masa 1-4 jam (waktu bekerja).</p>
+
+                <div style="background: #f0f7ff; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid var(--primary);">
+                    <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1.1rem;">📱 Join Telegram Support Group</h4>
+                    <p style="color: #666; margin-bottom: 1rem; font-size: 0.95rem;">Dapatkan bantuan lebih pantas, tips & tricks, dan update terkini!</p>
+                    <a href="https://t.me/+w2Ri8NTkpyZhOTU9" target="_blank" class="btn btn-secondary" style="display: inline-block; padding: 0.75rem 1.5rem; text-decoration: none;">
+                        💬 Join Telegram Group
+                    </a>
+                </div>
+
+                <button onclick="closeLicenseModal()" class="btn btn-primary" style="margin-top: 1rem;">Tutup</button>
             </div>
         </div>
     </div>
@@ -1245,6 +1290,7 @@
             <div class="footer-section">
                 <h3>Support</h3>
                 <ul>
+                    <li><a href="https://t.me/+w2Ri8NTkpyZhOTU9" target="_blank">💬 Telegram Support Group</a></li>
                     <li><a href="https://www.cikguaime.com">Website</a></li>
                     <li><a href="mailto:support@cikguaime.com">Email Support</a></li>
                     <li><a href="https://www.cikguaime.com/privacy-policy">Privacy Policy</a></li>
@@ -1357,48 +1403,60 @@
             }
         }
 
-        // Handle file selection
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
+        // Handle file selection - Improved version
+        function handleFileSelect(file) {
             const fileNameDisplay = document.getElementById('fileName');
             const fileError = document.getElementById('fileError');
-            const uploadWrapper = document.querySelector('.file-upload-wrapper');
+            const uploadWrapper = document.getElementById('fileUploadWrapper');
 
-            if (file) {
-                // Check file size (5MB max)
-                if (file.size > 5 * 1024 * 1024) {
-                    fileError.textContent = 'Saiz fail melebihi 5MB. Sila pilih fail yang lebih kecil.';
-                    fileError.classList.add('show');
-                    event.target.value = '';
-                    fileNameDisplay.textContent = '';
-                    uploadWrapper.style.borderColor = '#f44336';
-                    return;
-                }
+            if (!file) {
+                return;
+            }
 
-                // Check file type
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-                if (!allowedTypes.includes(file.type)) {
-                    fileError.textContent = 'Format fail tidak disokong. Sila upload JPG, PNG atau PDF sahaja.';
-                    fileError.classList.add('show');
-                    event.target.value = '';
-                    fileNameDisplay.textContent = '';
-                    uploadWrapper.style.borderColor = '#f44336';
-                    return;
-                }
+            // Check file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                fileError.textContent = 'Saiz fail melebihi 5MB. Sila pilih fail yang lebih kecil.';
+                fileError.classList.add('show');
+                document.getElementById('receiptFile').value = '';
+                fileNameDisplay.textContent = '';
+                uploadWrapper.style.borderColor = '#f44336';
+                return;
+            }
 
-                // File is valid
-                const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
-                fileNameDisplay.textContent = `✅ ${file.name} (${fileSize} MB)`;
-                fileError.classList.remove('show');
-                uploadWrapper.style.borderColor = '#4caf50';
+            // Check file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+            if (!allowedTypes.includes(file.type)) {
+                fileError.textContent = 'Format fail tidak disokong. Sila upload JPG, PNG atau PDF sahaja.';
+                fileError.classList.add('show');
+                document.getElementById('receiptFile').value = '';
+                fileNameDisplay.textContent = '';
+                uploadWrapper.style.borderColor = '#f44336';
+                return;
+            }
 
-                console.log('File selected successfully:', {
-                    name: file.name,
-                    size: fileSize + ' MB',
-                    type: file.type
+            // File is valid
+            const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+            fileNameDisplay.textContent = `✅ ${file.name} (${fileSize} MB)`;
+            fileError.classList.remove('show');
+            uploadWrapper.style.borderColor = '#4caf50';
+
+            console.log('File selected successfully:', {
+                name: file.name,
+                size: fileSize + ' MB',
+                type: file.type
+            });
+        }
+
+        // Setup file upload event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            const receiptFileInput = document.getElementById('receiptFile');
+            if (receiptFileInput) {
+                receiptFileInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    handleFileSelect(file);
                 });
             }
-        }
+        });
 
         // Submit form to Google Sheets
         async function submitLicenseForm(event) {
