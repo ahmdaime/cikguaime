@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ms">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
             -webkit-touch-callout: none;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
         /* Disable text selection */
         * {
             -webkit-user-select: none;
@@ -23,43 +24,57 @@
             -ms-user-select: none;
             user-select: none;
         }
-        
+
         /* Allow selection only for input fields */
-        input, textarea {
+        input,
+        textarea {
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
             user-select: text;
         }
-        
+
         .drag-item {
             cursor: grab;
             transition: all 0.3s ease;
         }
+
         .drag-item:active {
             cursor: grabbing;
         }
+
         .drop-zone {
             min-height: 40px;
             border: 2px dashed #cbd5e1;
             transition: all 0.3s ease;
         }
+
         .drop-zone.drag-over {
             border-color: #3b82f6;
             background-color: #eff6ff;
         }
+
         .drop-zone.filled {
             border-color: #10b981;
             background-color: #f0fdf4;
         }
+
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         /* Security overlay for developer tools detection */
         .security-overlay {
             position: fixed;
@@ -78,6 +93,7 @@
         }
     </style>
 </head>
+
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-full font-sans">
     <!-- Security Overlay -->
     <div id="securityOverlay" class="security-overlay">
@@ -98,9 +114,10 @@
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-indigo-800 mb-2">📚 Kuiz Interaktif Sejarah Tahun 5</h1>
             <p class="text-gray-600">Ujian komprehensif dengan soalan rawak untuk pembelajaran yang berkesan</p>
-            
+
             <!-- Professional Watermark -->
-            <div class="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg shadow-sm">
+            <div
+                class="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg shadow-sm">
                 <div class="flex items-center justify-center space-x-3">
                     <div class="text-2xl">👩‍🏫</div>
                     <div class="text-center">
@@ -108,8 +125,8 @@
                         <div class="flex items-center space-x-2">
                             <span class="text-lg font-bold text-purple-900">CikguAime</span>
                             <span class="text-purple-600">•</span>
-                            <a href="https://www.cikguaime.com/" target="_blank" rel="noopener noreferrer" 
-                               class="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-300">
+                            <a href="https://www.cikguaime.com/" target="_blank" rel="noopener noreferrer"
+                                class="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-300">
                                 www.cikguaime.com
                             </a>
                         </div>
@@ -124,24 +141,31 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Maklumat Murid</h2>
                 <p class="text-gray-600 mb-6">Sila isi maklumat anda sebelum memulakan kuiz</p>
             </div>
-            
+
             <div class="max-w-md mx-auto space-y-6">
                 <div>
                     <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Nama Penuh:</label>
-                    <input type="text" id="studentName" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none" placeholder="Masukkan nama penuh anda">
+                    <input type="text" id="studentName"
+                        class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                        placeholder="Masukkan nama penuh anda">
                 </div>
-                
+
                 <div>
                     <label for="studentClass" class="block text-sm font-medium text-gray-700 mb-2">Kelas:</label>
-                    <input type="text" id="studentClass" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none" placeholder="Contoh: 5 Bestari">
+                    <input type="text" id="studentClass"
+                        class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                        placeholder="Contoh: 5 Bestari">
                 </div>
-                
+
                 <div>
                     <label for="studentSchool" class="block text-sm font-medium text-gray-700 mb-2">Sekolah:</label>
-                    <input type="text" id="studentSchool" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none" placeholder="Nama sekolah anda">
+                    <input type="text" id="studentSchool"
+                        class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                        placeholder="Nama sekolah anda">
                 </div>
-                
-                <button onclick="submitStudentInfo()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+
+                <button onclick="submitStudentInfo()"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Teruskan ke Menu Kuiz
                 </button>
             </div>
@@ -151,34 +175,39 @@
         <div id="mainMenu" class="hidden bg-white rounded-xl shadow-lg p-8 text-center">
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Pilih Bahagian Kuiz</h2>
-                <p class="text-gray-600 mb-6">Setiap bahagian mempunyai soalan yang berbeza dan akan diacak secara rawak</p>
+                <p class="text-gray-600 mb-6">Setiap bahagian mempunyai soalan yang berbeza dan akan diacak secara rawak
+                </p>
                 <div class="bg-blue-50 p-4 rounded-lg mb-6">
                     <p class="text-sm text-blue-800"><strong>Jumlah Markah:</strong> 50 markah (A: 30, B: 10, C: 10)</p>
                 </div>
             </div>
-            
+
             <div class="grid md:grid-cols-3 gap-6 mb-6">
-                <button onclick="startSection('A')" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+                <button onclick="startSection('A')"
+                    class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
                     <div class="text-3xl mb-2">📝</div>
                     <div class="text-xl mb-2">Bahagian A</div>
                     <div class="text-sm opacity-90">30 Soalan Objektif</div>
                 </button>
-                
-                <button onclick="startSection('B')" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+
+                <button onclick="startSection('B')"
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
                     <div class="text-3xl mb-2">📋</div>
                     <div class="text-xl mb-2">Bahagian B</div>
                     <div class="text-sm opacity-90">2 Soalan Struktur</div>
                 </button>
-                
-                <button onclick="startSection('C')" class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
+
+                <button onclick="startSection('C')"
+                    class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-6 px-6 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg">
                     <div class="text-3xl mb-2">✍️</div>
                     <div class="text-xl mb-2">Bahagian C</div>
                     <div class="text-sm opacity-90">4 Soalan Jawapan Pendek</div>
                 </button>
             </div>
-            
+
             <div class="text-center">
-                <button onclick="showLeaderboard()" class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+                <button onclick="showLeaderboard()"
+                    class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
                     🏆 Papan Pendahulu
                 </button>
             </div>
@@ -193,7 +222,9 @@
                     <span id="progressText" class="text-sm font-medium text-gray-700">1 / 30</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    <div id="progressBar"
+                        class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-500"
+                        style="width: 0%"></div>
                 </div>
             </div>
 
@@ -204,15 +235,18 @@
 
             <!-- Navigation -->
             <div class="flex justify-between items-center">
-                <button id="prevBtn" onclick="previousQuestion()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button id="prevBtn" onclick="previousQuestion()"
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                     ← Sebelum
                 </button>
-                
-                <button id="nextBtn" onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+
+                <button id="nextBtn" onclick="nextQuestion()"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Seterusnya →
                 </button>
-                
-                <button id="submitBtn" onclick="submitQuiz()" class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+
+                <button id="submitBtn" onclick="submitQuiz()"
+                    class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Hantar Jawapan
                 </button>
             </div>
@@ -225,32 +259,37 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Tahniah!</h2>
                 <p class="text-gray-600">Anda telah selesai menjawab kuiz</p>
             </div>
-            
+
             <div id="scoreDisplay" class="text-4xl font-bold text-indigo-600 mb-6"></div>
-            
+
             <div id="navigationButtons" class="flex justify-center gap-4 mb-6">
-                <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                <button onclick="restartQuiz()"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Cuba Lagi
                 </button>
-                <button onclick="backToMenu()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                <button onclick="backToMenu()"
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Menu Utama
                 </button>
             </div>
-            
+
             <div id="nextSectionButton" class="hidden mb-6">
-                <button onclick="goToNextSection()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-300 text-lg">
+                <button onclick="goToNextSection()"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-300 text-lg">
                     <span id="nextSectionText">Teruskan ke Bahagian B</span> →
                 </button>
             </div>
-            
+
             <div class="flex justify-center gap-4">
                 <div id="reviewMistakes" class="hidden">
-                    <button onclick="showMistakeReview()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    <button onclick="showMistakeReview()"
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                         📋 Semak Kesilapan
                     </button>
                 </div>
                 <div id="showTeacherAnswers" class="hidden">
-                    <button onclick="showTeacherAnswers()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    <button onclick="showTeacherAnswers()"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                         👩‍🏫 Jawapan Guru
                     </button>
                 </div>
@@ -263,11 +302,12 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">📋 Semakan Kesilapan</h2>
                 <p class="text-gray-600">Semak jawapan yang salah untuk pembelajaran yang lebih baik</p>
             </div>
-            
+
             <div id="mistakesList" class="space-y-6 mb-6"></div>
-            
+
             <div class="text-center">
-                <button onclick="closeMistakeReview()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                <button onclick="closeMistakeReview()"
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Tutup
                 </button>
             </div>
@@ -279,11 +319,12 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">👩‍🏫 Jawapan Guru - Bahagian C</h2>
                 <p class="text-gray-600">Rujukan jawapan lengkap untuk pembelajaran tambahan</p>
             </div>
-            
+
             <div id="teacherAnswersList" class="space-y-6 mb-6"></div>
-            
+
             <div class="text-center">
-                <button onclick="closeTeacherAnswers()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                <button onclick="closeTeacherAnswers()"
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Tutup
                 </button>
             </div>
@@ -295,26 +336,28 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">🏆 Papan Pendahulu</h2>
                 <p class="text-gray-600">Kedudukan terbaik murid-murid</p>
             </div>
-            
+
             <div id="leaderboardList" class="space-y-3 mb-6"></div>
-            
+
             <div class="text-center">
-                <button onclick="closeLeaderboard()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                <button onclick="closeLeaderboard()"
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
                     Tutup
                 </button>
-                <button onclick="refreshLeaderboard()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 ml-3">
+                <button onclick="refreshLeaderboard()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 ml-3">
                     🔄 Muat Semula
                 </button>
             </div>
         </div>
-        
+
         <!-- Footer Watermark -->
         <footer class="mt-12 text-center">
             <div class="inline-block p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                 <div class="flex items-center space-x-2 text-sm text-gray-600">
                     <span>💻 Powered by</span>
-                    <a href="https://www.cikguaime.com/" target="_blank" rel="noopener noreferrer" 
-                       class="font-semibold text-purple-600 hover:text-purple-800 transition-colors duration-300">
+                    <a href="https://www.cikguaime.com/" target="_blank" rel="noopener noreferrer"
+                        class="font-semibold text-purple-600 hover:text-purple-800 transition-colors duration-300">
                         CikguAime
                     </a>
                     <span>|</span>
@@ -326,51 +369,51 @@
 
     <script>
         // 🔒 SISTEM KESELAMATAN KUIZ - CIKGUAIME 🔒
-        
+
         // Disable right-click context menu
-        document.addEventListener('contextmenu', function(e) {
+        document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
             showSecurityWarning('Klik kanan dilarang semasa kuiz!');
             return false;
         });
-        
+
         // Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+A, Ctrl+C, Ctrl+V
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // F12 - Developer Tools
             if (e.keyCode === 123) {
                 e.preventDefault();
                 showSecurityWarning('Developer tools dilarang!');
                 return false;
             }
-            
+
             // Ctrl+Shift+I - Developer Tools
             if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
                 e.preventDefault();
                 showSecurityWarning('Developer tools dilarang!');
                 return false;
             }
-            
+
             // Ctrl+Shift+C - Element Inspector
             if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
                 e.preventDefault();
                 showSecurityWarning('Element inspector dilarang!');
                 return false;
             }
-            
+
             // Ctrl+U - View Source
             if (e.ctrlKey && e.keyCode === 85) {
                 e.preventDefault();
                 showSecurityWarning('View source dilarang!');
                 return false;
             }
-            
+
             // Ctrl+S - Save Page
             if (e.ctrlKey && e.keyCode === 83) {
                 e.preventDefault();
                 showSecurityWarning('Menyimpan halaman dilarang!');
                 return false;
             }
-            
+
             // Ctrl+A - Select All (except in input fields)
             if (e.ctrlKey && e.keyCode === 65) {
                 if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
@@ -379,7 +422,7 @@
                     return false;
                 }
             }
-            
+
             // Ctrl+C - Copy (except in input fields)
             if (e.ctrlKey && e.keyCode === 67) {
                 if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
@@ -388,7 +431,7 @@
                     return false;
                 }
             }
-            
+
             // Ctrl+V - Paste (except in input fields)
             if (e.ctrlKey && e.keyCode === 86) {
                 if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
@@ -397,7 +440,7 @@
                     return false;
                 }
             }
-            
+
             // Ctrl+Shift+J - Console
             if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
                 e.preventDefault();
@@ -405,22 +448,22 @@
                 return false;
             }
         });
-        
+
         // Detect developer tools opening (more accurate detection)
         let devtools = {
             open: false,
             orientation: null
         };
-        
+
         // More conservative threshold to avoid false positives
         const threshold = 200;
-        
-        setInterval(function() {
+
+        setInterval(function () {
             // Only check if window is focused to avoid false positives
             if (document.hasFocus()) {
                 const heightDiff = window.outerHeight - window.innerHeight;
                 const widthDiff = window.outerWidth - window.innerWidth;
-                
+
                 // More strict detection - both dimensions must exceed threshold
                 if (heightDiff > threshold && widthDiff > threshold) {
                     if (!devtools.open) {
@@ -435,43 +478,54 @@
                 }
             }
         }, 1000); // Less frequent checking
-        
+
+        // Detect console usage
         // Detect console usage
         let consoleWarningShown = false;
-        const originalConsole = window.console;
-        
+        // Save original methods individually to avoid reference issues
+        const originalConsoleMethods = {
+            log: window.console.log,
+            warn: window.console.warn,
+            error: window.console.error,
+            info: window.console.info,
+            debug: window.console.debug
+        };
+
         // Override console methods
         ['log', 'warn', 'error', 'info', 'debug'].forEach(method => {
-            window.console[method] = function() {
+            window.console[method] = function () {
                 if (!consoleWarningShown) {
                     consoleWarningShown = true;
                     showSecurityWarning('Console usage dikesan! Kuiz mungkin tidak sah.');
                 }
-                return originalConsole[method].apply(this, arguments);
+                // Use the saved original method
+                if (originalConsoleMethods[method]) {
+                    return originalConsoleMethods[method].apply(window.console, arguments);
+                }
             };
         });
-        
+
         // Disable drag and drop (except for quiz drag items)
-        document.addEventListener('dragstart', function(e) {
+        document.addEventListener('dragstart', function (e) {
             if (!e.target.classList.contains('drag-item')) {
                 e.preventDefault();
                 return false;
             }
         });
-        
+
         // Disable print
-        window.addEventListener('beforeprint', function(e) {
+        window.addEventListener('beforeprint', function (e) {
             e.preventDefault();
             showSecurityWarning('Print dilarang semasa kuiz!');
             return false;
         });
-        
+
         // Show security warning
         function showSecurityWarning(message) {
             // Remove existing warnings
             const existingWarnings = document.querySelectorAll('.security-warning');
             existingWarnings.forEach(warning => warning.remove());
-            
+
             const warning = document.createElement('div');
             warning.className = 'security-warning fixed top-4 right-4 bg-red-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm';
             warning.innerHTML = `
@@ -483,9 +537,9 @@
                     </div>
                 </div>
             `;
-            
+
             document.body.appendChild(warning);
-            
+
             // Auto remove after 5 seconds
             setTimeout(() => {
                 if (warning.parentNode) {
@@ -493,7 +547,7 @@
                 }
             }, 5000);
         }
-        
+
         // Show security overlay
         function showSecurityOverlay() {
             const overlay = document.getElementById('securityOverlay');
@@ -501,7 +555,7 @@
                 overlay.style.display = 'flex';
             }
         }
-        
+
         // Hide security overlay
         function hideSecurityOverlay() {
             const overlay = document.getElementById('securityOverlay');
@@ -509,11 +563,11 @@
                 overlay.style.display = 'none';
             }
         }
-        
+
         // Blur page when window loses focus (tab switching detection)
         let isPageVisible = true;
-        
-        document.addEventListener('visibilitychange', function() {
+
+        document.addEventListener('visibilitychange', function () {
             if (document.hidden) {
                 isPageVisible = false;
                 showSecurityWarning('Tab switching dikesan! Fokus pada kuiz sahaja.');
@@ -521,17 +575,17 @@
                 isPageVisible = true;
             }
         });
-        
+
         // Detect window focus/blur
-        window.addEventListener('blur', function() {
+        window.addEventListener('blur', function () {
             showSecurityWarning('Window focus hilang! Fokus pada kuiz sahaja.');
         });
-        
+
         // Obfuscate quiz data in memory
         function obfuscateData(data) {
             return btoa(JSON.stringify(data));
         }
-        
+
         function deobfuscateData(data) {
             try {
                 return JSON.parse(atob(data));
@@ -539,7 +593,7 @@
                 return null;
             }
         }
-        
+
         // 🚨 TUKAR URL INI SAHAJA! 🚨
         // Gantikan dengan URL Google Apps Script anda
         const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzbG7SEOT5H4beUdzObqi_nnUlnFrAWvx2oNKJkoxqWSDTTvIT6S7fERdnTDd7TqAE/exec';
@@ -796,15 +850,15 @@
                     keywords: {
                         'Perpaduan/Harmoni': {
                             weight: 1,
-                            words: ['perpaduan','bersatu','harmoni','muafakat','kebersamaan','integrasi','kohesi sosial','kerjasama','saling memahami']
+                            words: ['perpaduan', 'bersatu', 'harmoni', 'muafakat', 'kebersamaan', 'integrasi', 'kohesi sosial', 'kerjasama', 'saling memahami']
                         },
                         'Elak Konflik/Salah faham': {
                             weight: 1,
-                            words: ['elak','mengelakkan','menghindari','kurangkan','mencegah','konflik','pergaduhan','ketegangan','salah faham','prasangka']
+                            words: ['elak', 'mengelakkan', 'menghindari', 'kurangkan', 'mencegah', 'konflik', 'pergaduhan', 'ketegangan', 'salah faham', 'prasangka']
                         },
                         'Nilai Murni/Rukun Negara': {
                             weight: 1,
-                            words: ['nilai murni','adab','kesopanan','kesusilaan','toleransi','hormat-menghormati','empati','rukun negara','kesopanan dan kesusilaan']
+                            words: ['nilai murni', 'adab', 'kesopanan', 'kesusilaan', 'toleransi', 'hormat-menghormati', 'empati', 'rukun negara', 'kesopanan dan kesusilaan']
                         }
                     },
                     scoring: 'weighted',
@@ -925,16 +979,16 @@
             const name = document.getElementById('studentName').value.trim();
             const studentClass = document.getElementById('studentClass').value.trim();
             const school = document.getElementById('studentSchool').value.trim();
-            
+
             if (!name || !studentClass || !school) {
                 showInlineMessage('Sila isi semua maklumat yang diperlukan.', 'error');
                 return;
             }
-            
+
             studentInfo.name = name;
             studentInfo.class = studentClass;
             studentInfo.school = school;
-            
+
             document.getElementById('studentInfoForm').classList.add('hidden');
             document.getElementById('mainMenu').classList.remove('hidden');
         }
@@ -944,26 +998,25 @@
             // Remove existing messages
             const existingMessages = document.querySelectorAll('.inline-message');
             existingMessages.forEach(msg => msg.remove());
-            
+
             const messageDiv = document.createElement('div');
-            messageDiv.className = `inline-message mt-4 p-4 rounded-lg border ${
-                type === 'error' ? 'bg-red-100 border-red-400 text-red-700' :
+            messageDiv.className = `inline-message mt-4 p-4 rounded-lg border ${type === 'error' ? 'bg-red-100 border-red-400 text-red-700' :
                 type === 'success' ? 'bg-green-100 border-green-400 text-green-700' :
-                'bg-blue-100 border-blue-400 text-blue-700'
-            }`;
+                    'bg-blue-100 border-blue-400 text-blue-700'
+                }`;
             messageDiv.innerHTML = `
                 <div class="flex items-center">
                     <div class="text-2xl mr-3">${type === 'error' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️'}</div>
                     <p>${message}</p>
                 </div>
             `;
-            
+
             // Insert after the form
             const form = document.getElementById('studentInfoForm');
             if (form && !form.classList.contains('hidden')) {
                 form.appendChild(messageDiv);
             }
-            
+
             // Auto remove after 5 seconds
             setTimeout(() => {
                 if (messageDiv.parentNode) {
@@ -986,34 +1039,34 @@
         function startSection(section) {
             currentSection = section;
             currentQuestions = shuffleArray([...quizData[section]]);
-            
+
             // Shuffle options for multiple choice questions and matching pairs
             currentQuestions.forEach(q => {
                 if (q.type === 'multiple' || q.type === 'drag') {
                     const originalOptions = [...q.options];
                     const shuffledOptions = shuffleArray(originalOptions);
-                    
+
                     // Update correct answers indices
                     if (q.correct) {
-                        q.correct = q.correct.map(correctIndex => 
+                        q.correct = q.correct.map(correctIndex =>
                             shuffledOptions.indexOf(originalOptions[correctIndex])
                         );
                     }
-                    
+
                     q.options = shuffledOptions;
                 } else if (q.type === 'matching') {
                     // Shuffle the pairs for matching questions
                     q.pairs = shuffleArray([...q.pairs]);
                 }
             });
-            
+
             currentQuestionIndex = 0;
             userAnswers = [];
             score = 0;
-            
+
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('quizContainer').classList.remove('hidden');
-            
+
             updateProgress();
             displayQuestion();
         }
@@ -1029,12 +1082,12 @@
         function displayQuestion() {
             const question = currentQuestions[currentQuestionIndex];
             const questionContent = document.getElementById('questionContent');
-            
+
             let html = `<h3 class="text-xl font-bold text-gray-800 mb-6">Soalan ${currentQuestionIndex + 1}</h3>`;
-            
+
             if (question.type === 'multiple') {
                 html += `<p class="text-lg text-gray-700 mb-6">${question.question}</p>`;
-                
+
                 // Add image if exists
                 if (question.imageUrl) {
                     html += `
@@ -1071,16 +1124,16 @@
                         </div>
                     `;
                 }
-                
+
                 if (question.multiSelect) {
                     html += `<p class="text-sm text-blue-600 mb-4">💡 Pilih lebih daripada satu jawapan</p>`;
                 }
-                
+
                 html += '<div class="space-y-3">';
                 question.options.forEach((option, index) => {
                     const inputType = question.multiSelect ? 'checkbox' : 'radio';
                     const inputName = question.multiSelect ? `q${currentQuestionIndex}_${index}` : `q${currentQuestionIndex}`;
-                    
+
                     html += `
                         <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 cursor-pointer transition-all duration-300">
                             <input type="${inputType}" name="${inputName}" value="${index}" class="mr-4 w-5 h-5 text-indigo-600">
@@ -1089,7 +1142,7 @@
                     `;
                 });
                 html += '</div>';
-                
+
             } else if (question.type === 'truefalse') {
                 html += `<p class="text-lg text-gray-700 mb-6">${question.question}</p>`;
                 html += '<div class="space-y-4">';
@@ -1104,11 +1157,11 @@
                     </label>
                 `;
                 html += '</div>';
-                
+
             } else if (question.type === 'drag') {
                 html += `<p class="text-lg text-gray-700 mb-6">${question.question}</p>`;
                 html += `<p class="text-sm text-blue-600 mb-4">💡 Seret jawapan ke tempat yang betul</p>`;
-                
+
                 // Create blanks
                 html += '<div class="mb-6 space-y-4">';
                 question.blanks.forEach((blank, index) => {
@@ -1122,7 +1175,7 @@
                     `;
                 });
                 html += '</div>';
-                
+
                 // Create draggable options
                 html += '<div class="grid grid-cols-2 gap-3">';
                 question.options.forEach((option, index) => {
@@ -1133,7 +1186,7 @@
                     `;
                 });
                 html += '</div>';
-                
+
             } else if (question.type === 'shortanswer') {
                 html += `<p class="text-lg text-gray-700 mb-4">${question.question}</p>`;
                 html += `<p class="text-sm text-blue-600 mb-4">📝 Markah: ${question.points}</p>`;
@@ -1150,7 +1203,7 @@
                 html += `<p class="text-sm text-blue-600 mb-4">📝 Markah: ${question.points}</p>`;
                 html += `<p class="text-sm text-gray-600 mb-4"><strong>Panduan:</strong> ${question.guidelines}</p>`;
                 html += `<p class="text-sm text-blue-600 mb-6">💡 Seret jawapan yang betul ke tempat kosong</p>`;
-                
+
                 // Display blanks
                 html += '<div class="space-y-4 mb-6">';
                 question.blanks.forEach((blank, index) => {
@@ -1162,7 +1215,7 @@
                     `;
                 });
                 html += '</div>';
-                
+
                 // Display options
                 html += '<div class="grid grid-cols-2 md:grid-cols-3 gap-3">';
                 question.options.forEach((option, index) => {
@@ -1173,15 +1226,15 @@
                     `;
                 });
                 html += '</div>';
-                
+
             } else if (question.type === 'matching') {
                 html += `<p class="text-lg text-gray-700 mb-4">${question.question}</p>`;
                 html += `<p class="text-sm text-blue-600 mb-4">📝 Markah: ${question.points}</p>`;
                 html += `<p class="text-sm text-gray-600 mb-4"><strong>Panduan:</strong> ${question.guidelines}</p>`;
                 html += `<p class="text-sm text-blue-600 mb-6">💡 Seret item dari sebelah kiri ke kotak yang sesuai di sebelah kanan</p>`;
-                
+
                 html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-8">';
-                
+
                 // Left column - draggable items
                 html += '<div class="space-y-3">';
                 html += '<h4 class="font-bold text-gray-800 mb-4">Warna/Lambang:</h4>';
@@ -1193,7 +1246,7 @@
                     `;
                 });
                 html += '</div>';
-                
+
                 // Right column - drop zones
                 html += '<div class="space-y-3">';
                 html += '<h4 class="font-bold text-gray-800 mb-4">Makna:</h4>';
@@ -1212,9 +1265,9 @@
                 html += '</div>';
                 html += '</div>';
             }
-            
+
             questionContent.innerHTML = html;
-            
+
             // Setup drag and drop for drag questions
             if (question.type === 'drag') {
                 setupDragAndDrop();
@@ -1223,10 +1276,10 @@
             } else if (question.type === 'fillblanks') {
                 setupFillBlanksDragAndDrop();
             }
-            
+
             // Load previous answer if exists
             loadPreviousAnswer();
-            
+
             // Update navigation buttons
             updateNavigationButtons();
         }
@@ -1235,28 +1288,28 @@
         function setupDragAndDrop() {
             const dragItems = document.querySelectorAll('.drag-item');
             const dropZones = document.querySelectorAll('.drop-zone');
-            
+
             dragItems.forEach(item => {
                 item.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', e.target.dataset.option);
                     e.target.style.opacity = '0.5';
                 });
-                
+
                 item.addEventListener('dragend', (e) => {
                     e.target.style.opacity = '1';
                 });
             });
-            
+
             dropZones.forEach(zone => {
                 zone.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     zone.classList.add('drag-over');
                 });
-                
+
                 zone.addEventListener('dragleave', () => {
                     zone.classList.remove('drag-over');
                 });
-                
+
                 zone.addEventListener('drop', (e) => {
                     e.preventDefault();
                     const data = e.dataTransfer.getData('text/plain');
@@ -1272,28 +1325,28 @@
         function setupMatchingDragAndDrop() {
             const dragItems = document.querySelectorAll('.drag-item');
             const dropZones = document.querySelectorAll('.drop-zone-match');
-            
+
             dragItems.forEach(item => {
                 item.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', e.target.dataset.match);
                     e.target.style.opacity = '0.5';
                 });
-                
+
                 item.addEventListener('dragend', (e) => {
                     e.target.style.opacity = '1';
                 });
             });
-            
+
             dropZones.forEach(zone => {
                 zone.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     zone.classList.add('drag-over');
                 });
-                
+
                 zone.addEventListener('dragleave', () => {
                     zone.classList.remove('drag-over');
                 });
-                
+
                 zone.addEventListener('drop', (e) => {
                     e.preventDefault();
                     const data = e.dataTransfer.getData('text/plain');
@@ -1309,28 +1362,28 @@
         function setupFillBlanksDragAndDrop() {
             const dragItems = document.querySelectorAll('.drag-item');
             const dropZones = document.querySelectorAll('.drop-zone-blank');
-            
+
             dragItems.forEach(item => {
                 item.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', e.target.dataset.option);
                     e.target.style.opacity = '0.5';
                 });
-                
+
                 item.addEventListener('dragend', (e) => {
                     e.target.style.opacity = '1';
                 });
             });
-            
+
             dropZones.forEach(zone => {
                 zone.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     zone.classList.add('drag-over');
                 });
-                
+
                 zone.addEventListener('dragleave', () => {
                     zone.classList.remove('drag-over');
                 });
-                
+
                 zone.addEventListener('drop', (e) => {
                     e.preventDefault();
                     const data = e.dataTransfer.getData('text/plain');
@@ -1346,9 +1399,9 @@
         function loadPreviousAnswer() {
             const answer = userAnswers[currentQuestionIndex];
             if (!answer) return;
-            
+
             const question = currentQuestions[currentQuestionIndex];
-            
+
             if (question.type === 'multiple') {
                 if (question.multiSelect) {
                     answer.forEach(index => {
@@ -1403,7 +1456,7 @@
         function saveCurrentAnswer() {
             const question = currentQuestions[currentQuestionIndex];
             let answer = null;
-            
+
             if (question.type === 'multiple') {
                 if (question.multiSelect) {
                     answer = [];
@@ -1446,7 +1499,7 @@
                     }
                 });
             }
-            
+
             userAnswers[currentQuestionIndex] = answer;
         }
 
@@ -1455,9 +1508,9 @@
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             const submitBtn = document.getElementById('submitBtn');
-            
+
             prevBtn.disabled = currentQuestionIndex === 0;
-            
+
             if (currentQuestionIndex === currentQuestions.length - 1) {
                 nextBtn.classList.add('hidden');
                 submitBtn.classList.remove('hidden');
@@ -1497,13 +1550,13 @@
         function calculateScore() {
             score = 0;
             mistakes = []; // Reset mistakes for current section
-            
+
             currentQuestions.forEach((question, index) => {
                 const userAnswer = userAnswers[index];
                 let isCorrect = false;
                 let correctAnswer = '';
                 let userAnswerText = '';
-                
+
                 if (question.type === 'multiple') {
                     if (question.multiSelect) {
                         if (userAnswer && userAnswer.length === question.correct.length) {
@@ -1562,12 +1615,12 @@
                 } else if (question.type === 'shortanswer') {
                     if (userAnswer && userAnswer.trim()) {
                         const answerResult = scoreShortAnswer(question, userAnswer);
-                        
+
                         // Handle both simple scoring (returns number) and AI scoring (returns object)
                         if (typeof answerResult === 'object') {
                             score += answerResult.score;
                             isCorrect = answerResult.score === question.points;
-                            
+
                             // Store AI analysis for display
                             if (!window.aiAnalysis) window.aiAnalysis = {};
                             window.aiAnalysis[index] = answerResult;
@@ -1579,7 +1632,7 @@
                     correctAnswer = 'Jawapan terbuka (semak dengan guru)';
                     userAnswerText = userAnswer || 'Tiada jawapan';
                 }
-                
+
                 // Track mistakes
                 if (!isCorrect) {
                     mistakes.push({
@@ -1599,44 +1652,44 @@
                 .replace(/[^\w\s]/g, ' ')
                 .replace(/\s+/g, ' ')
                 .trim();
-            
+
             if (question.scoring === 'simple') {
                 // Simple keyword matching for question (a)
-                const foundKeywords = question.keywords.filter(keyword => 
+                const foundKeywords = question.keywords.filter(keyword =>
                     normalizedAnswer.includes(keyword.toLowerCase())
                 );
-                return foundKeywords.length >= 2 ? question.points : 
-                       foundKeywords.length === 1 ? Math.floor(question.points / 2) : 0;
+                return foundKeywords.length >= 2 ? question.points :
+                    foundKeywords.length === 1 ? Math.floor(question.points / 2) : 0;
             } else if (question.scoring === 'weighted') {
                 // Advanced AI scoring for KBAT questions
                 return scoreKBATAnswer(question, normalizedAnswer, userAnswer);
             } else if (question.scoring === 'countries') {
                 // Country matching for question 2(a)
-                const foundCountries = question.keywords.filter(country => 
+                const foundCountries = question.keywords.filter(country =>
                     normalizedAnswer.includes(country.toLowerCase())
                 );
-                return foundCountries.length >= 2 ? question.points : 
-                       foundCountries.length === 1 ? Math.floor(question.points / 2) : 0;
+                return foundCountries.length >= 2 ? question.points :
+                    foundCountries.length === 1 ? Math.floor(question.points / 2) : 0;
             }
-            
+
             return 0;
         }
 
         // Advanced KBAT Answer Scoring with AI-like analysis
         function scoreKBATAnswer(question, normalizedAnswer, originalAnswer) {
             const maxScore = question.points;
-            
+
             // Check minimum answer length
             const wordCount = originalAnswer.trim().split(/\s+/).length;
             if (wordCount < 3) {
-                return { 
-                    score: 0, 
+                return {
+                    score: 0,
                     status: "❌",
                     feedback: "Jawapan terlalu pendek. Sila berikan penjelasan yang lebih lengkap.",
                     analysis: generateKBATAnalysis(question, originalAnswer, 0, maxScore)
                 };
             }
-            
+
             // Use intelligent KBAT evaluation
             return evaluateKBATAnswer(question, originalAnswer, normalizedAnswer);
         }
@@ -1644,7 +1697,7 @@
         // Intelligent KBAT Answer Evaluation
         function evaluateKBATAnswer(question, originalAnswer, normalizedAnswer) {
             const maxScore = question.points;
-            
+
             // Define reference answers and scoring patterns for each question
             const kbatPatterns = {
                 // Question 1(b): Why respect other religions?
@@ -1688,39 +1741,39 @@
                     ]
                 }
             };
-            
+
             // Find matching pattern based on question content
             let matchedPattern = null;
             const questionLower = question.question.toLowerCase();
-            
+
             for (const [key, pattern] of Object.entries(kbatPatterns)) {
                 if (questionLower.includes(key)) {
                     matchedPattern = pattern;
                     break;
                 }
             }
-            
+
             if (!matchedPattern) {
                 // Fallback to original keyword matching
                 return fallbackKBATScoring(question, originalAnswer, normalizedAnswer);
             }
-            
+
             // Evaluate answer against patterns
             let totalScore = 0;
             let foundConcepts = [];
             let missedConcepts = [];
-            
+
             matchedPattern.patterns.forEach(pattern => {
                 let conceptFound = false;
                 let foundInThisPattern = [];
-                
+
                 pattern.concepts.forEach(concept => {
                     if (normalizedAnswer.includes(concept.toLowerCase())) {
                         conceptFound = true;
                         foundInThisPattern.push(concept);
                     }
                 });
-                
+
                 if (conceptFound) {
                     totalScore += pattern.weight;
                     foundConcepts.push({
@@ -1731,11 +1784,11 @@
                     missedConcepts.push(pattern.description);
                 }
             });
-            
+
             // Determine status and feedback
             let status, feedback;
             const percentage = (totalScore / maxScore) * 100;
-            
+
             if (percentage >= 80) {
                 status = "✅";
                 feedback = `Jawapan cemerlang! Menunjukkan kefahaman yang mendalam tentang topik ini.`;
@@ -1746,7 +1799,7 @@
                 status = "❌";
                 feedback = `Jawapan perlu diperbaiki. Fokus pada: ${missedConcepts.slice(0, 2).join(', ')}.`;
             }
-            
+
             return {
                 score: Math.min(totalScore, maxScore),
                 status: status,
@@ -1754,19 +1807,19 @@
                 analysis: generateKBATAnalysis(question, originalAnswer, totalScore, maxScore, foundConcepts, missedConcepts)
             };
         }
-        
+
         // Fallback scoring for questions without specific patterns
         function fallbackKBATScoring(question, originalAnswer, normalizedAnswer) {
             let totalScore = 0;
             const maxScore = question.points;
             let feedback = [];
-            
+
             // Use original keyword matching as fallback
             if (question.keywords && typeof question.keywords === 'object') {
                 Object.keys(question.keywords).forEach(category => {
                     const categoryData = question.keywords[category];
                     let categoryFound = false;
-                    
+
                     if (categoryData.words) {
                         categoryData.words.forEach(word => {
                             if (normalizedAnswer.includes(word.toLowerCase())) {
@@ -1774,7 +1827,7 @@
                             }
                         });
                     }
-                    
+
                     if (categoryFound) {
                         totalScore += categoryData.weight || 1;
                         feedback.push(`✓ ${category}`);
@@ -1783,10 +1836,10 @@
                     }
                 });
             }
-            
+
             const percentage = (totalScore / maxScore) * 100;
             let status = percentage >= 80 ? "✅" : percentage >= 50 ? "⚠️" : "❌";
-            
+
             return {
                 score: Math.min(totalScore, maxScore),
                 status: status,
@@ -1799,7 +1852,7 @@
         function generateKBATAnalysis(question, answer, score, maxScore, foundConcepts = [], missedConcepts = []) {
             const percentage = Math.round((score / maxScore) * 100);
             const wordCount = answer.trim().split(/\s+/).length;
-            
+
             let analysis = `
                 <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h6 class="font-bold text-blue-800 mb-3">🤖 Analisis Penilai Automatik KBAT</h6>
@@ -1815,7 +1868,7 @@
                             </div>
                         </div>
             `;
-            
+
             if (foundConcepts.length > 0) {
                 analysis += `
                         <div class="mt-3">
@@ -1827,7 +1880,7 @@
                 });
                 analysis += `</ul></div>`;
             }
-            
+
             if (missedConcepts.length > 0) {
                 analysis += `
                         <div class="mt-3">
@@ -1839,12 +1892,12 @@
                 });
                 analysis += `</ul></div>`;
             }
-            
+
             analysis += `
                     </div>
                 </div>
             `;
-            
+
             return analysis;
         }
 
@@ -1855,17 +1908,17 @@
             if (!completedSections.includes(currentSection)) {
                 completedSections.push(currentSection);
             }
-            
+
             document.getElementById('quizContainer').classList.add('hidden');
             document.getElementById('resultsContainer').classList.remove('hidden');
-            
+
             const scoreDisplay = document.getElementById('scoreDisplay');
-            
+
             // Calculate total score across all completed sections
             totalScore = sectionScores.A.score + sectionScores.B.score + sectionScores.C.score;
             maxScore = sectionScores.A.max + sectionScores.B.max + sectionScores.C.max;
             const percentage = Math.round((totalScore / maxScore) * 100);
-            
+
             scoreDisplay.innerHTML = `
                 <div class="bg-blue-50 p-6 rounded-lg mb-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Maklumat Murid</h3>
@@ -1894,26 +1947,26 @@
                     <div class="bg-green-50 p-4 rounded-lg text-center ${completedSections.includes('A') ? '' : 'opacity-50'}">
                         <h4 class="font-bold text-green-800">Bahagian A</h4>
                         <p class="text-2xl font-bold text-green-600">${sectionScores.A.score}/${sectionScores.A.max}</p>
-                        <p class="text-sm text-green-700">${Math.round((sectionScores.A.score/sectionScores.A.max)*100)}%</p>
+                        <p class="text-sm text-green-700">${Math.round((sectionScores.A.score / sectionScores.A.max) * 100)}%</p>
                     </div>
                     <div class="bg-blue-50 p-4 rounded-lg text-center ${completedSections.includes('B') ? '' : 'opacity-50'}">
                         <h4 class="font-bold text-blue-800">Bahagian B</h4>
                         <p class="text-2xl font-bold text-blue-600">${sectionScores.B.score}/${sectionScores.B.max}</p>
-                        <p class="text-sm text-blue-700">${Math.round((sectionScores.B.score/sectionScores.B.max)*100)}%</p>
+                        <p class="text-sm text-blue-700">${Math.round((sectionScores.B.score / sectionScores.B.max) * 100)}%</p>
                     </div>
                     <div class="bg-purple-50 p-4 rounded-lg text-center ${completedSections.includes('C') ? '' : 'opacity-50'}">
                         <h4 class="font-bold text-purple-800">Bahagian C</h4>
                         <p class="text-2xl font-bold text-purple-600">${sectionScores.C.score}/${sectionScores.C.max}</p>
-                        <p class="text-sm text-purple-700">${Math.round((sectionScores.C.score/sectionScores.C.max)*100)}%</p>
+                        <p class="text-sm text-purple-700">${Math.round((sectionScores.C.score / sectionScores.C.max) * 100)}%</p>
                     </div>
                 </div>
             `;
-            
+
             // Show appropriate buttons
             const nextSectionButton = document.getElementById('nextSectionButton');
             const nextSectionText = document.getElementById('nextSectionText');
             const reviewMistakes = document.getElementById('reviewMistakes');
-            
+
             // Show next section button if not all sections completed
             if (currentSection === 'A' && !completedSections.includes('B')) {
                 nextSectionButton.classList.remove('hidden');
@@ -1957,14 +2010,14 @@
                     submitToGoogleSheets();
                 }
             }
-            
+
             // Show mistake review button if there are mistakes
             if (mistakes.length > 0) {
                 reviewMistakes.classList.remove('hidden');
             } else {
                 reviewMistakes.classList.add('hidden');
             }
-            
+
             // Show teacher answers button for section C only
             const showTeacherAnswers = document.getElementById('showTeacherAnswers');
             if (currentSection === 'C') {
@@ -1999,9 +2052,9 @@
         function showMistakeReview() {
             document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('mistakeReviewContainer').classList.remove('hidden');
-            
+
             const mistakesList = document.getElementById('mistakesList');
-            
+
             if (mistakes.length === 0) {
                 mistakesList.innerHTML = `
                     <div class="text-center p-8">
@@ -2012,13 +2065,13 @@
                 `;
                 return;
             }
-            
+
             let html = '';
             mistakes.forEach((mistake, index) => {
                 // Check if this question has AI analysis
                 const questionIndex = mistake.questionNumber - 1;
                 const hasAIAnalysis = window.aiAnalysis && window.aiAnalysis[questionIndex];
-                
+
                 html += `
                     <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg">
                         <div class="flex items-start">
@@ -2051,7 +2104,7 @@
                     </div>
                 `;
             });
-            
+
             mistakesList.innerHTML = html;
         }
 
@@ -2068,7 +2121,7 @@
                 showDataForCopy();
                 return;
             }
-            
+
             const data = {
                 timestamp: new Date().toLocaleString('ms-MY', { timeZone: 'Asia/Kuala_Lumpur' }),
                 name: studentInfo.name,
@@ -2080,17 +2133,17 @@
                 totalScore: totalScore,
                 percentage: Math.round((totalScore / maxScore) * 100)
             };
-            
+
             try {
                 // Try simple GET request with parameters
                 await submitViaGET(data);
-                
+
             } catch (error) {
                 console.error('Submission failed:', error);
                 showDataForCopy(data);
             }
         }
-        
+
         // Submit via multiple methods for better reliability
         async function submitViaGET(data) {
             const params = new URLSearchParams({
@@ -2105,38 +2158,38 @@
                 totalScore: data.totalScore,
                 percentage: data.percentage
             });
-            
+
             try {
                 // Method 1: Try fetch with no-cors mode
                 const response = await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
                     method: 'GET',
                     mode: 'no-cors'
                 });
-                
+
                 console.log('Data submitted via fetch (no-cors)');
                 showSubmissionSuccess();
                 return;
-                
+
             } catch (fetchError) {
                 console.log('Fetch failed, trying iframe method...');
-                
+
                 // Method 2: Use hidden iframe
                 try {
                     await submitViaIframe(params);
                     console.log('Data submitted via iframe');
                     showSubmissionSuccess();
                     return;
-                    
+
                 } catch (iframeError) {
                     console.log('Iframe failed, trying script tag method...');
-                    
+
                     // Method 3: Use script tag with JSONP-style callback
                     try {
                         await submitViaScript(params);
                         console.log('Data submitted via script tag');
                         showSubmissionSuccess();
                         return;
-                        
+
                     } catch (scriptError) {
                         console.error('All submission methods failed');
                         throw new Error('Submission failed');
@@ -2144,48 +2197,48 @@
                 }
             }
         }
-        
+
         // Submit via hidden iframe
         function submitViaIframe(params) {
             return new Promise((resolve, reject) => {
                 const iframe = document.createElement('iframe');
                 iframe.style.display = 'none';
                 iframe.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
-                
+
                 const timeoutId = setTimeout(() => {
                     document.body.removeChild(iframe);
                     resolve(); // Assume success even if we can't verify
                 }, 5000);
-                
+
                 iframe.onload = () => {
                     clearTimeout(timeoutId);
                     document.body.removeChild(iframe);
                     resolve();
                 };
-                
+
                 iframe.onerror = () => {
                     clearTimeout(timeoutId);
                     document.body.removeChild(iframe);
                     resolve(); // Still assume success as request was sent
                 };
-                
+
                 document.body.appendChild(iframe);
             });
         }
-        
+
         // Submit via script tag
         function submitViaScript(params) {
             return new Promise((resolve, reject) => {
                 const script = document.createElement('script');
                 script.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
-                
+
                 const timeoutId = setTimeout(() => {
                     if (script.parentNode) {
                         document.head.removeChild(script);
                     }
                     resolve(); // Assume success
                 }, 5000);
-                
+
                 script.onload = () => {
                     clearTimeout(timeoutId);
                     if (script.parentNode) {
@@ -2193,7 +2246,7 @@
                     }
                     resolve();
                 };
-                
+
                 script.onerror = () => {
                     clearTimeout(timeoutId);
                     if (script.parentNode) {
@@ -2201,19 +2254,19 @@
                     }
                     resolve(); // Still assume success
                 };
-                
+
                 document.head.appendChild(script);
             });
         }
-        
+
         // Show data for manual copy (fallback method)
         function showDataForCopy(data = null) {
             const scoreDisplay = document.getElementById('scoreDisplay');
-            
+
             // Remove any existing messages
             const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
             existingMessages.forEach(msg => msg.remove());
-            
+
             if (!data) {
                 data = {
                     timestamp: new Date().toLocaleString('ms-MY', { timeZone: 'Asia/Kuala_Lumpur' }),
@@ -2227,9 +2280,9 @@
                     percentage: Math.round((totalScore / maxScore) * 100)
                 };
             }
-            
+
             const dataText = `${data.timestamp}\t${data.name}\t${data.class}\t${data.school}\t${data.sectionA}\t${data.sectionB}\t${data.sectionC}\t${data.totalScore}\t${data.percentage}%`;
-            
+
             const copyMessage = document.createElement('div');
             copyMessage.className = 'submission-message mt-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg';
             copyMessage.innerHTML = `
@@ -2251,27 +2304,27 @@
             `;
             scoreDisplay.appendChild(copyMessage);
         }
-        
+
         // Copy data to clipboard
         function copyToClipboard() {
             const textarea = document.getElementById('copyData');
             textarea.select();
             textarea.setSelectionRange(0, 99999); // For mobile devices
-            
+
             try {
                 document.execCommand('copy');
-                
+
                 // Show success feedback
                 const button = event.target;
                 const originalText = button.innerHTML;
                 button.innerHTML = '✅ Disalin!';
                 button.className = 'bg-green-600 text-white px-4 py-2 rounded text-sm';
-                
+
                 setTimeout(() => {
                     button.innerHTML = originalText;
                     button.className = 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm';
                 }, 2000);
-                
+
             } catch (err) {
                 console.error('Failed to copy: ', err);
                 showSecurityWarning('Sila salin data secara manual');
@@ -2281,11 +2334,11 @@
         // Show submission success message
         function showSubmissionSuccess() {
             const scoreDisplay = document.getElementById('scoreDisplay');
-            
+
             // Remove any existing messages
             const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
             existingMessages.forEach(msg => msg.remove());
-            
+
             const successMessage = document.createElement('div');
             successMessage.className = 'submission-message mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg';
             successMessage.innerHTML = `
@@ -2299,15 +2352,15 @@
             `;
             scoreDisplay.appendChild(successMessage);
         }
-        
+
         // Show submission error message
         function showSubmissionError() {
             const scoreDisplay = document.getElementById('scoreDisplay');
-            
+
             // Remove any existing messages
             const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
             existingMessages.forEach(msg => msg.remove());
-            
+
             const errorMessage = document.createElement('div');
             errorMessage.className = 'submission-message mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg';
             errorMessage.innerHTML = `
@@ -2324,7 +2377,7 @@
             `;
             scoreDisplay.appendChild(errorMessage);
         }
-        
+
         // Retry submission
         function retrySubmission() {
             submitToGoogleSheets();
@@ -2335,14 +2388,14 @@
             // Hide current visible container
             const mainMenu = document.getElementById('mainMenu');
             const resultsContainer = document.getElementById('resultsContainer');
-            
+
             if (!mainMenu.classList.contains('hidden')) {
                 mainMenu.classList.add('hidden');
             }
             if (!resultsContainer.classList.contains('hidden')) {
                 resultsContainer.classList.add('hidden');
             }
-            
+
             document.getElementById('leaderboardContainer').classList.remove('hidden');
             loadLeaderboard();
         }
@@ -2350,7 +2403,7 @@
         // Load leaderboard data
         async function loadLeaderboard() {
             const leaderboardList = document.getElementById('leaderboardList');
-            
+
             if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
                 leaderboardList.innerHTML = `
                     <div class="text-center p-8">
@@ -2362,27 +2415,27 @@
                 `;
                 return;
             }
-            
+
             leaderboardList.innerHTML = `
                 <div class="text-center p-8">
                     <div class="animate-spin text-4xl mb-4">⏳</div>
                     <p class="text-gray-600">Memuat data papan pendahulu...</p>
                 </div>
             `;
-            
+
             try {
                 // Use JSONP approach to avoid CORS issues
                 const callbackName = 'leaderboardCallback' + Date.now();
-                
+
                 // Create a promise that resolves when callback is called
                 const dataPromise = new Promise((resolve, reject) => {
-                    window[callbackName] = function(data) {
+                    window[callbackName] = function (data) {
                         resolve(data);
                         // Clean up
                         delete window[callbackName];
                         document.head.removeChild(script);
                     };
-                    
+
                     // Set timeout for error handling
                     setTimeout(() => {
                         if (window[callbackName]) {
@@ -2392,20 +2445,20 @@
                         }
                     }, 10000);
                 });
-                
+
                 // Create script tag for JSONP
                 const script = document.createElement('script');
                 script.src = `${GOOGLE_SHEETS_URL}?action=getLeaderboard&callback=${callbackName}`;
                 document.head.appendChild(script);
-                
+
                 const data = await dataPromise;
-                
+
                 if (data && data.success && data.leaderboard) {
                     displayLeaderboard(data.leaderboard);
                 } else {
                     throw new Error('Invalid leaderboard data received');
                 }
-                
+
             } catch (error) {
                 console.error('Error loading leaderboard:', error);
                 leaderboardList.innerHTML = `
@@ -2425,7 +2478,7 @@
         // Display leaderboard
         function displayLeaderboard(leaderboardData) {
             const leaderboardList = document.getElementById('leaderboardList');
-            
+
             if (!leaderboardData || leaderboardData.length === 0) {
                 leaderboardList.innerHTML = `
                     <div class="text-center p-8">
@@ -2436,15 +2489,15 @@
                 `;
                 return;
             }
-            
+
             let html = '';
             leaderboardData.forEach((student, index) => {
                 const rank = index + 1;
                 const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-                const bgColor = rank === 1 ? 'bg-yellow-50 border-yellow-200' : 
-                               rank === 2 ? 'bg-gray-50 border-gray-200' : 
-                               rank === 3 ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200';
-                
+                const bgColor = rank === 1 ? 'bg-yellow-50 border-yellow-200' :
+                    rank === 2 ? 'bg-gray-50 border-gray-200' :
+                        rank === 3 ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200';
+
                 html += `
                     <div class="flex items-center justify-between p-4 ${bgColor} border-2 rounded-lg">
                         <div class="flex items-center space-x-4">
@@ -2461,14 +2514,14 @@
                     </div>
                 `;
             });
-            
+
             leaderboardList.innerHTML = html;
         }
 
         // Close leaderboard
         function closeLeaderboard() {
             document.getElementById('leaderboardContainer').classList.add('hidden');
-            
+
             // Return to appropriate screen based on completion status
             if (completedSections.length === 3) {
                 // If all sections completed, return to results
@@ -2488,9 +2541,9 @@
         function showTeacherAnswers() {
             document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('teacherAnswersContainer').classList.remove('hidden');
-            
+
             const teacherAnswersList = document.getElementById('teacherAnswersList');
-            
+
             let html = '';
             currentQuestions.forEach((question, index) => {
                 if (question.teacherAnswer) {
@@ -2508,7 +2561,7 @@
                     `;
                 }
             });
-            
+
             if (html === '') {
                 html = `
                     <div class="text-center p-8">
@@ -2518,7 +2571,7 @@
                     </div>
                 `;
             }
-            
+
             teacherAnswersList.innerHTML = html;
         }
 
@@ -2528,5 +2581,7 @@
             document.getElementById('resultsContainer').classList.remove('hidden');
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99532daa11bf26f2',t:'MTc2MTU3ODQzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+</body>
+
 </html>
