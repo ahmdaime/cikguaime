@@ -2353,7 +2353,7 @@
             scoreDisplay.appendChild(successMessage);
         }
 
-        // Show submission error message
+
         function showSubmissionError() {
             const scoreDisplay = document.getElementById('scoreDisplay');
 
@@ -2424,34 +2424,7 @@
             `;
 
             try {
-                // Use JSONP approach to avoid CORS issues
-                const callbackName = 'leaderboardCallback' + Date.now();
-
-                // Create a promise that resolves when callback is called
-                const dataPromise = new Promise((resolve, reject) => {
-                    window[callbackName] = function (data) {
-                        resolve(data);
-                        // Clean up
-                        delete window[callbackName];
-                        document.head.removeChild(script);
-                    };
-
-                    // Set timeout for error handling
-                    setTimeout(() => {
-                        if (window[callbackName]) {
-                            delete window[callbackName];
-                            document.head.removeChild(script);
-                            reject(new Error('Timeout loading leaderboard'));
-                        }
-                    }, 10000);
-                });
-
-                // Create script tag for JSONP
-                const script = document.createElement('script');
-                script.src = `${GOOGLE_SHEETS_URL}?action=getLeaderboard&callback=${callbackName}`;
-                document.head.appendChild(script);
-
-                const data = await dataPromise;
+                const data = await fetchLeaderboardJSONP();
 
                 if (data && data.success && data.leaderboard) {
                     displayLeaderboard(data.leaderboard);
@@ -2465,14 +2438,57 @@
                     <div class="text-center p-8">
                         <div class="text-6xl mb-4">📊</div>
                         <h3 class="text-xl font-bold text-blue-600 mb-2">Papan Pendahulu</h3>
-                        <p class="text-gray-600 mb-4">Sedang memuat data dari Google Sheets...</p>
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <p class="text-sm text-blue-700">💡 <strong>Nota:</strong> Papan pendahulu akan dipaparkan selepas beberapa murid menghantar kuiz.</p>
-                            <p class="text-sm text-blue-600 mt-2">Jika masalah berterusan, sila hubungi guru.</p>
+                        <p class="text-gray-600 mb-4">Gagal memuat data. Sila cuba lagi.</p>
+                        <div class="bg-red-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-red-700">${error.message}</p>
                         </div>
+                        <button onclick="loadLeaderboard()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300">
+                            🔄 Cuba Lagi
+                        </button>
                     </div>
                 `;
             }
+        }
+
+        // Helper function to fetch data via JSONP
+        function fetchLeaderboardJSONP() {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'leaderboardCallback' + Date.now();
+                const script = document.createElement('script');
+                const timeoutDuration = 15000; // 15 seconds timeout
+
+                // Define global callback
+                window[callbackName] = function (data) {
+                    cleanup();
+                    resolve(data);
+                };
+
+                // Cleanup function
+                function cleanup() {
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    clearTimeout(timeoutId);
+                }
+
+                // Timeout handler
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Timeout: Server tidak memberi respon.'));
+                }, timeoutDuration);
+
+                // Error handler
+                script.onerror = function () {
+                    cleanup();
+                    reject(new Error('Ralat rangkaian atau skrip disekat.'));
+                };
+
+                // Set src and append
+                // Add a random param to prevent caching
+                script.src = `${GOOGLE_SHEETS_URL}?action=getLeaderboard&callback=${callbackName}&_=${Date.now()}`;
+                document.body.appendChild(script);
+            });
         }
 
         // Display leaderboard
@@ -2531,6 +2547,8 @@
                 document.getElementById('mainMenu').classList.remove('hidden');
             }
         }
+
+
 
         // Refresh leaderboard
         function refreshLeaderboard() {
