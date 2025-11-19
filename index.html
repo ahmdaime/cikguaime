@@ -2395,6 +2395,201 @@
             if (!resultsContainer.classList.contains('hidden')) {
                 resultsContainer.classList.add('hidden');
             }
+            return new Promise((resolve, reject) => {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
+
+                const timeoutId = setTimeout(() => {
+                    document.body.removeChild(iframe);
+                    resolve(); // Assume success even if we can't verify
+                }, 5000);
+
+                iframe.onload = () => {
+                    clearTimeout(timeoutId);
+                    document.body.removeChild(iframe);
+                    resolve();
+                };
+
+                iframe.onerror = () => {
+                    clearTimeout(timeoutId);
+                    document.body.removeChild(iframe);
+                    resolve(); // Still assume success as request was sent
+                };
+
+                document.body.appendChild(iframe);
+            });
+        }
+
+        // Submit via script tag
+        function submitViaScript(params) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
+
+                const timeoutId = setTimeout(() => {
+                    if (script.parentNode) {
+                        document.head.removeChild(script);
+                    }
+                    resolve(); // Assume success
+                }, 5000);
+
+                script.onload = () => {
+                    clearTimeout(timeoutId);
+                    if (script.parentNode) {
+                        document.head.removeChild(script);
+                    }
+                    resolve();
+                };
+
+                script.onerror = () => {
+                    clearTimeout(timeoutId);
+                    if (script.parentNode) {
+                        document.head.removeChild(script);
+                    }
+                    resolve(); // Still assume success
+                };
+
+                document.head.appendChild(script);
+            });
+        }
+
+        // Show data for manual copy (fallback method)
+        function showDataForCopy(data = null) {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+
+            // Remove any existing messages
+            const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
+            existingMessages.forEach(msg => msg.remove());
+
+            if (!data) {
+                data = {
+                    timestamp: new Date().toLocaleString('ms-MY', { timeZone: 'Asia/Kuala_Lumpur' }),
+                    name: studentInfo.name,
+                    class: studentInfo.class,
+                    school: studentInfo.school,
+                    sectionA: sectionScores.A.score,
+                    sectionB: sectionScores.B.score,
+                    sectionC: sectionScores.C.score,
+                    totalScore: totalScore,
+                    percentage: Math.round((totalScore / maxScore) * 100)
+                };
+            }
+
+            const dataText = `${data.timestamp}\t${data.name}\t${data.class}\t${data.school}\t${data.sectionA}\t${data.sectionB}\t${data.sectionC}\t${data.totalScore}\t${data.percentage}%`;
+
+            const copyMessage = document.createElement('div');
+            copyMessage.className = 'submission-message mt-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg';
+            copyMessage.innerHTML = `
+                <div class="mb-3">
+                    <div class="flex items-center mb-2">
+                        <div class="text-2xl mr-3">📋</div>
+                        <div>
+                            <p class="font-bold">Sila Salin Data Ini</p>
+                            <p class="text-sm">Hantar kepada guru untuk direkodkan secara manual</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-3 rounded border border-blue-300 mb-3">
+                    <textarea id="copyData" class="w-full h-20 text-sm font-mono resize-none border-none outline-none" readonly>${dataText}</textarea>
+                </div>
+                <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    📋 Salin ke Clipboard
+                </button>
+            `;
+            scoreDisplay.appendChild(copyMessage);
+        }
+
+        // Copy data to clipboard
+        function copyToClipboard() {
+            const textarea = document.getElementById('copyData');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+
+                // Show success feedback
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Disalin!';
+                button.className = 'bg-green-600 text-white px-4 py-2 rounded text-sm';
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.className = 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm';
+                }, 2000);
+
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                showSecurityWarning('Sila salin data secara manual');
+            }
+        }
+
+        // Show submission success message
+        function showSubmissionSuccess() {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+
+            // Remove any existing messages
+            const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
+            existingMessages.forEach(msg => msg.remove());
+
+            const successMessage = document.createElement('div');
+            successMessage.className = 'submission-message mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg';
+            successMessage.innerHTML = `
+                <div class="flex items-center">
+                    <div class="text-2xl mr-3">✅</div>
+                    <div>
+                        <p class="font-bold">Data Berjaya Dihantar!</p>
+                        <p class="text-sm">Keputusan anda telah disimpan ke Google Sheets.</p>
+                    </div>
+                </div>
+            `;
+            scoreDisplay.appendChild(successMessage);
+        }
+
+
+        function showSubmissionError() {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+
+            // Remove any existing messages
+            const existingMessages = scoreDisplay.querySelectorAll('.submission-message');
+            existingMessages.forEach(msg => msg.remove());
+
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'submission-message mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg';
+            errorMessage.innerHTML = `
+                <div class="flex items-center">
+                    <div class="text-2xl mr-3">⚠️</div>
+                    <div>
+                        <p class="font-bold">Ralat Menghantar Data</p>
+                        <p class="text-sm">Sila hubungi guru untuk memastikan keputusan anda direkodkan.</p>
+                        <button onclick="retrySubmission()" class="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+                            Cuba Lagi
+                        </button>
+                    </div>
+                </div>
+            `;
+            scoreDisplay.appendChild(errorMessage);
+        }
+
+        // Retry submission
+        function retrySubmission() {
+            submitToGoogleSheets();
+        }
+
+        // Show leaderboard
+        function showLeaderboard() {
+            // Hide current visible container
+            const mainMenu = document.getElementById('mainMenu');
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            if (!mainMenu.classList.contains('hidden')) {
+                mainMenu.classList.add('hidden');
+            }
+            if (!resultsContainer.classList.contains('hidden')) {
+                resultsContainer.classList.add('hidden');
+            }
 
             document.getElementById('leaderboardContainer').classList.remove('hidden');
             loadLeaderboard();
@@ -2479,15 +2674,31 @@
                 }, timeoutDuration);
 
                 // Error handler
-                script.onerror = function () {
+                script.onerror = function (event) {
+                    console.error('JSONP Error details:', event);
                     cleanup();
-                    reject(new Error('Ralat rangkaian atau skrip disekat.'));
+
+                    // Fallback: Try fetch (useful if CORB blocks script but CORS is allowed)
+                    console.log('JSONP failed, attempting fetch fallback...');
+                    fetch(`${GOOGLE_SHEETS_URL}?action=getLeaderboard`)
+                        .then(response => {
+                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Fetch fallback successful');
+                            resolve(data);
+                        })
+                        .catch(fetchErr => {
+                            console.error('Fetch fallback failed:', fetchErr);
+                            reject(new Error('Ralat rangkaian atau skrip disekat. Sila pastikan sambungan internet stabil.'));
+                        });
                 };
 
                 // Set src and append
                 // Add a random param to prevent caching
                 script.src = `${GOOGLE_SHEETS_URL}?action=getLeaderboard&callback=${callbackName}&_=${Date.now()}`;
-                document.body.appendChild(script);
+                document.head.appendChild(script);
             });
         }
 
@@ -2547,8 +2758,6 @@
                 document.getElementById('mainMenu').classList.remove('hidden');
             }
         }
-
-
 
         // Refresh leaderboard
         function refreshLeaderboard() {
