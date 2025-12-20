@@ -2748,13 +2748,33 @@
                     }
 
         function fetchLeaderboardJSONP() {
-                        // Create a unique callback name
+                        // Use fetch with no-cors mode or direct fetch
+                        fetch(`${GOOGLE_SHEETS_URL}?action=getLeaderboard`)
+                            .then(response => response.json())
+                            .then(data => {
+                                displayLeaderboard(data);
+                            })
+                            .catch(error => {
+                                console.error('Fetch failed, trying JSONP:', error);
+                                // Fallback to JSONP if fetch fails
+                                tryJSONP();
+                            });
+                    }
+
+        function tryJSONP() {
                         const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                        let timeoutId;
+                        let completed = false;
 
                         // Define the callback function
                         window[callbackName] = function (data) {
+                            if (completed) return;
+                            completed = true;
+                            clearTimeout(timeoutId);
                             delete window[callbackName];
-                            document.body.removeChild(script);
+                            if (script.parentNode) {
+                                script.parentNode.removeChild(script);
+                            }
                             displayLeaderboard(data);
                         };
 
@@ -2762,16 +2782,32 @@
                         const script = document.createElement('script');
                         script.src = `${GOOGLE_SHEETS_URL}?action=getLeaderboard&callback=${callbackName}`;
                         script.onerror = function () {
+                            if (completed) return;
+                            completed = true;
+                            clearTimeout(timeoutId);
                             delete window[callbackName];
-                            document.body.removeChild(script);
+                            if (script.parentNode) {
+                                script.parentNode.removeChild(script);
+                            }
+                            showLeaderboardError();
+                        };
 
-                            // Fallback to fetch if JSONP fails (though fetch usually fails CORS)
-                            fetch(`${GOOGLE_SHEETS_URL}?action=getLeaderboard`)
-                                .then(response => response.json())
-                                .then(data => displayLeaderboard(data))
-                                .catch(error => {
-                                    console.error('Error loading leaderboard:', error);
-                                    document.getElementById('leaderboardList').innerHTML = `
+                        document.head.appendChild(script);
+
+                        // Timeout handler - show error after 10 seconds
+                        timeoutId = setTimeout(() => {
+                            if (completed) return;
+                            completed = true;
+                            delete window[callbackName];
+                            if (script.parentNode) {
+                                script.parentNode.removeChild(script);
+                            }
+                            showLeaderboardError();
+                        }, 10000);
+                    }
+
+        function showLeaderboardError() {
+                        document.getElementById('leaderboardList').innerHTML = `
                             <div class="text-center py-8 text-red-600">
                                 <p class="font-bold mb-2">⚠️ Gagal Memuatkan Data</p>
                                 <p class="text-sm">Sila pastikan sambungan internet anda stabil.</p>
@@ -2780,18 +2816,6 @@
                                 </button>
                             </div>
                         `;
-                                });
-                        };
-
-                        document.head.appendChild(script);
-
-                        // Timeout handler
-                        setTimeout(() => {
-                            if (window[callbackName]) {
-                                console.warn('JSONP timeout');
-                                // Cleanup is handled by onerror or success, but we can force error state here if needed
-                            }
-                        }, 15000);
                     }
 
         function displayLeaderboard(data) {
