@@ -2818,10 +2818,22 @@
                         `;
                     }
 
-        function displayLeaderboard(data) {
+        function displayLeaderboard(response) {
                         const content = document.getElementById('leaderboardList');
 
-                        if (!data || data.length === 0) {
+                        // Handle response format from Google Apps Script
+                        // Response format: { success: true, leaderboard: [...], totalEntries: n }
+                        let leaderboardData = [];
+
+                        if (response && response.leaderboard) {
+                            // New format: object with leaderboard array
+                            leaderboardData = response.leaderboard;
+                        } else if (Array.isArray(response)) {
+                            // Old format: direct array
+                            leaderboardData = response;
+                        }
+
+                        if (!leaderboardData || leaderboardData.length === 0) {
                             content.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <p>Belum ada rekod.</p>
@@ -2830,12 +2842,12 @@
                             return;
                         }
 
-                        // Sort by score (descending)
-                        data.sort((a, b) => b.totalScore - a.totalScore);
+                        // Data already sorted by Google Apps Script, but sort again just in case
+                        leaderboardData.sort((a, b) => b.totalScore - a.totalScore);
 
                         let html = '<div class="space-y-3">';
 
-                        data.slice(0, 10).forEach((entry, index) => {
+                        leaderboardData.slice(0, 10).forEach((entry, index) => {
                             const rank = index + 1;
                             const isTop3 = rank <= 3;
                             const rankColor = rank === 1 ? 'bg-yellow-100 text-yellow-700 border-yellow-300' :
@@ -2845,16 +2857,19 @@
 
                             const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span class="font-bold text-gray-500">#${rank}</span>`;
 
+                            // Handle percentage - remove % if already included
+                            const percentage = String(entry.percentage).replace('%', '');
+
                             html += `
                     <div class="flex items-center p-3 rounded-lg border ${rankColor} ${isTop3 ? 'transform hover:scale-102 transition-transform shadow-sm' : ''}">
                         <div class="flex-shrink-0 w-10 text-center text-xl">${medal}</div>
                         <div class="flex-1 min-w-0 ml-2">
                             <p class="font-bold truncate">${entry.name}</p>
-                            <p class="text-xs opacity-75 truncate">${entry.school}</p>
+                            <p class="text-xs opacity-75 truncate">${entry.school || entry.class || ''}</p>
                         </div>
                         <div class="flex-shrink-0 text-right ml-2">
-                            <p class="font-bold text-lg">${entry.totalScore}</p>
-                            <p class="text-xs opacity-75">${entry.percentage}%</p>
+                            <p class="font-bold text-lg">${entry.totalScore}/50</p>
+                            <p class="text-xs opacity-75">${percentage}%</p>
                         </div>
                     </div>
                 `;
