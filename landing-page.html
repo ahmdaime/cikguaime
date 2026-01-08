@@ -1576,6 +1576,9 @@
         </div>
     </footer>
 
+    <!-- Supabase Purchase Integration -->
+    <script src="supabase-purchase.js"></script>
+
     <!-- JavaScript -->
     <script>
         // Mobile Menu Toggle
@@ -1724,7 +1727,7 @@
             }
         });
 
-        // Submit form to Google Sheets
+        // Submit form to Supabase
         async function submitLicenseForm(event) {
             event.preventDefault();
 
@@ -1770,59 +1773,20 @@
             submitBtn.innerHTML = 'Menghantar... <span class="loading-spinner"></span>';
 
             try {
-                // Convert file to base64
-                const file = receiptFile.files[0];
-                const base64File = await fileToBase64(file);
+                // Submit to Supabase
+                const result = await SupabasePurchase.submit({
+                    productSlug: 'idme-pbd-helper',
+                    customerName: fullName.value.trim(),
+                    customerEmail: email.value.trim(),
+                    customerPhone: phone.value.trim(),
+                    receiptFile: receiptFile.files[0]
+                });
 
-                // Prepare form data
-                const formData = {
-                    timestamp: new Date().toISOString(),
-                    fullName: fullName.value.trim(),
-                    email: email.value.trim(),
-                    phone: phone.value.trim(),
-                    fileName: file.name,
-                    fileType: file.type,
-                    fileData: base64File
-                };
+                console.log('Purchase submitted:', result);
 
-                // IMPORTANT: Ganti URL ini dengan Google Apps Script Web App URL anda
-                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGYWiSuJd2JjW17Az5JMRa2WWZ_r9-LwQQ0bsfJmqIEiJTQCTTFp4sD-oi8bmL4Qmb/exec';
-
-                // Check if Google Apps Script URL is configured
-                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                    // Fallback: Show success message without actually sending
-                    // In production, you MUST configure the Google Apps Script URL
-                    console.warn('Google Apps Script URL not configured. Data will be logged to console only.');
-                    console.log('Form Data (not sent to server):', formData);
-
-                    // Show success message
-                    document.getElementById('formContainer').style.display = 'none';
-                    document.getElementById('successContainer').classList.add('show');
-
-                    // Alert admin to configure
-                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                        setTimeout(() => {
-                            alert('⚠️ NOTA UNTUK ADMIN: Google Apps Script URL belum dikonfigurasi!\n\nSila rujuk google-apps-script-setup.md untuk setup.\n\nData submission telah dilog ke browser console.');
-                        }, 1000);
-                    }
-                } else {
-                    // Send to Google Sheets
-                    const response = await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors', // Important for Google Apps Script
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData)
-                    });
-
-                    // Show success message
-                    document.getElementById('formContainer').style.display = 'none';
-                    document.getElementById('successContainer').classList.add('show');
-
-                    // Log success
-                    console.log('Form submitted successfully to Google Sheets');
-                }
+                // Show success message
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('successContainer').classList.add('show');
 
             } catch (error) {
                 console.error('Error submitting form:', error);
