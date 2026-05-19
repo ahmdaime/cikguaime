@@ -473,6 +473,7 @@
                         <input type="text" id="sekolah" maxlength="100" placeholder="Nama sekolah (optional)">
                     </div>
                     <button type="submit" class="btn">🚀 Mula Kuiz (55 Soalan)</button>
+                    <button type="button" class="btn" style="background:linear-gradient(135deg,#ff9800,#f57c00);" onclick="showClassSetup()">👨‍🏫 Mod Kelas (Projektor)</button>
                     <button type="button" class="btn btn-secondary" onclick="state.screen='leaderboard'; renderLeaderboardTabs();">🏆 Papan Markah</button>
                     <button type="button" class="btn btn-secondary" onclick="showAdminLogin()">🔐 Admin Panel</button>
                 </form>
@@ -751,6 +752,7 @@
         }
         
         function renderResult() {
+            state.screen = 'result';
             const percentage = Math.round((state.score / state.questions.length) * 100);
             const duration = state.endTime - state.startTime;
             
@@ -765,6 +767,7 @@
             app.innerHTML = `
                 <div class="header">
                     <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleSound()">${state.soundEnabled ? '🔊' : '🔇'}</button>
                         <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
                     </div>
                     <h1>📊 Keputusan Kuiz</h1>
@@ -805,6 +808,7 @@
         }
         
         function renderReview() {
+            state.screen = 'review';
             const app = document.getElementById('app');
             
             const reviewHTML = state.questions.map((q, idx) => {
@@ -1010,6 +1014,379 @@
             `;
         }
         
+        // ===== MOD KELAS (PROJEKTOR) =====
+        function showClassSetup() {
+            state.screen = 'classSetup';
+            const savedStudents = JSON.parse(localStorage.getItem('classStudents_' + CONFIG.QUIZ_ID) || '[]');
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
+                    </div>
+                    <h1>👨‍🏫 Mod Kelas (Projektor)</h1>
+                    <p style="color:#666;margin-top:8px;">Pancar kuiz ini di skrin kelas. Murid dipilih secara rawak untuk jawab soalan.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>📝 Senarai Murid (satu nama satu baris):</label>
+                    <textarea id="classStudentList" rows="8"
+                        style="width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:16px;resize:vertical;font-family:inherit;"
+                        placeholder="Ahmad bin Ali&#10;Siti Aminah&#10;Tan Wei Ming&#10;Raj Kumar"
+                    >${savedStudents.join('\n')}</textarea>
+                    <small style="color:#666;display:block;margin-top:5px;">💡 Senarai disimpan automatik dalam pelayar untuk sesi seterusnya.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>🎯 Bilangan Soalan:</label>
+                    <select id="classQuestionCount">
+                        <option value="5">5 soalan (singkat)</option>
+                        <option value="10" selected>10 soalan</option>
+                        <option value="15">15 soalan</option>
+                        <option value="20">20 soalan</option>
+                        <option value="30">30 soalan</option>
+                        <option value="0">Semua ${QUESTIONS.length} soalan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>⏱️ Masa Setiap Soalan:</label>
+                    <select id="classTimer">
+                        <option value="0" selected>Tanpa had masa (Cikgu kawal)</option>
+                        <option value="30">30 saat</option>
+                        <option value="45">45 saat</option>
+                        <option value="60">60 saat</option>
+                        <option value="90">90 saat</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>🎲 Mod Pilihan Murid:</label>
+                    <select id="classPickMode">
+                        <option value="no-repeat" selected>Tanpa ulang (semua kena giliran dulu sebelum reset)</option>
+                        <option value="free">Bebas (boleh kena banyak kali)</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn" onclick="startClassMode()">🚀 Mula Sesi Kelas</button>
+                <button type="button" class="btn btn-secondary" onclick="renderIntro()">↩️ Kembali</button>
+            `;
+        }
+
+        function startClassMode() {
+            const raw = document.getElementById('classStudentList').value;
+            const students = raw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+
+            if (students.length < 2) {
+                showToast('⚠️ Sila masukkan sekurang-kurangnya 2 nama murid', 'error');
+                return;
+            }
+
+            // Dedup case-insensitive
+            const seen = new Set();
+            const unique = students.filter(s => {
+                const k = s.toLowerCase();
+                if (seen.has(k)) return false;
+                seen.add(k);
+                return true;
+            });
+
+            localStorage.setItem('classStudents_' + CONFIG.QUIZ_ID, JSON.stringify(unique));
+
+            const count = parseInt(document.getElementById('classQuestionCount').value);
+            const timerSec = parseInt(document.getElementById('classTimer').value);
+            const pickMode = document.getElementById('classPickMode').value;
+
+            const shuffled = shuffleArray(QUESTIONS).map(q => {
+                if (q.type === 'mcq') {
+                    const choices = q.choices.map((c, i) => ({ c, i }));
+                    const sh = shuffleArray(choices);
+                    return { ...q, choices: sh.map(x => x.c), correct: sh.findIndex(x => x.i === q.correct) };
+                }
+                return q;
+            });
+
+            state.classMode = {
+                students: unique,
+                scores: Object.fromEntries(unique.map(s => [s, { correct: 0, wrong: 0, asked: 0 }])),
+                questions: count === 0 ? shuffled : shuffled.slice(0, count),
+                currentQuestion: 0,
+                pickedStudents: [],
+                currentStudent: null,
+                revealed: false,
+                timerSec: timerSec,
+                timeLeft: timerSec,
+                timerInterval: null,
+                pickMode: pickMode,
+                startTime: Date.now()
+            };
+
+            state.screen = 'classQuiz';
+            renderClassQuiz();
+        }
+
+        function renderClassQuiz() {
+            const cm = state.classMode;
+            const q = cm.questions[cm.currentQuestion];
+            const progress = ((cm.currentQuestion + 1) / cm.questions.length) * 100;
+
+            let itemsHTML = '';
+            if (q.hasItems && q.items) {
+                itemsHTML = `
+                    <div style="background:#f8f9fa;padding:18px;border-radius:12px;margin-bottom:20px;border:2px solid #667eea;">
+                        ${q.items.map((item, i) => `<div style="padding:8px;font-size:1.25em;"><strong style="color:#667eea;">${['I','II','III','IV'][i]}.</strong> ${item}</div>`).join('')}
+                    </div>
+                `;
+            }
+
+            const choicesHTML = q.choices.map((c, i) => {
+                let extra = '';
+                if (cm.revealed && i === q.correct) {
+                    extra = 'background:#d4edda !important;border-color:#28a745 !important;color:#155724 !important;font-weight:700;';
+                }
+                return `<div class="choice" style="font-size:1.35em;padding:18px 20px;${extra}">
+                    <strong style="color:#667eea;margin-right:12px;">${String.fromCharCode(65+i)}.</strong> ${c}
+                    ${cm.revealed && i === q.correct ? ' <span style="float:right;">✅</span>' : ''}
+                </div>`;
+            }).join('');
+
+            const remaining = cm.students.filter(s => !cm.pickedStudents.includes(s));
+            const pool = cm.pickMode === 'no-repeat' && remaining.length > 0 ? remaining : cm.students;
+
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleSound()">${state.soundEnabled ? '🔊' : '🔇'}</button>
+                        <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
+                        <button class="icon-btn" onclick="if(confirm('Tamatkan sesi kelas sekarang?')) { if(state.classMode.timerInterval) clearInterval(state.classMode.timerInterval); renderClassResults(); }" title="Tamat Sesi">🏁</button>
+                    </div>
+                    <h1 style="font-size:1.8em;">👨‍🏫 Mod Kelas — Soalan ${cm.currentQuestion+1}/${cm.questions.length}</h1>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+
+                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:25px;border-radius:15px;margin-bottom:20px;text-align:center;box-shadow:0 8px 25px rgba(102,126,234,.3);">
+                    <div style="font-size:1em;opacity:.9;margin-bottom:8px;">🎲 Murid yang dipilih:</div>
+                    <div id="pickedStudent" style="font-size:2.5em;font-weight:700;min-height:1.3em;letter-spacing:1px;">
+                        ${cm.currentStudent ? cm.currentStudent : '— Tekan Pilih Murid Rawak —'}
+                    </div>
+                    ${cm.currentStudent ? `
+                        <div style="margin-top:12px;font-size:.95em;opacity:.9;">
+                            Rekod murid ini: ✅ ${cm.scores[cm.currentStudent].correct} betul • ❌ ${cm.scores[cm.currentStudent].wrong} salah
+                        </div>` : ''}
+                </div>
+
+                ${cm.timerSec > 0 ? `<div class="timer-display" id="classTimerDisplay">⏱️ ${cm.timeLeft}s</div>` : ''}
+
+                <div style="background:#f8f9fa;padding:25px;border-radius:15px;margin-bottom:20px;">
+                    <div style="font-size:1.5em;line-height:1.5;font-weight:500;">${q.question}</div>
+                </div>
+                ${itemsHTML}
+                <div>${choicesHTML}</div>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:25px;">
+                    <button class="btn" onclick="pickRandomStudent()" ${pool.length === 0 ? 'disabled' : ''}>
+                        🎲 Pilih Murid Rawak
+                    </button>
+                    ${!cm.revealed ? `
+                        <button class="btn btn-secondary" onclick="revealClassAnswer()">💡 Tunjuk Jawapan</button>
+                    ` : `
+                        <button class="btn" style="background:linear-gradient(135deg,#28a745,#20c997);" onclick="markClassStudent(true)" ${!cm.currentStudent ? 'disabled' : ''}>✅ Betul</button>
+                        <button class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);" onclick="markClassStudent(false)" ${!cm.currentStudent ? 'disabled' : ''}>❌ Salah</button>
+                    `}
+                    <button class="btn btn-secondary" onclick="nextClassQuestion()">
+                        ${cm.currentQuestion === cm.questions.length - 1 ? '🏁 Tamat Sesi' : 'Soalan Seterusnya ➡️'}
+                    </button>
+                </div>
+
+                ${cm.pickMode === 'no-repeat' ? `
+                    <p style="text-align:center;margin-top:15px;color:#666;font-size:.9em;">
+                        📋 Baki murid belum kena giliran: <strong>${remaining.length}</strong> / ${cm.students.length}
+                    </p>
+                ` : ''}
+
+                <details style="margin-top:25px;background:#f8f9fa;padding:15px;border-radius:10px;">
+                    <summary style="cursor:pointer;font-weight:600;color:#667eea;font-size:1.05em;">📊 Lihat Markah Kelas (${cm.students.length} murid)</summary>
+                    <div style="margin-top:15px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;">
+                        ${[...cm.students].sort((a,b) => cm.scores[b].correct - cm.scores[a].correct).map(s => `
+                            <div style="background:white;padding:10px 12px;border-radius:8px;border-left:4px solid ${cm.scores[s].correct > 0 ? '#28a745' : (cm.scores[s].wrong > 0 ? '#dc3545' : '#ddd')};display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:600;${s === cm.currentStudent ? 'color:#667eea;' : ''}">${s}</span>
+                                <span style="font-size:.9em;color:#666;">✅${cm.scores[s].correct} ❌${cm.scores[s].wrong}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </details>
+            `;
+
+            if (cm.timerSec > 0 && !cm.revealed) startClassTimer();
+        }
+
+        function pickRandomStudent() {
+            const cm = state.classMode;
+            const remaining = cm.students.filter(s => !cm.pickedStudents.includes(s));
+            const pool = cm.pickMode === 'no-repeat' && remaining.length > 0 ? remaining : cm.students;
+            if (pool.length === 0) return;
+
+            const el = document.getElementById('pickedStudent');
+            if (!el) return;
+
+            let cycles = 0;
+            const totalCycles = 18;
+            const animInterval = setInterval(() => {
+                el.textContent = pool[Math.floor(Math.random() * pool.length)];
+                cycles++;
+                if (cycles >= totalCycles) {
+                    clearInterval(animInterval);
+                    const chosen = pool[Math.floor(Math.random() * pool.length)];
+                    cm.currentStudent = chosen;
+                    if (cm.pickMode === 'no-repeat') {
+                        if (!cm.pickedStudents.includes(chosen)) cm.pickedStudents.push(chosen);
+                        if (cm.pickedStudents.length >= cm.students.length) {
+                            cm.pickedStudents = [];
+                            showToast('🔄 Semua murid sudah kena giliran. Reset pusingan!', 'success');
+                        }
+                    }
+                    cm.scores[chosen].asked++;
+                    sounds.correct();
+                    renderClassQuiz();
+                }
+            }, 80);
+        }
+
+        function revealClassAnswer() {
+            state.classMode.revealed = true;
+            if (state.classMode.timerInterval) clearInterval(state.classMode.timerInterval);
+            renderClassQuiz();
+        }
+
+        function markClassStudent(correct) {
+            const cm = state.classMode;
+            if (!cm.currentStudent) return;
+            if (correct) {
+                cm.scores[cm.currentStudent].correct++;
+                sounds.correct();
+                showToast(`✅ ${cm.currentStudent} dapat 1 mata!`, 'success');
+            } else {
+                cm.scores[cm.currentStudent].wrong++;
+                sounds.wrong();
+                showToast(`❌ ${cm.currentStudent} jawab salah`, 'error');
+            }
+            renderClassQuiz();
+        }
+
+        function startClassTimer() {
+            const cm = state.classMode;
+            if (cm.timerInterval) clearInterval(cm.timerInterval);
+            cm.timerInterval = setInterval(() => {
+                cm.timeLeft--;
+                const el = document.getElementById('classTimerDisplay');
+                if (el) {
+                    el.textContent = `⏱️ ${cm.timeLeft}s`;
+                    if (cm.timeLeft <= 10) el.classList.add('warning');
+                }
+                if (cm.timeLeft <= 0) {
+                    clearInterval(cm.timerInterval);
+                    sounds.wrong();
+                    revealClassAnswer();
+                }
+            }, 1000);
+        }
+
+        function nextClassQuestion() {
+            const cm = state.classMode;
+            if (cm.timerInterval) clearInterval(cm.timerInterval);
+            if (cm.currentQuestion < cm.questions.length - 1) {
+                cm.currentQuestion++;
+                cm.currentStudent = null;
+                cm.revealed = false;
+                cm.timeLeft = cm.timerSec;
+                renderClassQuiz();
+            } else {
+                renderClassResults();
+            }
+        }
+
+        function renderClassResults() {
+            const cm = state.classMode;
+            if (cm.timerInterval) clearInterval(cm.timerInterval);
+            state.screen = 'classResult';
+
+            const ranked = [...cm.students].sort((a, b) => {
+                const dc = cm.scores[b].correct - cm.scores[a].correct;
+                if (dc !== 0) return dc;
+                return cm.scores[a].wrong - cm.scores[b].wrong;
+            });
+
+            const totalCorrect = Object.values(cm.scores).reduce((s, x) => s + x.correct, 0);
+            const totalWrong = Object.values(cm.scores).reduce((s, x) => s + x.wrong, 0);
+            const totalAsked = totalCorrect + totalWrong;
+            const accuracy = totalAsked > 0 ? Math.round((totalCorrect / totalAsked) * 100) : 0;
+            const duration = Date.now() - cm.startTime;
+
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <div class="header-controls">
+                        <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
+                    </div>
+                    <h1>🏆 Keputusan Sesi Kelas</h1>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:25px;">
+                    <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px;border-radius:15px;text-align:center;">
+                        <div style="font-size:.9em;opacity:.9;">Soalan</div>
+                        <div style="font-size:2em;font-weight:700;">${cm.currentQuestion + 1}</div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#28a745,#20c997);color:white;padding:20px;border-radius:15px;text-align:center;">
+                        <div style="font-size:.9em;opacity:.9;">Betul</div>
+                        <div style="font-size:2em;font-weight:700;">${totalCorrect}</div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#dc3545,#c82333);color:white;padding:20px;border-radius:15px;text-align:center;">
+                        <div style="font-size:.9em;opacity:.9;">Salah</div>
+                        <div style="font-size:2em;font-weight:700;">${totalWrong}</div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#ffc107,#ff9800);color:white;padding:20px;border-radius:15px;text-align:center;">
+                        <div style="font-size:.9em;opacity:.9;">Ketepatan</div>
+                        <div style="font-size:2em;font-weight:700;">${accuracy}%</div>
+                    </div>
+                </div>
+
+                <h3 style="color:#667eea;margin-bottom:15px;">🏅 Ranking Murid</h3>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr><th style="width:60px;">🏅</th><th>👤 Nama</th><th style="width:80px;">✅ Betul</th><th style="width:80px;">❌ Salah</th><th style="width:80px;">📊 %</th></tr>
+                    </thead>
+                    <tbody>
+                        ${ranked.map((s, i) => {
+                            const sc = cm.scores[s];
+                            const total = sc.correct + sc.wrong;
+                            const pct = total > 0 ? Math.round((sc.correct / total) * 100) : 0;
+                            let badgeClass = 'rank-other';
+                            if (i === 0 && sc.correct > 0) badgeClass = 'rank-1';
+                            else if (i === 1 && sc.correct > 0) badgeClass = 'rank-2';
+                            else if (i === 2 && sc.correct > 0) badgeClass = 'rank-3';
+                            return `
+                                <tr>
+                                    <td><span class="rank-badge ${badgeClass}">${i+1}</span></td>
+                                    <td><strong>${s}</strong></td>
+                                    <td><strong style="color:#28a745;">${sc.correct}</strong></td>
+                                    <td><strong style="color:#dc3545;">${sc.wrong}</strong></td>
+                                    <td>${total > 0 ? pct + '%' : '—'}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+
+                <p style="text-align:center;margin-top:15px;color:#666;font-size:.9em;">⏱️ Durasi sesi: ${formatDuration(duration)}</p>
+
+                <div style="margin-top:25px;">
+                    <button class="btn" onclick="showClassSetup()">🔄 Sesi Kelas Baru</button>
+                    <button class="btn btn-secondary" onclick="renderIntro()">🏠 Halaman Utama</button>
+                </div>
+            `;
+        }
+
         renderIntro();
     </script>
 </body>
