@@ -1113,6 +1113,8 @@
                 currentQuestion: 0,
                 pickedStudents: [],
                 currentStudent: null,
+                studentPick: null,
+                marked: false,
                 revealed: false,
                 timerSec: timerSec,
                 timeLeft: timerSec,
@@ -1141,12 +1143,22 @@
 
             const choicesHTML = q.choices.map((c, i) => {
                 let extra = '';
-                if (cm.revealed && i === q.correct) {
-                    extra = 'background:#d4edda !important;border-color:#28a745 !important;color:#155724 !important;font-weight:700;';
+                let badge = '';
+                if (cm.revealed) {
+                    if (i === q.correct) {
+                        extra = 'background:#d4edda !important;border-color:#28a745 !important;color:#155724 !important;font-weight:700;';
+                        badge = ' <span style="float:right;">✅ Jawapan Betul</span>';
+                    }
+                    if (cm.studentPick === i && i !== q.correct) {
+                        extra = 'background:#f8d7da !important;border-color:#dc3545 !important;color:#721c24 !important;font-weight:700;';
+                        badge = ' <span style="float:right;">❌ Pilihan Murid</span>';
+                    }
+                } else if (cm.studentPick === i) {
+                    extra = 'background:linear-gradient(135deg,#667eea,#764ba2) !important;color:white !important;border-color:#667eea !important;font-weight:700;';
+                    badge = ' <span style="float:right;">👆 Pilihan Murid</span>';
                 }
-                return `<div class="choice" style="font-size:1.35em;padding:18px 20px;${extra}">
-                    <strong style="color:#667eea;margin-right:12px;">${String.fromCharCode(65+i)}.</strong> ${c}
-                    ${cm.revealed && i === q.correct ? ' <span style="float:right;">✅</span>' : ''}
+                return `<div class="choice" style="font-size:1.35em;padding:18px 20px;${extra}" onclick="selectClassChoice(${i})">
+                    <strong style="${cm.studentPick === i && !cm.revealed ? 'color:white;' : 'color:#667eea;'}margin-right:12px;">${String.fromCharCode(65+i)}.</strong> ${c}${badge}
                 </div>`;
             }).join('');
 
@@ -1190,10 +1202,12 @@
                     </button>
                     ${!cm.revealed ? `
                         <button class="btn btn-secondary" onclick="revealClassAnswer()">💡 Tunjuk Jawapan</button>
+                    ` : (cm.marked ? `
+                        <button class="btn btn-secondary" disabled>✔️ Sudah direkod</button>
                     ` : `
                         <button class="btn" style="background:linear-gradient(135deg,#28a745,#20c997);" onclick="markClassStudent(true)" ${!cm.currentStudent ? 'disabled' : ''}>✅ Betul</button>
                         <button class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);" onclick="markClassStudent(false)" ${!cm.currentStudent ? 'disabled' : ''}>❌ Salah</button>
-                    `}
+                    `)}
                     <button class="btn btn-secondary" onclick="nextClassQuestion()">
                         ${cm.currentQuestion === cm.questions.length - 1 ? '🏁 Tamat Sesi' : 'Soalan Seterusnya ➡️'}
                     </button>
@@ -1253,15 +1267,38 @@
             }, 80);
         }
 
+        function selectClassChoice(idx) {
+            const cm = state.classMode;
+            if (cm.revealed) return;
+            cm.studentPick = idx;
+            renderClassQuiz();
+        }
+
         function revealClassAnswer() {
-            state.classMode.revealed = true;
-            if (state.classMode.timerInterval) clearInterval(state.classMode.timerInterval);
+            const cm = state.classMode;
+            cm.revealed = true;
+            if (cm.timerInterval) clearInterval(cm.timerInterval);
+            // Auto-mark jika murid dipilih dan pilihan murid dah direkod
+            if (cm.currentStudent && cm.studentPick !== null && !cm.marked) {
+                const q = cm.questions[cm.currentQuestion];
+                const correct = cm.studentPick === q.correct;
+                if (correct) {
+                    cm.scores[cm.currentStudent].correct++;
+                    sounds.correct();
+                    showToast(`✅ ${cm.currentStudent} jawab BETUL!`, 'success');
+                } else {
+                    cm.scores[cm.currentStudent].wrong++;
+                    sounds.wrong();
+                    showToast(`❌ ${cm.currentStudent} jawab salah`, 'error');
+                }
+                cm.marked = true;
+            }
             renderClassQuiz();
         }
 
         function markClassStudent(correct) {
             const cm = state.classMode;
-            if (!cm.currentStudent) return;
+            if (!cm.currentStudent || cm.marked) return;
             if (correct) {
                 cm.scores[cm.currentStudent].correct++;
                 sounds.correct();
@@ -1271,6 +1308,7 @@
                 sounds.wrong();
                 showToast(`❌ ${cm.currentStudent} jawab salah`, 'error');
             }
+            cm.marked = true;
             renderClassQuiz();
         }
 
@@ -1298,6 +1336,8 @@
             if (cm.currentQuestion < cm.questions.length - 1) {
                 cm.currentQuestion++;
                 cm.currentStudent = null;
+                cm.studentPick = null;
+                cm.marked = false;
                 cm.revealed = false;
                 cm.timeLeft = cm.timerSec;
                 renderClassQuiz();
