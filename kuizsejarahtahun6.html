@@ -298,6 +298,23 @@
         };
         
         const STATES = ["Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Penang", "Perak", "Perlis", "Sabah", "Sarawak", "Selangor", "Terengganu", "WP Kuala Lumpur", "WP Labuan", "WP Putrajaya"];
+
+        const TOPICS = {
+            uasa:        { label: 'Ulangkaji UASA (campuran semua tajuk)',         icon: '📚' },
+            pembentukan: { label: 'Tajuk 1: Tokoh & Cabaran Pembentukan Malaysia', icon: '🇲🇾' },
+            negeri:      { label: 'Unit 2: Negeri-negeri di Malaysia',             icon: '🗺️' },
+        };
+        const DEFAULT_TOPIC = 'uasa';
+        const TOPIC_PREF_KEY = 'sejarah-t6-last-topic';
+        function getQuestionsByTopic(topic) { return QUESTIONS.filter(q => q.topic === topic); }
+        function topicLabel(topic) { const t = TOPICS[topic]; return t ? `${t.icon} ${t.label}` : topic; }
+        function topicOptionsHTML(selected) {
+            return Object.entries(TOPICS).map(([key, t]) => {
+                const count = getQuestionsByTopic(key).length;
+                const sel = key === selected ? 'selected' : '';
+                return `<option value="${key}" ${sel}>${t.icon} ${t.label} (${count} soalan)</option>`;
+            }).join('');
+        }
         
         const ACHIEVEMENTS = {
             perfect: { name: "Perfect Score! 🎯", desc: "100% betul!", icon: "🎯" },
@@ -308,61 +325,106 @@
         };
         
         let QUESTIONS = [
-            { type: "mcq", question: "Siapakah yang memberikan idea penggabungan Persekutuan Tanah Melayu pada tahun 1955?", choices: ["Lord Brassey", "Ibrahim Haji Yaakob", "Malcolm MacDonald", "Tunku Abdul Rahman Putra Al-Haj"], correct: 3 },
-            { type: "mcq", question: "Apakah konsep yang diperjuangkan oleh tokoh-tokoh tempatan seperti Ibrahim Haji Yaakob dan Harun Aminurrashid?", choices: ["Melayu Rai", "Melayu Raya", "Melayu Bersatu", "Melayu Merdeka"], correct: 1 },
-            { type: "mcq", question: "Pembangunan Malaysia akan mempercepat pembangunan infrastruktur, sosial dan ekonomi. Apakah sebab yang bertepatan dengan pernyataan tersebut?", choices: ["Membangunan sosioekonomi", "Mencapai keseimbangan kaum", "Menjamin keselamatan negara", "Mempercepat kemerdekaan"], correct: 0 },
-            { type: "mcq", question: "Mengapakah Indonesia mengisytiharkan konfrontasi terhadap Malaysia?", choices: ["Indonesia mahu kekal di bawah pemerintahan Belanda", "Menganggap Malaysia mahu menguasai hasil bumi Indonesia", "Anggapan pembentukan Malaysia menyebabkan rakyatnya berhijrah", "Anggapan pembentukan Malaysia mengancam kedudukan negaranya"], correct: 3 },
-            { type: "mcq", question: "Asal usul nama negeri Kedah dikatakan berasal daripada perkataan Arab yang bermaksud cawan atau gelas berkaki. Apakah perkataan Arab tersebut?", choices: ["Qadah", "Malakat", "Kheddah", "prow-lowy"], correct: 0 },
-            { type: "mcq", question: "Negeri Sembilan merupakan negeri yang mempunyai keunikan tersendiri dalam penentuan pemimpin negeri. Apakah gelaran ketua negeri bagi Negeri Sembilan?", choices: ["Sultan atau raja", "Yang di-Pertuan Besar", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong"], correct: 1 },
-            { type: "mcq", question: "Bandar apakah yang terdapat warisan sejarah seperti istana, galeri dan monumen?", choices: ["Bandar besar", "Bandar diraja", "Bandar bersejarah", "Bandar pentadbiran"], correct: 1 },
-            { type: "mcq", question: "Apakah jawatankuasa yang telah merangka dan memperkenalkan Rukun Negara?", choices: ["Jawatankuasa Rukun Negara", "Jawatankuasa Antara Kerajaan", "Jawatankuasa Perpaduan Negara", "Jawatankuasa Setia Kawan Malaysia"], correct: 0 },
-            { type: "mcq", question: "Mengapakah pengasingan tempat tinggal menjadi salah satu sebab pengenalan kepada pembentukan Rukun Negara?", choices: ["Keharmonian semua kaum", "Permuafakatan antara kaum", "Kurangnya peluang berinteraksi", "Perpaduan yang kukuh antara kaum"], correct: 2 },
-            { type: "mcq", question: "Apakah yang akan terjadi jika Rukun Negara yang diperkenalkan tidak diterima oleh masyarakat?", choices: ["Memupuk kerjasama antara kaum", "Memecahbelahkan hubungan kaum", "Mewujudkan suasana aman dan harmoni", "Menggalakkan perpaduan antara pelbagai kaum"], correct: 1 },
-            { type: "mcq", question: "Antara berikut, permainan tradisional yang manakah yang dikategorikan sebagai permainan laman?", items: ["Congkak", "Kabaddi", "Sepak raga", "Paramapadham"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 2, hasItems: true },
-            { type: "mcq", question: "Apakah kaum yang mengenakan sari dan doti sebagai pakaian tradisional kaum mereka?", choices: ["Iban", "Cina", "India", "Baba dan Nyonya"], correct: 2 },
-            { type: "mcq", question: "Di manakah kawasan tempat tinggal masyarakat Cina ketika awal kedatangan mereka ke Tanah Melayu?", choices: ["Bandar", "Pedalaman", "Kawasan ladang", "Persisiran pantai"], correct: 0 },
-            { type: "mcq", question: "Apakah cara penyebaran agama yang berlaku di Malaysia?", choices: ["Paksaan", "Pengembara", "Pengaruh rakan", "Golongan agama"], correct: 3 },
-            { type: "mcq", question: "Apakah kitab suci bagi penganut beragama Sikh?", choices: ["Veda", "Tipitaka", "Al-Quran dan Hadis", "Sri Guru Granth Sahib"], correct: 3 },
-            { type: "mcq", question: "Apakah yang terkandung dalam Perkara 11(1) dalam Perlembagaan Persekutuan?", choices: ["Peranan Yang di-Pertuan Agong", "Hak menganuti agama masing-masing", "Ketua Agama Islam bagi negeri tiada raja", "Menguruskan hal ehwal agamanya sendiri"], correct: 1 },
-            { type: "mcq", question: "Apakah perayaan yang disambut oleh penganut agama Islam?", choices: ["Deepavali", "Tahun Baru Cina", "Tadau Kaamatan", "Hari Raya Aidiladha"], correct: 3 },
-            { type: "mcq", question: "Bagaimanakah cara setiap masyarakat memberikan ucapan semasa perayaan suatu masa dahulu?", choices: ["Menggunakan telefon bimbit", "Memuat naik di media sosial", "Menggunakan media elektronik", "Melalui pos atau serahan tangan"], correct: 3 },
-            { type: "mcq", question: "Bagaimanakah pemenang Unduk Ngadau dipilih pada masa kini?", choices: ["Upacara ritual antara peserta", "Berdasarkan semangat Huminodun", "Sesi soal jawab tentang kecantikan peserta", "Sesi soal jawab tentang sejarah masyarakat lampau"], correct: 3 },
-            { type: "mcq", question: "Siapakah ketua kerajaan yang mengetuai pentadbiran negara?", choices: ["Menteri Besar", "Perdana Menteri", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong"], correct: 1 },
-            { type: "mcq", question: "Apakah langkah yang boleh diambil untuk memelihara bangunan bersejarah di negara kita?", choices: ["Membiarkan bangunan lama usang sebagai tarikan pelancong", "Menjalankan aktiviti seni di kawasan istana", "Mengecat semula dan membaik pulih bangunan lama", "Merobohkan bangunan lama untuk bina baharu"], correct: 2 },
-            { type: "mcq", question: "Antara berikut, yang manakah pencapaian Tun Hussein Onn yang dikenang sehingga kini?", items: ["Mengembalikan keamanan selepas peristiwa 13 Mei", "Memperkenalkan Amanah Saham Nasional Berhad", "Memperkenalkan Program Rukun Tetangga", "Pengenalan Dasar Ekonomi Baru (DEB)"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 2, hasItems: true },
-            { type: "mcq", question: "Meningkatkan pengeluaran bahan makanan tempatan. Apakah industri yang dimaksudkan dengan pernyataan tersebut?", choices: ["Industri hiliran", "Industri asas tani", "Industri perhotelan", "Industri pembuatan"], correct: 1 },
-            { type: "mcq", question: "Apakah keistimewaan Malaysia sehingga menjadi tarikan pelancong ke negara ini?", items: ["Keindahan alam semula jadi", "Tapak dan bangunan bersejarah", "Pemimpin yang berbilang kaum", "Kesesakan lalu lintas"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 0, hasItems: true },
-            { type: "mcq", question: "Apakah contoh produk pertanian yang merupakan antara barangan buatan Malaysia?", items: ["Sabun", "Minyak masak", "Minyak pelincir", "Gas untuk memasak"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 0, hasItems: true },
-            { type: "mcq", question: "BAM merupakan akronim bagi persatuan sukan ________?", choices: ["Konfederasi Hoki Malaysia", "Persatuan Badminton Malaysia", "Persatuan Bola Sepak Malaysia", "Kesatuan Olahraga Amatur Malaysia"], correct: 1 },
-            { type: "mcq", question: "Apakah dasar yang menggalakkan murid terlibat dalam sekurang-kurangnya satu bidang sukan bermula tahun 2011?", choices: ["1M1S", "MSSM", "RIMUP", "MBMMBI"], correct: 0 },
-            { type: "mcq", question: "Apakah sukan yang sinonim dengan penganjuran kejohanan Le Tour de Langkawi?", choices: ["Lumba basikal", "Permotoran", "Bola sepak", "Badminton"], correct: 0 },
-            { type: "mcq", question: "Apakah pertubuhan antarabangsa yang keahliannya terbuka kepada semua negara?", choices: ["Komanwel", "Pertubuhan Kerjasama Islam (OIC)", "Pertubuhan Bangsa-Bangsa Bersatu (PBB)", "Pergerakan Negara-negara Berkecuali (NAM)"], correct: 2 },
-            { type: "mcq", question: "Apakah makna warna kuning pada logo ASEAN?", choices: ["Kesucian", "Kesopanan", "Keberanian", "Kemakmuran"], correct: 3 },
-            { type: "mcq", question: "Mengapakah PBB ditubuhkan?", items: ["Melindungi hak asasi manusia", "Menjamin kestabilan politik dunia", "Meningkatkan taraf hidup penduduk dunia", "Menggalakkan hubungan baik antara negara anggota"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 3, hasItems: true },
-            { type: "mcq", question: "Antara berikut, yang manakah cara masyarakat kita meraikan perayaan?", choices: ["Menyepikan diri di rumah", "Menziarahi jiran dan rakan", "Menutup rumah sepanjang hari", "Tidak bergaul dengan kaum lain"], correct: 1 },
-            { type: "mcq", question: "Tujuan kita berpegang kepada Rukun Negara ialah untuk…", choices: ["Hidup bebas tanpa undang-undang", "Menguatkan perpaduan dan keharmonian", "Menyertai pertandingan antarabangsa", "Mengasingkan kaum di negara ini"], correct: 1 },
-            { type: "mcq", question: "Apakah yang akan berlaku jika rakyat Malaysia tidak mengamalkan Rukun Negara?", choices: ["Negara akan menjadi aman", "Perpaduan kaum akan terjejas", "Semua rakyat hidup dalam keamanan", "Rakyat semakin bersatu padu"], correct: 1 },
-            { type: "mcq", question: "Kaum Baba dan Nyonya terkenal dengan budaya tempatan yang melibatkan…", choices: ["Cara hidup dan percakapan", "Permainan tradisional", "Muzik moden", "Alat komunikasi"], correct: 0 },
-            { type: "mcq", question: "Apakah nilai yang boleh kita pelajari daripada cerita rakyat yang diwarisi daripada nenek moyang?", choices: ["Nilai hiburan dan nasihat", "Nilai ekonomi dan perniagaan", "Nilai peperangan dan keberanian", "Nilai lawak dan gurauan"], correct: 0 },
-            { type: "mcq", question: "Agama manakah yang menggunakan kitab Veda sebagai panduan?", choices: ["Buddha", "Hindu", "Kristian", "Sikh"], correct: 1 },
-            { type: "mcq", question: "Pilih pasangan agama dan kitab yang betul.", choices: ["Islam – Kitab Injil", "Kristian – Kitab Tripitaka", "Hindu – Kitab Veda", "Buddha – Kitab Al-Quran"], correct: 2 },
-            { type: "mcq", question: "Mengapakah rakyat Malaysia yang berbeza agama boleh hidup dalam keadaan aman?", choices: ["Kerana semua mempunyai warna kulit sama", "Kerana saling menghormati antara satu sama lain", "Kerana semua tinggal di negeri yang sama", "Kerana undang-undang memaksa mereka"], correct: 1 },
-            { type: "mcq", question: "Perayaan yang disambut oleh umat Islam selepas ibadah haji ialah…", choices: ["Hari Deepavali", "Hari Krismas", "Hari Raya Aidiladha", "Tahun Baharu Cina"], correct: 2 },
-            { type: "mcq", question: "Kaum manakah di Malaysia yang menyambut Hari Gawai?", choices: ["Kaum Sikh", "Kaum Dayak", "Kaum Melayu", "Kaum India"], correct: 1 },
-            { type: "mcq", question: "Bagaimanakah cara pemilihan Yang di-Pertuan Negara atau Yang di-Pertuan Agong dilakukan?", choices: ["Melalui undian dan mesyuarat Majlis Raja-Raja", "Dilantik oleh Perdana Menteri", "Dipilih oleh rakyat melalui pilihan raya", "Dilantik oleh Parlimen"], correct: 0 },
-            { type: "mcq", question: "Antara berikut, yang manakah merupakan tanggungjawab Perdana Menteri Malaysia?", items: ["Menyelia pentadbiran negara", "Menandatangani surat rasmi sekolah", "Mengurus hal pentadbiran negeri", "Mengiringi Yang di-Pertuan Agong ke Majlis Raja-Raja Melayu"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 1, hasItems: true },
-            { type: "mcq", question: "Apakah tugas utama seorang Perdana Menteri?", choices: ["Menentukan dasar dan pembangunan negara", "Menulis ucapan untuk Yang di-Pertuan Agong", "Menguruskan pilihan raya", "Mengiringi pelancong luar negara"], correct: 0 },
-            { type: "mcq", question: "Dilahirkan pada tahun 1925 di Alor Setar dan dikenali sebagai Bapa Permodenan. Siapakah tokoh tersebut?", choices: ["Tunku Abdul Rahman Putra Al-Haj", "Tun Abdul Razak bin Hussein", "Tun Dr. Mahathir bin Mohamad", "Tan Sri Muhyiddin bin Yassin"], correct: 2 },
-            { type: "mcq", question: "Program apakah yang diperkenalkan oleh Tun Hussein Onn untuk menggalakkan rakyat bekerjasama?", choices: ["Rukun Tetangga", "Amanah Saham Nasional", "Tabung Haji", "Skim Perumahan Rakyat"], correct: 0 },
-            { type: "mcq", question: "Antara bahan berikut, yang manakah boleh dihasilkan daripada buah kelapa sawit?", choices: ["Sabun dan minyak masak", "Kertas dan getah", "Beras dan tepung", "Kayu dan kaca"], correct: 0 },
-            { type: "mcq", question: "Proton Saga merupakan kereta buatan pertama di Malaysia.", choices: ["Betul", "Salah"], correct: 0 },
-            { type: "mcq", question: "Bandar diraja ialah bandar yang mempunyai tempat bersejarah seperti istana, muzium dan galeri. Antara berikut, manakah contoh bandar diraja di Malaysia?", choices: ["Sik dan Kuala Terengganu", "Klang dan Kuala Kangsar", "Ipoh dan Johor Bahru", "Seremban dan Kota Bharu"], correct: 1 },
-            { type: "mcq", question: "Siapakah atlet wanita Malaysia yang pernah bergelar pemain skuasy nombor satu dunia?", choices: ["Nicol Ann David", "Pandelela Rinong", "Farah Ann Abdul Hadi", "Nurul Huda Abdullah"], correct: 0 },
-            { type: "mcq", question: "Apakah aktiviti yang boleh mengukuhkan perpaduan antara kaum di Malaysia?", choices: ["Menyertai sukan antara rumah", "Bergaul hanya dengan kaum sendiri", "Tidak menyertai aktiviti sekolah", "Mengasingkan diri semasa majlis"], correct: 0 },
-            { type: "mcq", question: "Apakah tujuan utama penubuhan ASEAN?", choices: ["Menghapuskan amalan Apartheid", "Menjalin hubungan persahabatan serantau", "Menghapuskan raja-raja Melayu", "Menggalakkan peperangan di Asia Tenggara"], correct: 1 },
-            { type: "mcq", question: "Apakah peranan Malaysia dalam Pertubuhan Bangsa-Bangsa Bersatu (PBB)?", items: ["Menubuhkan Bank Pembangunan Islam", "Membantu menamatkan amalan apartheid", "Menyuarakan usaha memerangi jenayah dadah", "Menyertai peperangan di negara lain"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 2, hasItems: true },
-            { type: "mcq", question: "Pertubuhan Komanwel dianggotai oleh…", choices: ["Negara-negara bekas jajahan British", "Negara-negara Eropah sahaja", "Negara-negara Asia Tenggara sahaja", "Semua negara Islam dunia"], correct: 0 },
-            { type: "mcq", question: "Apakah peranan Malaysia dalam Pertubuhan Kerjasama Islam (OIC)?", choices: ["Membantu rakyat Palestin yang tertindas", "Menentang negara Islam lain", "Menghapuskan ajaran agama", "Mengurus pilihan raya antarabangsa"], correct: 0 }
+            { type: "mcq", question: "Siapakah yang memberikan idea penggabungan Persekutuan Tanah Melayu pada tahun 1955?", choices: ["Lord Brassey", "Ibrahim Haji Yaakob", "Malcolm MacDonald", "Tunku Abdul Rahman Putra Al-Haj"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Apakah konsep yang diperjuangkan oleh tokoh-tokoh tempatan seperti Ibrahim Haji Yaakob dan Harun Aminurrashid?", choices: ["Melayu Rai", "Melayu Raya", "Melayu Bersatu", "Melayu Merdeka"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Pembangunan Malaysia akan mempercepat pembangunan infrastruktur, sosial dan ekonomi. Apakah sebab yang bertepatan dengan pernyataan tersebut?", choices: ["Membangunan sosioekonomi", "Mencapai keseimbangan kaum", "Menjamin keselamatan negara", "Mempercepat kemerdekaan"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Mengapakah Indonesia mengisytiharkan konfrontasi terhadap Malaysia?", choices: ["Indonesia mahu kekal di bawah pemerintahan Belanda", "Menganggap Malaysia mahu menguasai hasil bumi Indonesia", "Anggapan pembentukan Malaysia menyebabkan rakyatnya berhijrah", "Anggapan pembentukan Malaysia mengancam kedudukan negaranya"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Asal usul nama negeri Kedah dikatakan berasal daripada perkataan Arab yang bermaksud cawan atau gelas berkaki. Apakah perkataan Arab tersebut?", choices: ["Qadah", "Malakat", "Kheddah", "prow-lowy"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Negeri Sembilan merupakan negeri yang mempunyai keunikan tersendiri dalam penentuan pemimpin negeri. Apakah gelaran ketua negeri bagi Negeri Sembilan?", choices: ["Sultan atau raja", "Yang di-Pertuan Besar", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Bandar apakah yang terdapat warisan sejarah seperti istana, galeri dan monumen?", choices: ["Bandar besar", "Bandar diraja", "Bandar bersejarah", "Bandar pentadbiran"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah jawatankuasa yang telah merangka dan memperkenalkan Rukun Negara?", choices: ["Jawatankuasa Rukun Negara", "Jawatankuasa Antara Kerajaan", "Jawatankuasa Perpaduan Negara", "Jawatankuasa Setia Kawan Malaysia"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Mengapakah pengasingan tempat tinggal menjadi salah satu sebab pengenalan kepada pembentukan Rukun Negara?", choices: ["Keharmonian semua kaum", "Permuafakatan antara kaum", "Kurangnya peluang berinteraksi", "Perpaduan yang kukuh antara kaum"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Apakah yang akan terjadi jika Rukun Negara yang diperkenalkan tidak diterima oleh masyarakat?", choices: ["Memupuk kerjasama antara kaum", "Memecahbelahkan hubungan kaum", "Mewujudkan suasana aman dan harmoni", "Menggalakkan perpaduan antara pelbagai kaum"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Antara berikut, permainan tradisional yang manakah yang dikategorikan sebagai permainan laman?", items: ["Congkak", "Kabaddi", "Sepak raga", "Paramapadham"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 2, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "Apakah kaum yang mengenakan sari dan doti sebagai pakaian tradisional kaum mereka?", choices: ["Iban", "Cina", "India", "Baba dan Nyonya"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Di manakah kawasan tempat tinggal masyarakat Cina ketika awal kedatangan mereka ke Tanah Melayu?", choices: ["Bandar", "Pedalaman", "Kawasan ladang", "Persisiran pantai"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah cara penyebaran agama yang berlaku di Malaysia?", choices: ["Paksaan", "Pengembara", "Pengaruh rakan", "Golongan agama"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Apakah kitab suci bagi penganut beragama Sikh?", choices: ["Veda", "Tipitaka", "Al-Quran dan Hadis", "Sri Guru Granth Sahib"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Apakah yang terkandung dalam Perkara 11(1) dalam Perlembagaan Persekutuan?", choices: ["Peranan Yang di-Pertuan Agong", "Hak menganuti agama masing-masing", "Ketua Agama Islam bagi negeri tiada raja", "Menguruskan hal ehwal agamanya sendiri"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah perayaan yang disambut oleh penganut agama Islam?", choices: ["Deepavali", "Tahun Baru Cina", "Tadau Kaamatan", "Hari Raya Aidiladha"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Bagaimanakah cara setiap masyarakat memberikan ucapan semasa perayaan suatu masa dahulu?", choices: ["Menggunakan telefon bimbit", "Memuat naik di media sosial", "Menggunakan media elektronik", "Melalui pos atau serahan tangan"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Bagaimanakah pemenang Unduk Ngadau dipilih pada masa kini?", choices: ["Upacara ritual antara peserta", "Berdasarkan semangat Huminodun", "Sesi soal jawab tentang kecantikan peserta", "Sesi soal jawab tentang sejarah masyarakat lampau"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Siapakah ketua kerajaan yang mengetuai pentadbiran negara?", choices: ["Menteri Besar", "Perdana Menteri", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah langkah yang boleh diambil untuk memelihara bangunan bersejarah di negara kita?", choices: ["Membiarkan bangunan lama usang sebagai tarikan pelancong", "Menjalankan aktiviti seni di kawasan istana", "Mengecat semula dan membaik pulih bangunan lama", "Merobohkan bangunan lama untuk bina baharu"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Antara berikut, yang manakah pencapaian Tun Hussein Onn yang dikenang sehingga kini?", items: ["Mengembalikan keamanan selepas peristiwa 13 Mei", "Memperkenalkan Amanah Saham Nasional Berhad", "Memperkenalkan Program Rukun Tetangga", "Pengenalan Dasar Ekonomi Baru (DEB)"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 2, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "Meningkatkan pengeluaran bahan makanan tempatan. Apakah industri yang dimaksudkan dengan pernyataan tersebut?", choices: ["Industri hiliran", "Industri asas tani", "Industri perhotelan", "Industri pembuatan"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah keistimewaan Malaysia sehingga menjadi tarikan pelancong ke negara ini?", items: ["Keindahan alam semula jadi", "Tapak dan bangunan bersejarah", "Pemimpin yang berbilang kaum", "Kesesakan lalu lintas"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 0, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "Apakah contoh produk pertanian yang merupakan antara barangan buatan Malaysia?", items: ["Sabun", "Minyak masak", "Minyak pelincir", "Gas untuk memasak"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 0, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "BAM merupakan akronim bagi persatuan sukan ________?", choices: ["Konfederasi Hoki Malaysia", "Persatuan Badminton Malaysia", "Persatuan Bola Sepak Malaysia", "Kesatuan Olahraga Amatur Malaysia"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah dasar yang menggalakkan murid terlibat dalam sekurang-kurangnya satu bidang sukan bermula tahun 2011?", choices: ["1M1S", "MSSM", "RIMUP", "MBMMBI"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah sukan yang sinonim dengan penganjuran kejohanan Le Tour de Langkawi?", choices: ["Lumba basikal", "Permotoran", "Bola sepak", "Badminton"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah pertubuhan antarabangsa yang keahliannya terbuka kepada semua negara?", choices: ["Komanwel", "Pertubuhan Kerjasama Islam (OIC)", "Pertubuhan Bangsa-Bangsa Bersatu (PBB)", "Pergerakan Negara-negara Berkecuali (NAM)"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Apakah makna warna kuning pada logo ASEAN?", choices: ["Kesucian", "Kesopanan", "Keberanian", "Kemakmuran"], correct: 3, topic: "uasa" },
+            { type: "mcq", question: "Mengapakah PBB ditubuhkan?", items: ["Melindungi hak asasi manusia", "Menjamin kestabilan politik dunia", "Meningkatkan taraf hidup penduduk dunia", "Menggalakkan hubungan baik antara negara anggota"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 3, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "Antara berikut, yang manakah cara masyarakat kita meraikan perayaan?", choices: ["Menyepikan diri di rumah", "Menziarahi jiran dan rakan", "Menutup rumah sepanjang hari", "Tidak bergaul dengan kaum lain"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Tujuan kita berpegang kepada Rukun Negara ialah untuk…", choices: ["Hidup bebas tanpa undang-undang", "Menguatkan perpaduan dan keharmonian", "Menyertai pertandingan antarabangsa", "Mengasingkan kaum di negara ini"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah yang akan berlaku jika rakyat Malaysia tidak mengamalkan Rukun Negara?", choices: ["Negara akan menjadi aman", "Perpaduan kaum akan terjejas", "Semua rakyat hidup dalam keamanan", "Rakyat semakin bersatu padu"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Kaum Baba dan Nyonya terkenal dengan budaya tempatan yang melibatkan…", choices: ["Cara hidup dan percakapan", "Permainan tradisional", "Muzik moden", "Alat komunikasi"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah nilai yang boleh kita pelajari daripada cerita rakyat yang diwarisi daripada nenek moyang?", choices: ["Nilai hiburan dan nasihat", "Nilai ekonomi dan perniagaan", "Nilai peperangan dan keberanian", "Nilai lawak dan gurauan"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Agama manakah yang menggunakan kitab Veda sebagai panduan?", choices: ["Buddha", "Hindu", "Kristian", "Sikh"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Pilih pasangan agama dan kitab yang betul.", choices: ["Islam – Kitab Injil", "Kristian – Kitab Tripitaka", "Hindu – Kitab Veda", "Buddha – Kitab Al-Quran"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Mengapakah rakyat Malaysia yang berbeza agama boleh hidup dalam keadaan aman?", choices: ["Kerana semua mempunyai warna kulit sama", "Kerana saling menghormati antara satu sama lain", "Kerana semua tinggal di negeri yang sama", "Kerana undang-undang memaksa mereka"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Perayaan yang disambut oleh umat Islam selepas ibadah haji ialah…", choices: ["Hari Deepavali", "Hari Krismas", "Hari Raya Aidiladha", "Tahun Baharu Cina"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Kaum manakah di Malaysia yang menyambut Hari Gawai?", choices: ["Kaum Sikh", "Kaum Dayak", "Kaum Melayu", "Kaum India"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Bagaimanakah cara pemilihan Yang di-Pertuan Negara atau Yang di-Pertuan Agong dilakukan?", choices: ["Melalui undian dan mesyuarat Majlis Raja-Raja", "Dilantik oleh Perdana Menteri", "Dipilih oleh rakyat melalui pilihan raya", "Dilantik oleh Parlimen"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Antara berikut, yang manakah merupakan tanggungjawab Perdana Menteri Malaysia?", items: ["Menyelia pentadbiran negara", "Menandatangani surat rasmi sekolah", "Mengurus hal pentadbiran negeri", "Mengiringi Yang di-Pertuan Agong ke Majlis Raja-Raja Melayu"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 1, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "Apakah tugas utama seorang Perdana Menteri?", choices: ["Menentukan dasar dan pembangunan negara", "Menulis ucapan untuk Yang di-Pertuan Agong", "Menguruskan pilihan raya", "Mengiringi pelancong luar negara"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Dilahirkan pada tahun 1925 di Alor Setar dan dikenali sebagai Bapa Permodenan. Siapakah tokoh tersebut?", choices: ["Tunku Abdul Rahman Putra Al-Haj", "Tun Abdul Razak bin Hussein", "Tun Dr. Mahathir bin Mohamad", "Tan Sri Muhyiddin bin Yassin"], correct: 2, topic: "uasa" },
+            { type: "mcq", question: "Program apakah yang diperkenalkan oleh Tun Hussein Onn untuk menggalakkan rakyat bekerjasama?", choices: ["Rukun Tetangga", "Amanah Saham Nasional", "Tabung Haji", "Skim Perumahan Rakyat"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Antara bahan berikut, yang manakah boleh dihasilkan daripada buah kelapa sawit?", choices: ["Sabun dan minyak masak", "Kertas dan getah", "Beras dan tepung", "Kayu dan kaca"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Proton Saga merupakan kereta buatan pertama di Malaysia.", choices: ["Betul", "Salah"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Bandar diraja ialah bandar yang mempunyai tempat bersejarah seperti istana, muzium dan galeri. Antara berikut, manakah contoh bandar diraja di Malaysia?", choices: ["Sik dan Kuala Terengganu", "Klang dan Kuala Kangsar", "Ipoh dan Johor Bahru", "Seremban dan Kota Bharu"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Siapakah atlet wanita Malaysia yang pernah bergelar pemain skuasy nombor satu dunia?", choices: ["Nicol Ann David", "Pandelela Rinong", "Farah Ann Abdul Hadi", "Nurul Huda Abdullah"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah aktiviti yang boleh mengukuhkan perpaduan antara kaum di Malaysia?", choices: ["Menyertai sukan antara rumah", "Bergaul hanya dengan kaum sendiri", "Tidak menyertai aktiviti sekolah", "Mengasingkan diri semasa majlis"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah tujuan utama penubuhan ASEAN?", choices: ["Menghapuskan amalan Apartheid", "Menjalin hubungan persahabatan serantau", "Menghapuskan raja-raja Melayu", "Menggalakkan peperangan di Asia Tenggara"], correct: 1, topic: "uasa" },
+            { type: "mcq", question: "Apakah peranan Malaysia dalam Pertubuhan Bangsa-Bangsa Bersatu (PBB)?", items: ["Menubuhkan Bank Pembangunan Islam", "Membantu menamatkan amalan apartheid", "Menyuarakan usaha memerangi jenayah dadah", "Menyertai peperangan di negara lain"], choices: ["I dan II", "I dan IV", "II dan III", "III dan IV"], correct: 2, hasItems: true, topic: "uasa" },
+            { type: "mcq", question: "Pertubuhan Komanwel dianggotai oleh…", choices: ["Negara-negara bekas jajahan British", "Negara-negara Eropah sahaja", "Negara-negara Asia Tenggara sahaja", "Semua negara Islam dunia"], correct: 0, topic: "uasa" },
+            { type: "mcq", question: "Apakah peranan Malaysia dalam Pertubuhan Kerjasama Islam (OIC)?", choices: ["Membantu rakyat Palestin yang tertindas", "Menentang negara Islam lain", "Menghapuskan ajaran agama", "Mengurus pilihan raya antarabangsa"], correct: 0, topic: "uasa" },
+            // ===== Tajuk 1: Tokoh & Cabaran Pembentukan Malaysia =====
+            { type: "mcq", question: "Siapakah Perdana Menteri Persekutuan Tanah Melayu yang mengetuai perwakilan dalam Perjanjian Malaysia di London?", choices: ["Tun Abdul Razak Hussein", "Tunku Abdul Rahman Putra Al-Haj", "Tun Muhammad Ghazali Shafie", "Tun V. T. Sambanthan"], correct: 1, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah parti yang dipimpin oleh Tun Datu Mustapha Datu Harun?", choices: ["United Malays National Organisation (UMNO)", "United Sabah National Organisation (USNO)", "United National Kadazan Organization (UNKO)", "Sarawak National Party (SNAP)"], correct: 1, topic: "pembentukan" },
+            { type: "mcq", question: "Mengapakah Lee Kuan Yew menyokong idea pembentukan Malaysia?", choices: ["Untuk menentang penjajahan British", "Untuk menyatukan Borneo Utara", "Untuk membendung ideologi komunis di Singapura", "Untuk menjadi Perdana Menteri Malaysia"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Siapakah pemimpin yang mencadangkan penubuhan Jawatankuasa Siasatan Kemerdekaan Malaysia (JSKM)?", choices: ["Tun Abdul Razak Hussein", "Lee Kuan Yew", "Tun Muhammad Ghazali Shafie", "Donald Stephens (Tun Muhammad Fuad Stephens)"], correct: 3, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah parti yang dipimpin oleh Tan Sri Wong Pow Nee?", choices: ["Malayan Indian Congress (MIC)", "People's Action Party (PAP)", "Malayan Chinese Association (MCA)", "United Malays National Organisation (UMNO)"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Negara manakah yang mengisytiharkan konfrontasi terhadap Malaysia dari tahun 1963 hingga 1966?", choices: ["Filipina", "Thailand", "Indonesia", "Brunei"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah parti yang menolak rancangan pembentukan Malaysia kerana mahu membentuk persekutuan sendiri yang terdiri daripada Brunei, Sarawak dan Borneo Utara?", choices: ["Sarawak National Party (SNAP)", "Sarawak United People's Party (SUPP)", "Parti Negara Sarawak (PANAS)", "Parti Pesaka Anak Sarawak (PESAKA)"], correct: 1, topic: "pembentukan" },
+            { type: "mcq", question: "Bilakah Malaysia terbentuk secara rasmi?", choices: ["31 Ogos 1957", "16 September 1963", "1 Januari 1963", "31 Ogos 1963"], correct: 1, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah peranan Tun Muhammad Ghazali Shafie dalam pembentukan Malaysia?", choices: ["Mengetuai perwakilan di London", "Memimpin Parti PESAKA", "Memainkan peranan penting sebagai Ketua Setiausaha Tetap Kementerian Luar", "Mencadangkan penubuhan JSKM"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah tuntutan negara Filipina yang menjadi cabaran dalam pembentukan Malaysia?", choices: ["Mendakwa Sarawak sebahagian wilayahnya", "Mendakwa Singapura sebahagian wilayahnya", "Mendakwa Sabah sebahagian daripada wilayahnya", "Mendakwa Brunei sebahagian wilayahnya"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Siapakah pemimpin Parti Pesaka Anak Sarawak (PESAKA) yang menandatangani Perjanjian Malaysia di London pada tahun 1963?", choices: ["Tan Sri Datuk Amar Stephen Kalong Ningkan", "Datu Bandar Abang Haji Mustapha", "Tun Temenggung Jugah anak Barieng", "Donald Stephens"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah maksud konfrontasi?", choices: ["Kerjasama antara negara", "Pertentangan dengan sesuatu pihak", "Perjanjian perdamaian", "Perundingan diplomatik"], correct: 1, topic: "pembentukan" },
+            { type: "mcq", question: "Siapakah wakil Persekutuan Tanah Melayu dalam Suruhanjaya Cobbold yang menemu ramah penduduk Sarawak dan Sabah?", choices: ["Tun V. T. Sambanthan", "Tun Abdul Razak Hussein", "Tan Sri Wong Pow Nee", "Tun Muhammad Ghazali Shafie"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Apakah peranan Tun V. T. Sambanthan dalam pembentukan Malaysia?", choices: ["Mengetuai Suruhanjaya Cobbold", "Menandatangani Perjanjian Malaysia di London", "Meneliti draf laporan Suruhanjaya Cobbold bersama Jawatankuasa Kabinet Persekutuan Tanah Melayu", "Memberikan penjelasan tentang pembentukan Malaysia kepada penduduk Sabah"], correct: 2, topic: "pembentukan" },
+            { type: "mcq", question: "Tan Sri Datuk Amar Stephen Kalong Ningkan memainkan peranan penting untuk membentuk organisasi apakah di Sarawak?", choices: ["Suruhanjaya Cobbold", "Jawatankuasa Siasatan Kemerdekaan Malaysia (JSKM)", "Perikatan Sarawak", "Jawatankuasa Antara Kerajaan (JAK)"], correct: 2, topic: "pembentukan" }
+            ,
+            // ===== Unit 2: Negeri-negeri di Malaysia =====
+            { type: "mcq", question: "Malaysia terdiri daripada berapa buah negeri dan Wilayah Persekutuan?", choices: ["11 buah negeri dan 2 Wilayah Persekutuan", "13 buah negeri dan 3 Wilayah Persekutuan", "14 buah negeri dan 3 Wilayah Persekutuan", "13 buah negeri dan 2 Wilayah Persekutuan"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Nama Perlis dipercayai berasal daripada perkataan Siam 'prow-lowy'. Apakah maksudnya?", choices: ["Pokok kelapa", "Pantai pasir", "Kelapa hanyut", "Air mengalir"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Nama Kedah dikatakan berasal daripada perkataan 'Kheddah'. Apakah maksud perkataan tersebut?", choices: ["Perangkap ikan", "Perangkap gajah", "Perangkap harimau", "Perangkap burung"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Mengapakah orang Melayu dari Kedah menamakan Pulau Pinang sebagai Tanjong Penaga?", choices: ["Kerana banyak buah pinang di pulau tersebut", "Kerana ramai pedagang Arab singgah di situ", "Kerana banyak pokok penaga terdapat di pulau tersebut", "Kerana pulau tersebut berbentuk seperti buah pinang"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Nama Perak dikaitkan dengan 'kilatan ikan di dalam air'. Apakah bahan galian yang turut dikaitkan dengan nama Perak?", choices: ["Bijih emas", "Bijih besi", "Bijih timah putih", "Bijih tembaga"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Nama Selangor dikaitkan dengan pokok mentagau di kuala sungai. Pedagang yang singgah di situ menyebutnya sebagai...", choices: ["Kuala Mentagau", "Kuala Selangau", "Kuala Sangur", "Kuala Serangga"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Negeri Sembilan terbentuk daripada gabungan sembilan buah luak pada tahun 1773. Perkataan 'negeri' berasal daripada dialek Minangkabau 'nagari'. Apakah maksudnya?", choices: ["Perkampungan", "Kerajaan", "Wilayah", "Persekutuan"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Nama Melaka dikaitkan dengan dua asal usul yang berbeza. Manakah padanan yang BETUL?", choices: ["Sumber Arab: nama pokok; Sumber tempatan: perhimpunan pedagang", "Sumber Arab: 'Malakat' (perhimpunan pedagang); Sumber tempatan: nama pokok tempat Parameswara berehat", "Sumber Arab: pelabuhan; Sumber tempatan: nama sungai", "Sumber Arab: tanah merah; Sumber tempatan: nama buah"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Nama Johor berasal daripada perkataan Arab 'Jauhar'. Apakah maksudnya?", choices: ["Tanah yang subur", "Pelabuhan yang ramai", "Batu permata yang bernilai", "Hutan yang lebat"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Dalam naskhah Sulalatus Salatin, Pahang dikenali sebagai Inderapura atau Pura. Apakah maksud 'Pura'?", choices: ["Istana", "Bandar atau pekan", "Hutan belantara", "Sungai besar"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Nama Terengganu dikatakan berasal daripada sebutan 'taring anu'. Apakah yang dimaksudkan dengan 'taring anu'?", choices: ["Tanduk rusa yang besar", "Taring besar seperti gading gajah atau binatang liar", "Sisik ikan yang berkilat", "Paruh burung yang tajam"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Nama Kuala Lumpur dikaitkan dengan muara sungai yang dipenuhi lumpur. Apakah aktiviti yang menyebabkan keadaan ini berlaku?", choices: ["Pertanian padi", "Pembalakan hutan", "Perlombongan bijih timah", "Pembinaan jalan kereta api"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Nama Sabah dikaitkan dengan sejenis tumbuhan. Apakah tumbuhan tersebut?", choices: ["Pisang emas", "Pisang tanduk", "Pisang saba", "Pisang rastali"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Nama Labuan berasal daripada perkataan 'labuhan'. Apakah maksud perkataan tersebut?", choices: ["Pulau yang cantik", "Tempat persinggahan kapal", "Pelabuhan ikan", "Tempat berehat pedagang"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Berdasarkan asal usul nama negeri-negeri di Malaysia, yang manakah BENAR?", choices: ["Semua negeri dinamakan berdasarkan sumber alam semula jadi", "Semua negeri dinamakan berdasarkan bahasa Arab", "Penamaan negeri dipengaruhi oleh pelbagai faktor termasuk sumber alam, bahasa asing dan peristiwa sejarah", "Semua negeri dinamakan berdasarkan nama tokoh pemerintah"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Ketua negeri merupakan tonggak utama dalam pemerintahan sesebuah negeri. Apakah yang dimaksudkan dengan 'tonggak utama'?", choices: ["Orang yang paling kaya di negeri", "Tunjang atau asas utama pemerintahan", "Ketua tentera negeri", "Penasihat raja di istana"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Apakah gelaran ketua negeri yang digunakan di Perlis?", choices: ["Sultan", "Yang di-Pertuan Besar", "Raja", "Yang di-Pertua Negeri"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Gelaran Yang di-Pertuan Besar digunakan di negeri manakah?", choices: ["Melaka", "Sabah", "Perlis", "Negeri Sembilan"], correct: 3, topic: "negeri" },
+            { type: "mcq", question: "Manakah antara negeri berikut yang ketua negerinya bergelaran Sultan?", choices: ["Perlis, Kedah, Perak", "Kedah, Perak, Selangor", "Perlis, Sabah, Melaka", "Kedah, Negeri Sembilan, Sarawak"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Gelaran Yang di-Pertua Negeri digunakan di negeri-negeri berikut KECUALI...", choices: ["Pulau Pinang", "Melaka", "Sarawak", "Negeri Sembilan"], correct: 3, topic: "negeri" },
+            { type: "mcq", question: "Siapakah ketua negeri bagi Wilayah Persekutuan?", choices: ["Perdana Menteri", "Yang di-Pertua Negeri", "Yang di-Pertuan Agong", "Menteri Besar"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Berapakah jumlah negeri di Malaysia yang ketua negerinya bergelaran Sultan?", choices: ["5 buah negeri", "6 buah negeri", "7 buah negeri", "8 buah negeri"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Mengapakah gelaran ketua negeri di Malaysia berbeza-beza antara satu negeri dengan negeri yang lain?", choices: ["Kerana pemerintah British yang menetapkannya", "Kerana gelaran yang berbeza memperlihatkan keunikan negara kita", "Kerana setiap negeri mahu gelaran yang lebih baik", "Kerana ketua negeri sendiri yang memilih gelaran"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Ali tinggal di Sarawak. Apakah gelaran ketua negeri di negeri Ali?", choices: ["Sultan", "Raja", "Yang di-Pertuan Besar", "Yang di-Pertua Negeri"], correct: 3, topic: "negeri" },
+            { type: "mcq", question: "Manakah antara berikut menunjukkan padanan yang BETUL antara gelaran dan negeri?", choices: ["Raja — Kedah", "Sultan — Negeri Sembilan", "Yang di-Pertuan Besar — Negeri Sembilan", "Yang di-Pertua Negeri — Kelantan"], correct: 2, topic: "negeri" },
+            { type: "mcq", question: "Apakah persamaan antara Pulau Pinang, Melaka, Sarawak dan Sabah dari segi ketua negeri?", choices: ["Semua menggunakan gelaran Sultan", "Semua menggunakan gelaran Yang di-Pertua Negeri", "Semua menggunakan gelaran Raja", "Semua tidak mempunyai ketua negeri"], correct: 1, topic: "negeri" },
+            { type: "mcq", question: "Sikap menghormati dan taat setia kepada raja dapat dipupuk melalui cara berikut KECUALI...", choices: ["Mengenali ketua negeri", "Menghormati lambang negeri", "Mengabaikan sejarah negeri", "Menghargai warisan negeri"], correct: 2, topic: "negeri" }
         ];
         
         let state = {
@@ -472,7 +534,11 @@
                         <label>Sekolah:</label>
                         <input type="text" id="sekolah" maxlength="100" placeholder="Nama sekolah (optional)">
                     </div>
-                    <button type="submit" class="btn">🚀 Mula Kuiz (55 Soalan)</button>
+                    <div class="form-group">
+                        <label>📚 Pilih Tajuk Ulangkaji:</label>
+                        <select id="topicSelect">${topicOptionsHTML(localStorage.getItem(TOPIC_PREF_KEY) || DEFAULT_TOPIC)}</select>
+                    </div>
+                    <button type="submit" class="btn">🚀 Mula Kuiz</button>
                     <button type="button" class="btn" style="background:linear-gradient(135deg,#ff9800,#f57c00);" onclick="showClassSetup()">👨‍🏫 Mod Kelas (Projektor)</button>
                     <button type="button" class="btn btn-secondary" onclick="state.screen='leaderboard'; renderLeaderboardTabs();">🏆 Papan Markah</button>
                     <button type="button" class="btn btn-secondary" onclick="showAdminLogin()">🔐 Admin Panel</button>
@@ -490,10 +556,15 @@
             
             document.getElementById('introForm').onsubmit = (e) => {
                 e.preventDefault();
+                const topic = document.getElementById('topicSelect').value || DEFAULT_TOPIC;
+                localStorage.setItem(TOPIC_PREF_KEY, topic);
+                state.topic = topic;
                 state.studentInfo = {
                     nama: document.getElementById('nama').value.trim(),
                     negeri: document.getElementById('negeri').value || 'Tidak dinyatakan',
-                    sekolah: document.getElementById('sekolah').value.trim() || ''
+                    sekolah: document.getElementById('sekolah').value.trim() || '',
+                    topic,
+                    topicLabel: topicLabel(topic)
                 };
                 startQuiz();
             };
@@ -636,7 +707,8 @@
         }
         
         function startQuiz() {
-            state.questions = shuffleArray(QUESTIONS).map(q => {
+            const pool = state.topic ? getQuestionsByTopic(state.topic) : QUESTIONS;
+            state.questions = shuffleArray(pool).map(q => {
                 if (q.type === 'mcq') {
                     const choices = q.choices.map((c, i) => ({ c, i }));
                     const shuffled = shuffleArray(choices);
@@ -771,6 +843,7 @@
                         <button class="icon-btn" onclick="toggleDarkMode()">${state.darkMode ? '☀️' : '🌙'}</button>
                     </div>
                     <h1>📊 Keputusan Kuiz</h1>
+                    <p style="color:#666;margin-top:4px;">${topicLabel(state.topic || DEFAULT_TOPIC)}</p>
                 </div>
                 <div style="text-align: center; padding: 40px 20px;">
                     <div style="font-size: 1.5em; margin-bottom: 20px; font-weight: 600;">${msg}</div>
@@ -864,6 +937,8 @@
                 durasi: state.endTime - state.startTime,
                 tarikh: new Date().toISOString(),
                 quiz_id: CONFIG.QUIZ_ID,
+                topic: state.topic || DEFAULT_TOPIC,
+                topic_label: topicLabel(state.topic || DEFAULT_TOPIC),
                 achievements: state.achievements.map(a => a.name).join(', ')
             };
             
@@ -1018,6 +1093,7 @@
         function showClassSetup() {
             state.screen = 'classSetup';
             const savedStudents = JSON.parse(localStorage.getItem('classStudents_' + CONFIG.QUIZ_ID) || '[]');
+            const savedTopic = localStorage.getItem(TOPIC_PREF_KEY) || DEFAULT_TOPIC;
             const app = document.getElementById('app');
             app.innerHTML = `
                 <div class="header">
@@ -1026,6 +1102,11 @@
                     </div>
                     <h1>👨‍🏫 Mod Kelas (Projektor)</h1>
                     <p style="color:#666;margin-top:8px;">Pancar kuiz ini di skrin kelas. Murid dipilih secara rawak untuk jawab soalan.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>📚 Pilih Tajuk:</label>
+                    <select id="classTopic">${topicOptionsHTML(savedTopic)}</select>
                 </div>
 
                 <div class="form-group">
@@ -1039,14 +1120,7 @@
 
                 <div class="form-group">
                     <label>🎯 Bilangan Soalan:</label>
-                    <select id="classQuestionCount">
-                        <option value="5">5 soalan (singkat)</option>
-                        <option value="10" selected>10 soalan</option>
-                        <option value="15">15 soalan</option>
-                        <option value="20">20 soalan</option>
-                        <option value="30">30 soalan</option>
-                        <option value="0">Semua ${QUESTIONS.length} soalan</option>
-                    </select>
+                    <select id="classQuestionCount"></select>
                 </div>
 
                 <div class="form-group">
@@ -1071,6 +1145,18 @@
                 <button type="button" class="btn" onclick="startClassMode()">🚀 Mula Sesi Kelas</button>
                 <button type="button" class="btn btn-secondary" onclick="renderIntro()">↩️ Kembali</button>
             `;
+
+            const topicSel = document.getElementById('classTopic');
+            const countSel = document.getElementById('classQuestionCount');
+            function refreshCount() {
+                const max = getQuestionsByTopic(topicSel.value).length;
+                const candidates = [5, 10, 15, 20, 30].filter(n => n < max);
+                const def = candidates.includes(10) ? 10 : (candidates[0] || max);
+                countSel.innerHTML = candidates.map(n => `<option value="${n}" ${n === def ? 'selected' : ''}>${n} soalan</option>`).join('')
+                    + `<option value="0">Semua ${max} soalan</option>`;
+            }
+            refreshCount();
+            topicSel.addEventListener('change', refreshCount);
         }
 
         function startClassMode() {
@@ -1096,8 +1182,11 @@
             const count = parseInt(document.getElementById('classQuestionCount').value);
             const timerSec = parseInt(document.getElementById('classTimer').value);
             const pickMode = document.getElementById('classPickMode').value;
+            const topic = document.getElementById('classTopic').value || DEFAULT_TOPIC;
+            localStorage.setItem(TOPIC_PREF_KEY, topic);
 
-            const shuffled = shuffleArray(QUESTIONS).map(q => {
+            const pool = getQuestionsByTopic(topic);
+            const shuffled = shuffleArray(pool).map(q => {
                 if (q.type === 'mcq') {
                     const choices = q.choices.map((c, i) => ({ c, i }));
                     const sh = shuffleArray(choices);
@@ -1107,6 +1196,7 @@
             });
 
             state.classMode = {
+                topic,
                 students: unique,
                 scores: Object.fromEntries(unique.map(s => [s, { correct: 0, wrong: 0, asked: 0 }])),
                 questions: count === 0 ? shuffled : shuffled.slice(0, count),
@@ -1174,6 +1264,7 @@
                         <button class="icon-btn" onclick="if(confirm('Tamatkan sesi kelas sekarang?')) { if(state.classMode.timerInterval) clearInterval(state.classMode.timerInterval); renderClassResults(); }" title="Tamat Sesi">🏁</button>
                     </div>
                     <h1 style="font-size:1.8em;">👨‍🏫 Mod Kelas — Soalan ${cm.currentQuestion+1}/${cm.questions.length}</h1>
+                    <p style="color:#666;margin-top:4px;font-size:.95em;">${topicLabel(cm.topic)}</p>
                 </div>
                 <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
 
