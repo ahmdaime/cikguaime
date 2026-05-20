@@ -69,6 +69,10 @@
                     <label for="schoolName" class="block text-sm font-medium text-purple-700 mb-2">Nama Sekolah:</label>
                     <input type="text" id="schoolName" required class="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none text-lg">
                 </div>
+                <div>
+                    <label for="topicSelect" class="block text-sm font-medium text-purple-700 mb-2">📚 Pilih Tajuk Ulangkaji:</label>
+                    <select id="topicSelect" class="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none text-lg bg-white"></select>
+                </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-4 px-6 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all text-lg">🚀 Mula Kuiz</button>
                 <button type="button" id="openClassModeBtn" class="w-full bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold py-3 px-6 rounded-lg hover:from-orange-600 hover:to-amber-700 transition-all">👨‍🏫 Mod Kelas (Projektor)</button>
             </form>
@@ -170,59 +174,155 @@
 
         // ---------- Question Bank ----------
         const quizData = [
-            { question: "Di antara warna berikut, yang manakah bukan warna asas?", options: ["Putih", "Biru", "Merah", "Kuning"], correct: 0 },
-            { question: "Campuran dua warna asas akan menghasilkan", options: ["Warna neutral", "Warna tertier", "Warna sekunder", "Warna asas"], correct: 2 },
-            { question: "Apakah yang dimaksudkan dengan simetri?", options: ["Objek yang bergerak", "Objek yang mempunyai banyak warna", "Objek yang mempunyai garisan berulang", "Objek yang kelihatan seimbang di kedua-dua belah"], correct: 3 },
-            { question: "Dalam teknik kolaj, kita perlu ______________.", options: ["mengukir kayu", "menyapu warna pada kertas", "melakar garisan terlebih dahulu", "memotong dan melekatkan bahan"], correct: 3 },
-            { question: "Variasi warna daripada terang kepada gelap dikenali sebagai", options: ["Warna asas", "Ton warna", "Warna harmoni", "Rupa warna"], correct: 1 },
-            { question: "Berikut adalah benar tentang prinsip rekaan KECUALI", options: ["ruang", "harmoni", "kepadatan", "kepelbagaian"], correct: 2 },
-            { question: "Pilih pernyataan yang benar", options: ["Wau adalah sejenis permainan yang terkenal di negeri Sembilan", "Wau dimainkan di dalam bangunan", "Wau dihasilkan daripada anyaman daun kelapa", "Wau sangat terkenal di negeri-negeri sebelah pantai timur"], correct: 3 },
-            { question: "____ terdiri daripada gabungan pelbagai bahan buangan yang disusun menjadi karya seni.", options: ["Arca asemblaj", "Arca mobail", "Arca stabail", "Arca luakan"], correct: 0 },
-            { question: "Apakah fungsi ruang dalam karya seni?", options: ["Mengubah bentuk asal", "Menentukan ketebalan warna", "Menunjukkan jarak dan kedalaman", "Menjadikan karya kelihatan lebih bercahaya"], correct: 2 },
-            { question: "Apakah fungsi utama warna dalam hasil seni visual?", options: ["Menyusun objek", "Memberi kesan ruang", "Menentukan arah lukisan", "Menarik perhatian dan menunjukkan emosi"], correct: 3 },
-            { question: "Apakah tujuan penilaian hasil seni?", options: ["Menilai harga pasaran", "Untuk menghias rumah", "Mendapat markah tinggi semata-mata", "Membaiki kelemahan dan penambahbaikan"], correct: 3 },
-            { question: "Apakah elemen yang paling penting dalam proses penghasilan arca stabail?", options: ["Estetik", "Berfungsi", "Keseimbangan", "Tekstur permukaan"], correct: 2 },
-            { question: "Rajah di bawah merupakan salah satu penggunaan garisan halus. Garisan halus wujud dalam karya ini melalui teknik lukisan ____________.", options: ["nipis", "zig-zag", "lorekan", "silang pangkah"], correct: 3, image: "https://i.imgur.com/1hZMhh9.png" },
-            { question: "Rajah di bawah menunjukkan corak susunan sisik ikan. Corak ini dikategorikan sebagai", options: ["Susunan corak dam", "Susunan corak terancang", "Susunan corak berpancar", "Susunan corak tidak terancang"], correct: 1, image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEijXMELqawL5PelHWG6TIOY1uNMKffNof9HYdwWUJtLhKejxc03so3SuZ__qKw39WgQHigeUBah2Ek3OXTBVQ6TkKslpCziUBP2pVBwj20yuK-lqICqvdRX5fycSUqzJ8YPIMRI3EMrMykG/s1600/corak+sisik+ikan.PNG" },
-            { question: "Rajah di bawah merupakan salah satu seni kraf warisan Melayu. Apakah nama seni kraf tersebut?", options: ["Dokoh", "Gelang", "Pending", "Cucuk sanggul"], correct: 2, image: "https://i.imgur.com/kAGIUGR.png" },
-            { question: "Hasil seni ini menggunakan gambar lebah dan corak bentuk __________.", options: ["simetri", "geometri", "kontra", "batik"], correct: 1, image: "https://i.imgur.com/nW4z8T3.png" },
-            { question: "Apakah nama susunan ini?", options: ["Susunan cerminan", "Susunan berpancar", "Susunan orgee", "Susunan dam"], correct: 0, image: "https://i.imgur.com/Xrm6hok.png" },
-            { question: "Rajah di atas menunjukkan hasil karya gabungan", options: ["Lukisan dan origami", "Diorama dan capan", "Arca stabail dan catan", "Asemblaj dan capan"], correct: 2, image: "https://imgur.com/M6RRwAD.png" },
-            { question: "Apakah teknik yang digunakan untuk menghasilkan karya kotak di atas?", options: ["Guntingan, capan dan gurisan", "Garisan, guntingan dan lipatan", "Lukisan, guntingan dan capan", "Lukisan, lipatan, cantuman"], correct: 3, image: "https://imgur.com/MxMTJpD.png" },
-            { question: "Corak tidak terancang ini terhasil melalui teknik ___", options: ["renjisan", "titisan", "tiupan", "Lipatan dan guntingan"], correct: 1, image: "https://i.imgur.com/EtgZB7R.png" },
-            { question: "Rajah di atas menunjukkan salah satu kraf seni warisan. Apakah namanya?", options: ["Dokoh", "Gelang", "Pending", "Cucuk sanggul"], correct: 0, image: "https://i.imgur.com/DxLBOpA.png" },
-            { question: "Antara berikut, bahan manakah yang boleh digunakan untuk menghasilkan karya arca asemblaj?", options: ["Kanvas", "Tanah liat", "Kertas lukisan", "Logam, kayu dan plastik"], correct: 3 },
-            { question: "Apakah alat yang sesuai untuk aktiviti catan?", options: ["Pisau dan palet", "Gunting dan pelekat", "Berus dan warna air", "Pensel dan pemadam"], correct: 2 },
-            { question: "Teknik montaj melibatkan__________.", options: ["capan dan cap jari", "reka bentuk kraf 3D", "teknik gosokan dan percikan", "gabungan gambar dan imej sedia ada"], correct: 3 },
-            { question: "_____ sangat penting dalam proses penghasilan arca stabail.", options: ["Estetik", "Berfungsi", "Keseimbangan", "Tekstur permukaan"], correct: 2 },
-            { question: "Selain dari perhiasan diri, Pending juga berfungsi sebagai ________", options: ["alat perlindungan diri", "hiasan dinding", "peralatan memasak", "mainan kanak-kanak"], correct: 0 },
-            { question: "Berikut adalah bahan yang sesuai untuk menghasilkan tanjak, KECUALI", options: ["Botol kaca", "Kain felt", "Kad manila", "Kertas krep"], correct: 0 },
-            { question: "Berikut merupakan alat perhiasan diri, KECUALI", options: ["Cucuk sanggul", "Dokoh", "Gelang kaki", "Tepak sireh"], correct: 3 },
-            { question: "Arca merupakan karya ____________ dimensi.", options: ["satu", "dua", "tiga", "empat"], correct: 2 },
-            { question: "Ciri motif yang manakah yang sering digunakan pada Wau Bulan?", options: ["Motif geometri", "Warna hitam putih sahaja", "Garisan lurus tanpa hiasan", "Corak flora seperti daun sirih"], correct: 3 },
-            { question: "Apakah ciri-ciri loket tradisional?", options: ["Tanpa ukiran", "Dibuat daripada plastik", "Tiada penggunaan logam berharga", "Motif bunga besar sebagai penegasan"], correct: 3 },
-            { question: "Lakaran perkembangan idea dan lakaran idea motif boleh dihasilkan dengan menggunakan ____________.", options: ["akrilik", "krayon", "warna air", "pensil dan pen"], correct: 3 },
-            { question: "Apakah yang dimaksudkan dengan \"prinsip ritma dan pergerakan\" dalam rekaan seni visual?", options: ["Susunan elemen yang tampak statik sahaja", "Susunan elemen menghasilkan kesan gerakan atau aliran dalam karya", "Hanya berkaitan warna", "Hanya berkaitan garisan"], correct: 1 },
-            { question: "Dalam karya seni visual, garisan selari, garisan silang pangkah, garisan berpusat termasuk dalam unsur…", options: ["warna", "garisan", "bentuk", "ruang"], correct: 1 },
-            { question: "Nilai murni dalam aktiviti seni visual termasuk ____", options: ["kerjasama, yakin diri, disiplin", "menyalin kerja rakan tanpa izin", "tidak menjaga alat saat selesai", "mengabaikan keselamatan"], correct: 0 },
-            { question: "Apakah tujuan utama mengadakan pameran seni visual di sekolah?", options: ["Menjual karya kepada orang ramai", "Menunjukkan hasil karya dan menghargai usaha murid", "Menilai keputusan peperiksaan seni", "Mengumpul dana untuk sekolah"], correct: 1 },
-            { question: "Siapakah yang bertanggungjawab merancang dan menguruskan pameran seni visual di sekolah?", options: ["Guru besar", "Guru PSV dan murid bersama-sama", "Juruteknik komputer", "Murid yang menang pertandingan"], correct: 1 },
-            { question: "Apakah perkara pertama yang perlu dibuat sebelum melaksanakan pameran seni?", options: ["Menyusun karya di ruang pameran", "Melantik ahli jawatankuasa", "Menjemput tetamu kehormat", "Menghantar surat penghargaan"], correct: 1 },
-            { question: "Apakah contoh tema pameran seni visual yang sesuai untuk murid Tahun 6?", options: ["Dunia Mewah Saya", "Kreativiti Tanpa Batasan", "Perang Dunia Kedua", "Perakaunan Moden"], correct: 1 },
-            { question: "Aktiviti promosi pameran seni visual boleh dilakukan melalui:", options: ["Surat rasmi kepada murid sahaja", "Catatan dalam buku latihan", "Notis di papan kenyataan staf", "Poster, sepanduk, media sosial, dan hebahan sekolah"], correct: 3 },
-            { question: "Kesan harmoni dalam seni kraf tradisional dihasilkan melalui", options: ["garisan putus-putus", "saiz rawak tanpa perancangan", "warna yang disusun secara bertaburan", "ulangan bentuk dan komposisi yang seimbang"], correct: 3 },
-            { question: "'Ukiran timbul dan tampalan batu permata pada kraf tradisional boleh menambah keindahan sesuatu kraf tradisional'. Berdasarkan penyataan di atas, unsur seni manakah yang boleh dikaitkan dengan ini?", options: ["Warna", "Garisan", "Jalinan sentuh", "Jalinan tampak"], correct: 2 },
-            { question: "Apakah contoh media kering dalam seni visual?", options: ["Cat air", "Akrilik", "Krayon", "Cat minyak"], correct: 2 },
-            { question: "Apakah prinsip rekaan yang diterapkan pada cucuk sanggul melalui susunan bunga seimbang di bahagian kiri dan kanan?", options: ["Ritma", "Kontra", "Pergerakan", "Imbangan simetri"], correct: 3 },
-            { question: "Tajuk Si Cilik Koi memberi tumpuan kepada aktiviti seni yang melibatkan…", options: ["Lukisan digital ikan hiasan", "Penghasilan arca atau binaan ikan koi menggunakan bahan terbuang", "Menulis karangan tentang ikan koi", "Menjahit patung ikan daripada kain"], correct: 1 },
-            { question: "Apabila menghasilkan karya bertemakan Si Cilik Koi, apakah nilai murni yang boleh diterapkan?", options: ["Keberanian dan ketangkasan", "Kesabaran, ketelitian dan kasih terhadap alam sekitar", "Keangkuhan dan persaingan", "Keghairahan terhadap warna semata-mata"], correct: 1 },
-            { question: "Dalam pameran Si Cilik Koi, karya murid boleh disusun dengan cara…", options: ["Diletakkan berselerak atas lantai untuk menarik perhatian", "Disusun mengikut saiz dan warna supaya ruang tampak harmoni dan tersusun", "Digantung di siling bilik darjah", "Diletakkan semua di atas meja guru"], correct: 1 },
-            { question: "Tajuk Beg Batik Rekaanku menekankan kemahiran murid dalam", options: ["Menjahit beg menggunakan mesin jahit", "Mereka corak batik sendiri untuk dijadikan rekaan pada beg", "Membeli beg batik di pasar raya", "Mengira kos penghasilan beg"], correct: 1 },
-            { question: "Alat utama yang digunakan untuk melukis corak batik dengan lilin panas ialah…", options: ["Berus cat air", "Pisau kecil", "Canting", "Span"], correct: 2 },
-            { question: "Mengapa teknik batik sesuai digunakan dalam projek Beg Batik Rekaanku?", options: ["Kerana batik mudah dihasilkan tanpa perancangan", "Corak batik memberi identiti budaya tempatan dan nilai estetika yang tinggi", "Batik hanya menggunakan warna terang yang murah", "Batik digunakan untuk kerja kraf tangan sahaja"], correct: 1 }
+            { question: "Di antara warna berikut, yang manakah bukan warna asas?", options: ["Putih", "Biru", "Merah", "Kuning"], correct: 0, topic: "uasa" },
+            { question: "Campuran dua warna asas akan menghasilkan", options: ["Warna neutral", "Warna tertier", "Warna sekunder", "Warna asas"], correct: 2, topic: "uasa" },
+            { question: "Apakah yang dimaksudkan dengan simetri?", options: ["Objek yang bergerak", "Objek yang mempunyai banyak warna", "Objek yang mempunyai garisan berulang", "Objek yang kelihatan seimbang di kedua-dua belah"], correct: 3, topic: "uasa" },
+            { question: "Dalam teknik kolaj, kita perlu ______________.", options: ["mengukir kayu", "menyapu warna pada kertas", "melakar garisan terlebih dahulu", "memotong dan melekatkan bahan"], correct: 3, topic: "uasa" },
+            { question: "Variasi warna daripada terang kepada gelap dikenali sebagai", options: ["Warna asas", "Ton warna", "Warna harmoni", "Rupa warna"], correct: 1, topic: "uasa" },
+            { question: "Berikut adalah benar tentang prinsip rekaan KECUALI", options: ["ruang", "harmoni", "kepadatan", "kepelbagaian"], correct: 2, topic: "uasa" },
+            { question: "Pilih pernyataan yang benar", options: ["Wau adalah sejenis permainan yang terkenal di negeri Sembilan", "Wau dimainkan di dalam bangunan", "Wau dihasilkan daripada anyaman daun kelapa", "Wau sangat terkenal di negeri-negeri sebelah pantai timur"], correct: 3, topic: "uasa" },
+            { question: "____ terdiri daripada gabungan pelbagai bahan buangan yang disusun menjadi karya seni.", options: ["Arca asemblaj", "Arca mobail", "Arca stabail", "Arca luakan"], correct: 0, topic: "uasa" },
+            { question: "Apakah fungsi ruang dalam karya seni?", options: ["Mengubah bentuk asal", "Menentukan ketebalan warna", "Menunjukkan jarak dan kedalaman", "Menjadikan karya kelihatan lebih bercahaya"], correct: 2, topic: "uasa" },
+            { question: "Apakah fungsi utama warna dalam hasil seni visual?", options: ["Menyusun objek", "Memberi kesan ruang", "Menentukan arah lukisan", "Menarik perhatian dan menunjukkan emosi"], correct: 3, topic: "uasa" },
+            { question: "Apakah tujuan penilaian hasil seni?", options: ["Menilai harga pasaran", "Untuk menghias rumah", "Mendapat markah tinggi semata-mata", "Membaiki kelemahan dan penambahbaikan"], correct: 3, topic: "uasa" },
+            { question: "Apakah elemen yang paling penting dalam proses penghasilan arca stabail?", options: ["Estetik", "Berfungsi", "Keseimbangan", "Tekstur permukaan"], correct: 2, topic: "uasa" },
+            { question: "Rajah di bawah merupakan salah satu penggunaan garisan halus. Garisan halus wujud dalam karya ini melalui teknik lukisan ____________.", options: ["nipis", "zig-zag", "lorekan", "silang pangkah"], correct: 3, image: "https://i.imgur.com/1hZMhh9.png", topic: "uasa" },
+            { question: "Rajah di bawah menunjukkan corak susunan sisik ikan. Corak ini dikategorikan sebagai", options: ["Susunan corak dam", "Susunan corak terancang", "Susunan corak berpancar", "Susunan corak tidak terancang"], correct: 1, image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEijXMELqawL5PelHWG6TIOY1uNMKffNof9HYdwWUJtLhKejxc03so3SuZ__qKw39WgQHigeUBah2Ek3OXTBVQ6TkKslpCziUBP2pVBwj20yuK-lqICqvdRX5fycSUqzJ8YPIMRI3EMrMykG/s1600/corak+sisik+ikan.PNG", topic: "uasa" },
+            { question: "Rajah di bawah merupakan salah satu seni kraf warisan Melayu. Apakah nama seni kraf tersebut?", options: ["Dokoh", "Gelang", "Pending", "Cucuk sanggul"], correct: 2, image: "https://i.imgur.com/kAGIUGR.png", topic: "uasa" },
+            { question: "Hasil seni ini menggunakan gambar lebah dan corak bentuk __________.", options: ["simetri", "geometri", "kontra", "batik"], correct: 1, image: "https://i.imgur.com/nW4z8T3.png", topic: "uasa" },
+            { question: "Apakah nama susunan ini?", options: ["Susunan cerminan", "Susunan berpancar", "Susunan orgee", "Susunan dam"], correct: 0, image: "https://i.imgur.com/Xrm6hok.png", topic: "uasa" },
+            { question: "Rajah di atas menunjukkan hasil karya gabungan", options: ["Lukisan dan origami", "Diorama dan capan", "Arca stabail dan catan", "Asemblaj dan capan"], correct: 2, image: "https://imgur.com/M6RRwAD.png", topic: "uasa" },
+            { question: "Apakah teknik yang digunakan untuk menghasilkan karya kotak di atas?", options: ["Guntingan, capan dan gurisan", "Garisan, guntingan dan lipatan", "Lukisan, guntingan dan capan", "Lukisan, lipatan, cantuman"], correct: 3, image: "https://imgur.com/MxMTJpD.png", topic: "uasa" },
+            { question: "Corak tidak terancang ini terhasil melalui teknik ___", options: ["renjisan", "titisan", "tiupan", "Lipatan dan guntingan"], correct: 1, image: "https://i.imgur.com/EtgZB7R.png", topic: "uasa" },
+            { question: "Rajah di atas menunjukkan salah satu kraf seni warisan. Apakah namanya?", options: ["Dokoh", "Gelang", "Pending", "Cucuk sanggul"], correct: 0, image: "https://i.imgur.com/DxLBOpA.png", topic: "uasa" },
+            { question: "Antara berikut, bahan manakah yang boleh digunakan untuk menghasilkan karya arca asemblaj?", options: ["Kanvas", "Tanah liat", "Kertas lukisan", "Logam, kayu dan plastik"], correct: 3, topic: "uasa" },
+            { question: "Apakah alat yang sesuai untuk aktiviti catan?", options: ["Pisau dan palet", "Gunting dan pelekat", "Berus dan warna air", "Pensel dan pemadam"], correct: 2, topic: "uasa" },
+            { question: "Teknik montaj melibatkan__________.", options: ["capan dan cap jari", "reka bentuk kraf 3D", "teknik gosokan dan percikan", "gabungan gambar dan imej sedia ada"], correct: 3, topic: "uasa" },
+            { question: "_____ sangat penting dalam proses penghasilan arca stabail.", options: ["Estetik", "Berfungsi", "Keseimbangan", "Tekstur permukaan"], correct: 2, topic: "uasa" },
+            { question: "Selain dari perhiasan diri, Pending juga berfungsi sebagai ________", options: ["alat perlindungan diri", "hiasan dinding", "peralatan memasak", "mainan kanak-kanak"], correct: 0, topic: "uasa" },
+            { question: "Berikut adalah bahan yang sesuai untuk menghasilkan tanjak, KECUALI", options: ["Botol kaca", "Kain felt", "Kad manila", "Kertas krep"], correct: 0, topic: "uasa" },
+            { question: "Berikut merupakan alat perhiasan diri, KECUALI", options: ["Cucuk sanggul", "Dokoh", "Gelang kaki", "Tepak sireh"], correct: 3, topic: "uasa" },
+            { question: "Arca merupakan karya ____________ dimensi.", options: ["satu", "dua", "tiga", "empat"], correct: 2, topic: "uasa" },
+            { question: "Ciri motif yang manakah yang sering digunakan pada Wau Bulan?", options: ["Motif geometri", "Warna hitam putih sahaja", "Garisan lurus tanpa hiasan", "Corak flora seperti daun sirih"], correct: 3, topic: "uasa" },
+            { question: "Apakah ciri-ciri loket tradisional?", options: ["Tanpa ukiran", "Dibuat daripada plastik", "Tiada penggunaan logam berharga", "Motif bunga besar sebagai penegasan"], correct: 3, topic: "uasa" },
+            { question: "Lakaran perkembangan idea dan lakaran idea motif boleh dihasilkan dengan menggunakan ____________.", options: ["akrilik", "krayon", "warna air", "pensil dan pen"], correct: 3, topic: "uasa" },
+            { question: "Apakah yang dimaksudkan dengan \"prinsip ritma dan pergerakan\" dalam rekaan seni visual?", options: ["Susunan elemen yang tampak statik sahaja", "Susunan elemen menghasilkan kesan gerakan atau aliran dalam karya", "Hanya berkaitan warna", "Hanya berkaitan garisan"], correct: 1, topic: "uasa" },
+            { question: "Dalam karya seni visual, garisan selari, garisan silang pangkah, garisan berpusat termasuk dalam unsur…", options: ["warna", "garisan", "bentuk", "ruang"], correct: 1, topic: "uasa" },
+            { question: "Nilai murni dalam aktiviti seni visual termasuk ____", options: ["kerjasama, yakin diri, disiplin", "menyalin kerja rakan tanpa izin", "tidak menjaga alat saat selesai", "mengabaikan keselamatan"], correct: 0, topic: "uasa" },
+            { question: "Apakah tujuan utama mengadakan pameran seni visual di sekolah?", options: ["Menjual karya kepada orang ramai", "Menunjukkan hasil karya dan menghargai usaha murid", "Menilai keputusan peperiksaan seni", "Mengumpul dana untuk sekolah"], correct: 1, topic: "uasa" },
+            { question: "Siapakah yang bertanggungjawab merancang dan menguruskan pameran seni visual di sekolah?", options: ["Guru besar", "Guru PSV dan murid bersama-sama", "Juruteknik komputer", "Murid yang menang pertandingan"], correct: 1, topic: "uasa" },
+            { question: "Apakah perkara pertama yang perlu dibuat sebelum melaksanakan pameran seni?", options: ["Menyusun karya di ruang pameran", "Melantik ahli jawatankuasa", "Menjemput tetamu kehormat", "Menghantar surat penghargaan"], correct: 1, topic: "uasa" },
+            { question: "Apakah contoh tema pameran seni visual yang sesuai untuk murid Tahun 6?", options: ["Dunia Mewah Saya", "Kreativiti Tanpa Batasan", "Perang Dunia Kedua", "Perakaunan Moden"], correct: 1, topic: "uasa" },
+            { question: "Aktiviti promosi pameran seni visual boleh dilakukan melalui:", options: ["Surat rasmi kepada murid sahaja", "Catatan dalam buku latihan", "Notis di papan kenyataan staf", "Poster, sepanduk, media sosial, dan hebahan sekolah"], correct: 3, topic: "uasa" },
+            { question: "Kesan harmoni dalam seni kraf tradisional dihasilkan melalui", options: ["garisan putus-putus", "saiz rawak tanpa perancangan", "warna yang disusun secara bertaburan", "ulangan bentuk dan komposisi yang seimbang"], correct: 3, topic: "uasa" },
+            { question: "'Ukiran timbul dan tampalan batu permata pada kraf tradisional boleh menambah keindahan sesuatu kraf tradisional'. Berdasarkan penyataan di atas, unsur seni manakah yang boleh dikaitkan dengan ini?", options: ["Warna", "Garisan", "Jalinan sentuh", "Jalinan tampak"], correct: 2, topic: "uasa" },
+            { question: "Apakah contoh media kering dalam seni visual?", options: ["Cat air", "Akrilik", "Krayon", "Cat minyak"], correct: 2, topic: "uasa" },
+            { question: "Apakah prinsip rekaan yang diterapkan pada cucuk sanggul melalui susunan bunga seimbang di bahagian kiri dan kanan?", options: ["Ritma", "Kontra", "Pergerakan", "Imbangan simetri"], correct: 3, topic: "uasa" },
+            { question: "Tajuk Si Cilik Koi memberi tumpuan kepada aktiviti seni yang melibatkan…", options: ["Lukisan digital ikan hiasan", "Penghasilan arca atau binaan ikan koi menggunakan bahan terbuang", "Menulis karangan tentang ikan koi", "Menjahit patung ikan daripada kain"], correct: 1, topic: "uasa" },
+            { question: "Apabila menghasilkan karya bertemakan Si Cilik Koi, apakah nilai murni yang boleh diterapkan?", options: ["Keberanian dan ketangkasan", "Kesabaran, ketelitian dan kasih terhadap alam sekitar", "Keangkuhan dan persaingan", "Keghairahan terhadap warna semata-mata"], correct: 1, topic: "uasa" },
+            { question: "Dalam pameran Si Cilik Koi, karya murid boleh disusun dengan cara…", options: ["Diletakkan berselerak atas lantai untuk menarik perhatian", "Disusun mengikut saiz dan warna supaya ruang tampak harmoni dan tersusun", "Digantung di siling bilik darjah", "Diletakkan semua di atas meja guru"], correct: 1, topic: "uasa" },
+            { question: "Tajuk Beg Batik Rekaanku menekankan kemahiran murid dalam", options: ["Menjahit beg menggunakan mesin jahit", "Mereka corak batik sendiri untuk dijadikan rekaan pada beg", "Membeli beg batik di pasar raya", "Mengira kos penghasilan beg"], correct: 1, topic: "uasa" },
+            { question: "Alat utama yang digunakan untuk melukis corak batik dengan lilin panas ialah…", options: ["Berus cat air", "Pisau kecil", "Canting", "Span"], correct: 2, topic: "uasa" },
+            { question: "Mengapa teknik batik sesuai digunakan dalam projek Beg Batik Rekaanku?", options: ["Kerana batik mudah dihasilkan tanpa perancangan", "Corak batik memberi identiti budaya tempatan dan nilai estetika yang tinggi", "Batik hanya menggunakan warna terang yang murah", "Batik digunakan untuk kerja kraf tangan sahaja"], correct: 1, topic: "uasa" },
+    // ===== Unit 1: Gambaran Minda =====
+    { question: "Apakah fungsi utama tetingkap fokus dalam aktiviti seni ini?", options: ["Memfokuskan sesuatu objek tertentu untuk dilukis", "Menghasilkan garisan perspektif pada lukisan", "Mewujudkan kesan ruang dalam pada karya", "Menggantikan penggunaan kertas lukisan"], correct: 0, topic: "unit1" },,
+    { question: "Penggunaan garisan perspektif dalam karya dua dimensi memberikan kesan apa?", options: ["Kesan warna", "Kesan ruang", "Kesan jalinan", "Kesan bentuk"], correct: 1, topic: "unit1" },,
+    { question: "Apakah istilah yang digunakan bagi kedudukan ruang di belakang dalam karya?", options: ["Ruang tampak", "Ruang cetak", "Ruang dalam", "Ruang fokus"], correct: 2, topic: "unit1" },,
+    { question: "Manakah antara berikut BUKAN alat atau bahan yang disenaraikan dalam gambar?", options: ["Kertas lukisan", "Pen penanda", "Cat minyak", "Pensel warna"], correct: 2, topic: "unit1" },,
+    { question: "Bagaimanakah penggunaan warna dapat menimbulkan kedalaman ruang?", options: ["Menggunakan warna yang lebih gelap", "Menggunakan warna yang lebih pudar", "Menggunakan satu warna sahaja", "Menggunakan warna kuning terang"], correct: 0, topic: "unit1" },,
+    { question: "Mengapakah hasil lorekan perlu lebih jelas pada objek yang berada di hadapan?", options: ["Untuk menutup ruang kosong", "Untuk mendapatkan jalinan tampak", "Untuk menonjolkan garisan perspektif", "Untuk membezakan saiz kertas"], correct: 1, topic: "unit1" },,
+    { question: "Apakah peranan garisan tebal dan halus dalam lakaran?", options: ["Menjelaskan jarak dan saiz di antara objek", "Menentukan jenis media basah yang digunakan", "Mengaburkan objek di bahagian belakang", "Memastikan bingkai gambar kelihatan lurus"], correct: 0, topic: "unit1" },,
+    { question: "Pilih pernyataan yang paling tepat mengenai maksud 'ruang dalam'.", options: ["Ruang kosong di sekeliling bingkai gambar", "Ruang ilusi yang kelihatan jauh dan luas pada permukaan dua dimensi", "Ruang fizikal sebenar di dalam bilik darjah", "Ruang antara dua objek yang dilukis secara bertindih"], correct: 1, topic: "unit1" },,
+    { question: "Langkah pertama ialah mencari gambar pemandangan. Apakah langkah seterusnya untuk menghasilkan karya Tingkap Damai?", options: ["Mewarnakan gambar tersebut dengan pensel warna", "Menggunting gambar tersebut mengikut bentuk bulat", "Meletakkan tetingkap fokus pada imej tersebut", "Melakarkan pemandangan di atas kertas lukisan"], correct: 2, topic: "unit1" },,
+    { question: "Anda menyusun kedudukan objek secara bertindih dalam lukisan anda. Apakah kesan seni yang akan terhasil daripada teknik ini?", options: ["Kesan ruang", "Kesan kontra", "Kesan harmoni", "Kesan pergerakan"], correct: 0, topic: "unit1" },
+    // ===== Unit 2: Pembina Cilik =====
+    { question: "Apakah maksud estetik dalam seni visual?", options: ["Keseimbangan dalam karya seni", "Keindahan dan kecantikan pada sesuatu hasil karya seni", "Kekuatan struktur sesuatu binaan", "Keharmonian warna dalam lukisan"], correct: 1, topic: "unit2" },,
+    { question: "Apakah jenis arca yang dihasilkan daripada cantuman pelbagai bahan dan media?", options: ["Arca ukiran", "Arca acuan", "Arca asemblaj", "Arca stabail"], correct: 2, topic: "unit2" },,
+    { question: "Apakah maksud tanggam?", options: ["Teknik menganyam bahan semula jadi", "Sambungan kayu yang bertakuk-takuk supaya rapat dan teguh", "Kaedah mewarna menggunakan cat air", "Cara mengikat tali pada binaan"], correct: 1, topic: "unit2" },,
+    { question: "Mengapakah warna merah digunakan pada arca berbentuk hati yang terdapat di kawasan lapang?", options: ["Kerana warna merah mudah dilihat pada waktu malam", "Kerana warna merah menimbulkan kontra dengan persekitaran", "Kerana warna merah melambangkan kasih sayang", "Kerana warna merah paling tahan terhadap cuaca panas"], correct: 1, topic: "unit2" },,
+    { question: "Apakah yang dimaksudkan dengan imbangan tidak simetri pada arca berbentuk hati?", options: ["Arca tersebut tidak seimbang dan mudah terjatuh", "Bentuk arca tidak sama sisi tetapi masih menampakkan keteguhan dan kestabilan", "Arca dibina tanpa mengikut sebarang perancangan", "Bahagian kiri dan kanan arca adalah sama tepat"], correct: 1, topic: "unit2" },,
+    { question: "Kamu diminta membina arca stabail menggunakan bod impra. Apakah prinsip yang perlu diaplikasikan supaya arca stabil?", options: ["Kontra dan harmoni", "Imbangan dan unsur bentuk", "Jalinan dan penegasan", "Irama dan pergerakan"], correct: 1, topic: "unit2" },,
+    { question: "Bagaimanakah corak dihasilkan pada karya binaan?", options: ["Melukis garisan lurus pada permukaan karya", "Menyusun rupa yang sama secara berulang-ulang", "Mengecat seluruh permukaan karya dengan satu warna", "Memotong bahan kepada saiz yang berbeza-beza"], correct: 1, topic: "unit2" },,
+    { question: "Pada arca asemblaj robot, bahasa seni visual yang mewujudkan harmoni ialah...", options: ["Penggunaan warna merah pada badan arca", "Jalinan kasar dan bergerigi pada permukaan bahan", "Susun atur pelbagai bahan dari kaki hingga kepala arca", "Bentuk silinder dan segi empat pada bahagian arca"], correct: 2, topic: "unit2" },,
+    { question: "Mengapakah tapak arca stabail perlu dibina dari tapak yang lebih luas dan besar?", options: ["Supaya arca kelihatan lebih cantik dan menarik", "Supaya arca seimbang dan kukuh", "Supaya arca lebih mudah diwarnakan", "Supaya arca mempunyai lebih banyak corak"], correct: 1, topic: "unit2" },,
+    { question: "Pada arca asemblaj robot, apakah unsur seni yang menjadi titik fokus karya?", options: ["Kaki arca yang diperbuat daripada logam", "Badan arca yang berwarna merah", "Bentuk tangan arca", "Kepala arca yang diperbuat daripada plastik"], correct: 2, topic: "unit2" },,
+    { question: "Manakah antara berikut yang PALING TEPAT menerangkan penegasan wujud pada arca berbentuk hati?", options: ["Arca dibina menggunakan bahan besi tahan karat", "Arca dicat dengan warna merah yang terang", "Arca dibina di kawasan lapang yang terbuka", "Arca mempunyai bentuk tiga dimensi yang besar"], correct: 2, topic: "unit2" },,
+    { question: "Seorang murid membina arca stabail tetapi arcanya mudah tumbang. Apakah masalah UTAMA yang mungkin berlaku?", options: ["Warna yang digunakan tidak sesuai", "Corak pada permukaan arca terlalu banyak", "Tapak arca tidak cukup luas dan besar", "Bahan pelekat yang digunakan terlalu tebal"], correct: 2, topic: "unit2" },,
+    { question: "Antara berikut, manakah bahan yang digunakan dalam arca asemblaj robot?", options: ["Kayu, rotan, dan buluh", "Besi, logam, dan plastik terpakai", "Tanah liat, simen, dan pasir", "Kain, benang, dan kertas"], correct: 1, topic: "unit2" },,
+    { question: "Apakah persamaan prinsip seni visual yang diperlukan oleh KEDUA-DUA arca asemblaj dan arca stabail?", options: ["Kedua-duanya mesti menggunakan bahan logam", "Kedua-duanya memerlukan prinsip imbangan", "Kedua-duanya mesti dicat dengan warna merah", "Kedua-duanya perlu dibina di kawasan lapang"], correct: 1, topic: "unit2" },,
+    { question: "Kesatuan pada karya binaan arca stabail dapat dilihat dari segi...", options: ["Saiz bahan yang digunakan sahaja", "Warna dan gabungan bentuk yang tersusun", "Bilangan bahagian tanggam yang digunakan", "Jenis pelekat yang digunakan pada permukaan"], correct: 1, topic: "unit2" },,
+    { question: "Mengapakah pelbagai jenis kotak seperti kotak hadiah, kotak piza dan kotak makanan dikumpulkan pada langkah pertama aktiviti Kotak Kejutan?", options: ["Untuk dihias dan dijual semula", "Untuk meneroka pelbagai bentuk dan saiz sebagai rujukan binaan", "Untuk dikitar semula menjadi bahan kraf", "Untuk diisi dengan hadiah kejutan"], correct: 1, topic: "unit2" },,
+    { question: "Hasil karya Kotak Kejutan dikatakan berbentuk konkrit. Apakah ciri utama bentuk konkrit?", options: ["Hanya boleh dilihat dari satu arah sahaja", "Merupakan bentuk dua dimensi yang rata", "Bentuk nyata yang dapat dilihat dari pelbagai arah", "Bentuk yang hanya wujud dalam imaginasi"], correct: 2, topic: "unit2" },,
+    { question: "Antara berikut, yang manakah PALING SESUAI untuk menggambarkan tujuan aktiviti Kotak Kejutan?", options: ["Menghasilkan lukisan dua dimensi yang menarik", "Meneroka pelbagai media bagi menghasilkan binaan yang kukuh dan berfungsi", "Mempelajari teknik mewarna menggunakan cat air", "Menghasilkan arca menggunakan tanah liat"], correct: 1, topic: "unit2" },,
+    { question: "Seorang murid memilih warna gelap untuk menghias Kotak Kejutannya. Apakah kesan yang mungkin berlaku pada karya tersebut?", options: ["Karya kelihatan lebih menarik dan menonjol", "Karya kurang penegasan dan kurang daya tarikan", "Karya menjadi lebih kukuh dan tahan lama", "Karya kelihatan lebih besar saiznya"], correct: 1, topic: "unit2" },,
+    { question: "Kamu ingin menghasilkan Kotak Kejutan yang kukuh dan berfungsi. Apakah aspek yang perlu diteliti semasa proses penghasilan?", options: ["Warna, corak, dan hiasan", "Bentuk, ruang, dan imbangan", "Garisan, jalinan, dan ton", "Saiz, berat, dan tekstur"], correct: 1, topic: "unit2" },,
+    { question: "Pada langkah 2, bukaan kotak ditampalkan pada kertas lukisan. Apakah tujuan utama tindakan ini?", options: ["Untuk menjadikan kertas lukisan lebih tebal", "Untuk dijadikan maklumat rujukan dan templat binaan", "Untuk menghias kertas lukisan dengan pelbagai bentuk", "Untuk mengukur saiz kertas lukisan"], correct: 1, topic: "unit2" },,
+    { question: "Alia menghasilkan Kotak Kejutan tetapi kotak tersebut tidak seimbang dan mudah terjatuh. Apakah aspek yang mungkin diabaikannya?", options: ["Pemilihan warna yang terang", "Corak pada permukaan kotak", "Prinsip imbangan semasa membentuk kotak", "Penggunaan gam yang banyak"], correct: 2, topic: "unit2" },,
+    { question: "Manakah antara berikut BUKAN alat atau bahan yang digunakan dalam aktiviti Kotak Kejutan?", options: ["Kad manila", "Cat air", "Gunting", "Gam"], correct: 1, topic: "unit2" },,
+    { question: "Mengapakah kotak perlu dibuka dan lipatannya diamati secara teliti sebelum menghasilkan kotak baharu?", options: ["Untuk menjimatkan penggunaan kertas lukisan", "Untuk memahami struktur binaan dan menjadikannya sebagai templat", "Untuk menghias kotak yang sedia ada", "Untuk mengira bilangan lipatan pada kotak"], correct: 1, topic: "unit2" },,
+    { question: "Hasil karya Kotak Kejutan boleh digabungkan dengan bidang lain. Apakah bidang yang dimaksudkan?", options: ["Bidang muzik dan nyanyian", "Bidang menggambar atau membuat corak pada permukaan kotak", "Bidang jahitan dan anyaman", "Bidang lakonan dan teater"], correct: 1, topic: "unit2" },,
+    { question: "Manakah antara berikut merupakan susunan langkah yang BETUL dalam menghasilkan Kotak Kejutan?", options: ["Lakar → Kumpul kotak → Gunting → Bentuk", "Kumpul kotak → Buka dan amati lipatan → Lakar pada kertas → Gunting dan bentuk", "Gunting kertas → Lakar bentuk → Kumpul kotak → Warnakan", "Buka kotak → Gunting kertas → Kumpul bahan → Tampal"], correct: 1, topic: "unit2" },,
+    { question: "Ahmad ingin menjadikan Kotak Kejutannya lebih kreatif dan menarik. Antara berikut, tindakan manakah yang PALING SESUAI?", options: ["Menggunakan kertas nipis supaya mudah dilipat", "Menghias permukaan kotak dengan corak dan warna terang", "Membuat kotak tanpa mengikut templat", "Menggunakan satu warna sahaja pada keseluruhan kotak"], correct: 1, topic: "unit2" },,
+    { question: "Apakah yang mewujudkan unsur ruang pada hasil karya Kotak Kejutan?", options: ["Penggunaan warna yang pelbagai", "Perbezaan jarak dan kedalaman pada hasil karya", "Bilangan lipatan pada kotak", "Saiz kertas lukisan yang digunakan"], correct: 1, topic: "unit2" },
+    // ===== Unit 4: Seni Kreatif dan Kado =====
+    { question: "Apakah bentuk geometri yang terdapat pada sarang lebah?", options: ["Segi empat sama", "Segi enam (heksagon)", "Segi tiga", "Bulatan"], correct: 1, topic: "unit4" },
+    { question: "Manakah antara berikut merupakan serangga yang digunakan sebagai sumber idea dalam Unit 4?", options: ["Semut dan lipas", "Lebah, rama-rama dan kumbang", "Belalang dan jangkrik", "Nyamuk dan lalat"], correct: 1, topic: "unit4" },
+    { question: "Apakah tiga jenis media warna yang dikaji dalam aktiviti kajian warna?", options: ["Cat air, cat minyak, cat poster", "Pen warna, pen marker, oil pastel", "Krayon, arang, pensil warna", "Gouache, akrilik, watercolour"], correct: 1, topic: "unit4" },
+    { question: "Bahagian A dalam Unit 4 ini bertajuk apa?", options: ["Penghasilan Karya", "Apresiasi Seni", "Perkembangan Idea", "Penghasilan Gambar Karya"], correct: 2, topic: "unit4" },
+    { question: "Apakah nama unit ini?", options: ["Gambaran Minda", "Pembina Cilik", "Seni Kreatif dan Kado", "Corak Alam Semula Jadi"], correct: 2, topic: "unit4" },
+    { question: "Mengapakah bentuk sarang lebah sesuai dijadikan inspirasi dalam penghasilan karya seni?", options: ["Kerana bentuknya sukar dilukis", "Kerana corak heksagonnya tersusun dan menarik secara visual", "Kerana sarang lebah berwarna warni", "Kerana lebah haiwan yang berbahaya"], correct: 1, topic: "unit4" },
+    { question: "Apakah tujuan utama membuat lakaran perkembangan idea sebelum menghasilkan karya?", options: ["Untuk menjimatkan kertas", "Untuk merancang dan memilih idea terbaik sebelum mula", "Untuk menunjukkan kepada guru sahaja", "Untuk menyalin reka bentuk orang lain"], correct: 1, topic: "unit4" },
+    { question: "Apakah maksud 'apresiasi seni' dalam konteks Bahagian D?", options: ["Menjual karya seni", "Menghargai, memberi pendapat dan membincangkan karya seni", "Menyalin karya seni orang lain", "Membuang karya yang tidak cantik"], correct: 1, topic: "unit4" },
+    { question: "Kenapa lakaran idea bermula daripada pemerhatian objek sebenar seperti serangga?", options: ["Supaya lukisan kelihatan sama seperti gambar", "Supaya murid boleh memahami bentuk, struktur dan corak daripada alam semula jadi", "Supaya murid tidak perlu berfikir sendiri", "Supaya guru mudah menanda"], correct: 1, topic: "unit4" },
+    { question: "Apakah perbezaan utama antara lakaran idea hal benda dengan lakaran perkembangan idea?", options: ["Lakaran hal benda lebih berwarna", "Lakaran hal benda melukis objek sebenar, lakaran perkembangan idea mengubah bentuk asal menjadi reka bentuk baru", "Tiada perbezaan, kedua-duanya sama", "Lakaran perkembangan idea hanya guna komputer"], correct: 1, topic: "unit4" },
+    { question: "Dalam proses penghasilan karya corak sarang lebah, apakah langkah PERTAMA yang perlu dilakukan?", options: ["Terus mewarnakan karya", "Melakar corak heksagon pada kertas menggunakan pensel", "Menggunting karya yang siap", "Mencetak gambar menggunakan komputer"], correct: 1, topic: "unit4" },
+    { question: "Jika kamu ingin menghasilkan kesan warna yang tebal dan terang pada corak heksagon, media manakah yang paling sesuai?", options: ["Pen warna", "Pensel HB", "Oil pastel", "Pen dakwat hitam"], correct: 2, topic: "unit4" },
+    { question: "Bagaimanakah cara menghasilkan templat kotak kado daripada kertas?", options: ["Lipat kertas menjadi bola", "Lukis bentangan kotak, gunting mengikut garisan, dan lipat menjadi kotak", "Tampal banyak kertas di atas meja", "Potong kertas menjadi bulatan"], correct: 1, topic: "unit4" },
+    { question: "Dalam Bahagian C, apakah alat yang digunakan untuk menghasilkan gambar karya secara digital?", options: ["Mesin taip", "Komputer dan pencetak", "Telefon bimbit sahaja", "Kamera filem"], correct: 1, topic: "unit4" },
+    { question: "Kamu diminta menghias kotak kado dengan corak sarang lebah. Apakah langkah yang betul?", options: ["Lukis corak pada kotak siap → warnakan → tampal hiasan", "Warnakan kotak kosong → lukis corak → gunting", "Tampal kertas warna → buang kotak → lukis semula", "Gunting corak dahulu → buang kertas → lukis pada meja"], correct: 0, topic: "unit4" },
+    { question: "Bandingkan kesan visual antara pen warna dan oil pastel. Manakah pernyataan yang BETUL?", options: ["Pen warna menghasilkan kesan lebih tebal daripada oil pastel", "Oil pastel menghasilkan kesan warna lebih pekat dan tebal, pen warna lebih halus dan ringan", "Kedua-duanya menghasilkan kesan yang sama", "Pen warna tidak boleh digunakan pada kertas"], correct: 1, topic: "unit4" },
+    { question: "Mengapakah proses perkembangan idea memerlukan BEBERAPA lakaran dan bukan hanya satu?", options: ["Supaya kertas habis digunakan", "Supaya ada pilihan idea dan murid boleh memilih reka bentuk yang paling sesuai", "Supaya guru nampak murid rajin", "Supaya semua lukisan kelihatan sama"], correct: 1, topic: "unit4" },
+    { question: "Dalam penghasilan karya corak sarang lebah, apakah unsur seni yang paling menonjol?", options: ["Garisan dan jalinan", "Corak dan bentuk", "Ruang dan imbangan", "Ton dan nilai"], correct: 1, topic: "unit4" },
+    { question: "Kenapa kotak kado menggunakan bentangan (net) dan bukan dibuat secara terus?", options: ["Supaya kotak kelihatan hodoh", "Supaya ukuran tepat, lipatan kemas dan kotak boleh dibuka rata untuk dihias sebelum dilipat", "Supaya kotak tidak boleh ditutup", "Supaya murid tidak perlu mengukur"], correct: 1, topic: "unit4" },
+    { question: "Antara berikut, yang manakah menunjukkan hubungan antara alam semula jadi dengan seni visual dalam unit ini?", options: ["Murid melukis awan di langit", "Corak heksagon sarang lebah dijadikan inspirasi untuk reka bentuk karya dan hiasan kotak kado", "Murid membaca buku tentang lebah", "Murid menangkap serangga untuk dikaji"], correct: 1, topic: "unit4" },
+    { question: "Rakan kamu menghasilkan karya corak heksagon tetapi warnanya tidak sekata dan garisan tidak kemas. Apakah cadangan yang paling membina?", options: ["Buang kerja tu dan buat baru", "Tebalkan garisan dengan pen marker dan warnakan semula bahagian yang tidak sekata", "Biarkan sahaja, tak penting", "Salin karya kawan yang lain"], correct: 1, topic: "unit4" },
+    { question: "Antara tiga media (pen warna, pen marker, oil pastel), yang manakah paling sesuai untuk mewarnakan karya kecil yang memerlukan perincian halus?", options: ["Oil pastel", "Pen marker", "Pen warna", "Semua sama sahaja"], correct: 2, topic: "unit4" },
+    { question: "Kamu melihat dua karya: Karya A menggunakan warna harmoni (sedondon), Karya B menggunakan warna kontra (bertentangan). Manakah pernyataan yang BETUL?", options: ["Karya A salah kerana warnanya membosankan", "Karya B salah kerana warnanya terlalu terang", "Kedua-duanya boleh menjadi karya yang baik bergantung pada tujuan dan kesan yang ingin disampaikan", "Hanya satu cara pewarnaan yang betul dalam seni"], correct: 2, topic: "unit4" },
+    { question: "Semasa sesi apresiasi seni, rakan kamu berkata karya seninya 'tidak cantik'. Apakah respons yang paling sesuai?", options: ["Setuju dan ketawakan dia", "Nyatakan aspek yang menarik dalam karyanya dan cadangkan penambahbaikan secara positif", "Abaikan dia", "Suruh dia buang dan buat semula"], correct: 1, topic: "unit4" },
+    { question: "Adakah penggunaan teknologi (komputer dan pencetak) dalam Bahagian C mengurangkan nilai seni karya tersebut?", options: ["Ya, kerana seni mesti dilakukan dengan tangan sahaja", "Tidak, teknologi membantu mendokumentasikan dan mempersembahkan karya dengan lebih baik tanpa mengurangkan nilai seni asal", "Ya, kerana komputer yang melukis, bukan murid", "Tidak berkaitan dengan seni langsung"], correct: 1, topic: "unit4" },
+    { question: "Kamu diminta mencipta kotak kado dengan tema alam semula jadi. Selain sarang lebah, corak manakah yang paling sesuai?", options: ["Corak logo jenama terkenal", "Corak sisik ikan atau urat daun", "Corak nombor telefon", "Corak huruf abjad"], correct: 1, topic: "unit4" },
+    { question: "Jika kamu ingin menghasilkan karya gabungan 2D dan 3D menggunakan tema sarang lebah, apakah cara terbaik?", options: ["Lukis corak heksagon pada kertas sahaja", "Buat kotak kado (3D) dan hiaskan permukaannya dengan corak heksagon berwarna (2D)", "Buat arca tanah liat tanpa warna", "Tampal gambar lebah pada dinding"], correct: 1, topic: "unit4" },
+    { question: "Kamu mahu menghasilkan karya seni untuk dipamerkan di sekolah. Apakah langkah yang paling lengkap?", options: ["Lukis terus tanpa rancangan", "Buat lakaran idea → pilih reka bentuk terbaik → hasilkan karya → ambil gambar → pamer dan apresiasi", "Salin karya daripada internet", "Minta kawan buatkan"], correct: 1, topic: "unit4" },
+    { question: "Guru meminta kamu mereka bentuk pembungkusan hadiah untuk Hari Guru menggunakan konsep yang dipelajari. Apakah rancangan terbaik?", options: ["Beli pembungkus hadiah dari kedai", "Reka kotak kado sendiri dengan corak alam semula jadi, warnakan dengan media pilihan, dan tulis mesej penghargaan", "Balut dengan surat khabar lama", "Guna beg plastik sebagai pembungkus"], correct: 1, topic: "unit4" },
+    { question: "Jika kamu ingin mengubah suai corak heksagon sarang lebah supaya kelihatan lebih unik, apakah teknik yang boleh digunakan?", options: ["Lukis semua heksagon dengan saiz dan warna yang sama", "Ubah saiz heksagon secara berperingkat, gabungkan warna kontra, dan tambah motif serangga di dalamnya", "Padamkan semua garisan", "Gantikan heksagon dengan bulatan sahaja"], correct: 1, topic: "unit4" }
         ];
 
         const TOTAL_Q = quizData.length;
+
+        // ---------- Topics ----------
+        const TOPICS = {
+            uasa:  { label: 'Ulangkaji UASA (campuran semua tajuk)', icon: '📚' },
+            unit1: { label: 'Unit 1: Gambaran Minda',                icon: '🪟' },
+            unit2: { label: 'Unit 2: Pembina Cilik',                 icon: '🤖' },
+            unit4: { label: 'Unit 4: Seni Kreatif dan Kado',         icon: '🎁' },
+        };
+        const DEFAULT_TOPIC = 'uasa';
+        const TOPIC_PREF_KEY = 'psv-t6-last-topic';
+
+        function getQuestionsByTopic(topic) {
+            return quizData.filter(q => q.topic === topic);
+        }
+        function topicLabel(topic) {
+            const t = TOPICS[topic];
+            return t ? `${t.icon} ${t.label}` : topic;
+        }
+        function populateTopicSelect(selectEl, selected) {
+            selectEl.innerHTML = Object.entries(TOPICS).map(([key, t]) => {
+                const count = getQuestionsByTopic(key).length;
+                const sel = key === selected ? 'selected' : '';
+                return `<option value="${key}" ${sel}>${t.icon} ${t.label} (${count} soalan)</option>`;
+            }).join('');
+        }
 
         // ---------- Storage ----------
         const STORAGE_KEY = 'psv-t6-quiz-progress-v2';
@@ -270,8 +370,9 @@
                 correct: shuffledIdx.indexOf(q.correct)
             };
         }
-        function buildShuffledQuiz() {
-            return shuffleArray(quizData).map(shuffleQuestionOptions);
+        function buildShuffledQuiz(topic) {
+            const pool = topic ? getQuestionsByTopic(topic) : quizData;
+            return shuffleArray(pool).map(shuffleQuestionOptions);
         }
 
         // ---------- DOM ----------
@@ -309,6 +410,7 @@
         // ---------- Init ----------
         document.addEventListener('DOMContentLoaded', () => {
             updateOnlineStatus();
+            populateTopicSelect(el('topicSelect'), localStorage.getItem(TOPIC_PREF_KEY) || DEFAULT_TOPIC);
             setupEventListeners();
             tryOfferResume();
             trySyncPending();
@@ -355,7 +457,8 @@
             const saved = readJSON(STORAGE_KEY, null);
             if (!saved || !saved.studentInfo || !Array.isArray(saved.shuffledQuizData) || saved.shuffledQuizData.length === 0) return;
             const answered = (saved.userAnswers || []).filter(a => a !== null && a !== undefined).length;
-            el('resumeInfo').textContent = `${saved.studentInfo.name} (${saved.studentInfo.class}) — ${answered}/${saved.shuffledQuizData.length} soalan telah dijawab.`;
+            const topicTxt = saved.studentInfo.topicLabel ? ` · ${saved.studentInfo.topicLabel}` : '';
+            el('resumeInfo').textContent = `${saved.studentInfo.name} (${saved.studentInfo.class}) — ${answered}/${saved.shuffledQuizData.length} soalan telah dijawab${topicTxt}.`;
             resumeBanner.classList.remove('hidden');
         }
 
@@ -379,12 +482,16 @@
 
         // ---------- Start ----------
         function startNewQuiz() {
+            const topic = el('topicSelect').value || DEFAULT_TOPIC;
+            localStorage.setItem(TOPIC_PREF_KEY, topic);
             studentInfo = {
                 name: el('studentName').value.trim(),
                 class: el('studentClass').value.trim(),
-                school: el('schoolName').value.trim()
+                school: el('schoolName').value.trim(),
+                topic,
+                topicLabel: topicLabel(topic)
             };
-            shuffledQuizData = buildShuffledQuiz();
+            shuffledQuizData = buildShuffledQuiz(topic);
             userAnswers = new Array(shuffledQuizData.length).fill(null);
             currentQuestion = 0;
             elapsedAtResume = 0;
@@ -550,7 +657,7 @@
                 const s = d.timeSpent % 60;
                 el('finalScore').textContent = `Markah: ${d.score}/${d.totalQuestions}`;
                 el('finalPercentage').textContent = `Peratusan: ${d.percentage}%`;
-                el('finalTime').textContent = `Masa: ${m}:${String(s).padStart(2,'0')}`;
+                el('finalTime').textContent = `Masa: ${m}:${String(s).padStart(2,'0')}${d.topicLabel ? ' · ' + d.topicLabel : ''}`;
             }
         }
 
@@ -725,10 +832,17 @@
 
         function renderClassSetup() {
             const saved = readJSON(CLASS_STUDENTS_KEY, []);
+            const savedTopic = localStorage.getItem(TOPIC_PREF_KEY) || DEFAULT_TOPIC;
+            const topicCount = getQuestionsByTopic(savedTopic).length;
             classSection.innerHTML = `
                 <div class="quiz-card rounded-xl p-6 md:p-8 shadow-lg mb-6">
                     <h2 class="text-2xl font-bold text-purple-800 mb-2 text-center">👨‍🏫 Mod Kelas (Projektor)</h2>
                     <p class="text-sm text-gray-600 mb-5 text-center">Pancar kuiz di skrin kelas. Murid dipilih rawak untuk jawab soalan.</p>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-purple-700 mb-2">📚 Pilih Tajuk:</label>
+                        <select id="cmTopic" class="w-full px-3 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none"></select>
+                    </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-purple-700 mb-2">📝 Senarai Murid (satu nama satu baris):</label>
@@ -739,14 +853,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                         <div>
                             <label class="block text-sm font-medium text-purple-700 mb-2">🎯 Bilangan Soalan:</label>
-                            <select id="cmQuestionCount" class="w-full px-3 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none">
-                                <option value="5">5 soalan</option>
-                                <option value="10" selected>10 soalan</option>
-                                <option value="15">15 soalan</option>
-                                <option value="20">20 soalan</option>
-                                <option value="30">30 soalan</option>
-                                <option value="0">Semua ${TOTAL_Q} soalan</option>
-                            </select>
+                            <select id="cmQuestionCount" class="w-full px-3 py-3 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none"></select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-purple-700 mb-2">⏱️ Masa Setiap Soalan:</label>
@@ -773,6 +880,20 @@
                     </div>
                 </div>
             `;
+            // Wire topic + count adaptive
+            const topicSel = el('cmTopic');
+            const countSel = el('cmQuestionCount');
+            populateTopicSelect(topicSel, savedTopic);
+            function refreshCountOptions() {
+                const max = getQuestionsByTopic(topicSel.value).length;
+                const candidates = [5, 10, 15, 20, 30].filter(n => n < max);
+                const defaultPick = candidates.includes(10) ? 10 : (candidates[0] || max);
+                countSel.innerHTML = candidates.map(n => `<option value="${n}" ${n === defaultPick ? 'selected' : ''}>${n} soalan</option>`).join('')
+                    + `<option value="0">Semua ${max} soalan</option>`;
+            }
+            refreshCountOptions();
+            topicSel.addEventListener('change', refreshCountOptions);
+
             el('cmStartBtn').addEventListener('click', startClassSession);
             el('cmBackBtn').addEventListener('click', backToIntro);
         }
@@ -789,9 +910,12 @@
             const count = parseInt(el('cmQuestionCount').value, 10);
             const timerSec = parseInt(el('cmTimer').value, 10);
             const pickMode = el('cmPickMode').value;
+            const topic = el('cmTopic').value || DEFAULT_TOPIC;
+            localStorage.setItem(TOPIC_PREF_KEY, topic);
 
-            const shuffled = buildShuffledQuiz();
+            const shuffled = buildShuffledQuiz(topic);
             classMode = {
+                topic,
                 students: unique,
                 scores: Object.fromEntries(unique.map(s => [s, { correct: 0, wrong: 0, asked: 0 }])),
                 questions: count === 0 ? shuffled : shuffled.slice(0, count),
@@ -836,7 +960,7 @@
             classSection.innerHTML = `
                 <div class="quiz-card rounded-xl p-4 mb-4 shadow-lg">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-medium text-purple-700">👨‍🏫 Mod Kelas — Soalan ${cm.currentQuestion+1} / ${cm.questions.length}</span>
+                        <span class="text-sm font-medium text-purple-700">👨‍🏫 Mod Kelas — Soalan ${cm.currentQuestion+1} / ${cm.questions.length} <span class="text-purple-500">· ${topicLabel(cm.topic)}</span></span>
                         <button id="cmEndBtn" class="text-xs bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">🏁 Tamat Sesi</button>
                     </div>
                     <div class="w-full bg-purple-200 rounded-full h-3">
