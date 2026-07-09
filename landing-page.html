@@ -1208,30 +1208,25 @@
     <!-- How to Buy Section -->
     <section id="how-to-buy" class="container section">
         <h2 class="section-title">🛒 Cara Membeli PRO License</h2>
-        <p class="section-subtitle">5 langkah mudah untuk activate PRO features</p>
+        <p class="section-subtitle">4 langkah mudah untuk activate PRO features</p>
         <div class="steps-grid">
             <div class="step">
                 <div class="step-number">1</div>
-                <h3 class="step-title">Isi Borang</h3>
-                <p class="step-description">Masukkan nama, email, no. telefon di halaman pembelian</p>
+                <h3 class="step-title">Klik Beli</h3>
+                <p class="step-description">Anda dibawa terus ke halaman pembelian rasmi</p>
             </div>
             <div class="step">
                 <div class="step-number">2</div>
-                <h3 class="step-title">Bayar RM10</h3>
-                <p class="step-description">Online Banking, FPX, atau DuitNow/QR Pay</p>
+                <h3 class="step-title">Isi & Bayar</h3>
+                <p class="step-description">Masukkan nama, email dan bayar online — FPX, DuitNow atau kad</p>
             </div>
             <div class="step">
                 <div class="step-number">3</div>
-                <h3 class="step-title">Upload Resit</h3>
-                <p class="step-description">Screenshot resit pembayaran (JPG/PNG)</p>
+                <h3 class="step-title">Terima License Key</h3>
+                <p class="step-description">Dihantar automatik ke email anda dengan serta-merta</p>
             </div>
             <div class="step">
                 <div class="step-number">4</div>
-                <h3 class="step-title">Terima Email</h3>
-                <p class="step-description">License key akan dihantar dalam 1-4 jam</p>
-            </div>
-            <div class="step">
-                <div class="step-number">5</div>
                 <h3 class="step-title">Activate!</h3>
                 <p class="step-description">Masukkan license key di extension - Done! ✅</p>
             </div>
@@ -1463,16 +1458,6 @@
                     <p>Sila isi maklumat dan upload resit pembayaran</p>
                 </div>
 
-                <div class="payment-info">
-                    <h4>📋 Maklumat Pembayaran</h4>
-                    <p><strong>Jumlah:</strong> RM10.00</p>
-                    <p><strong>Bank:</strong> Maybank</p>
-                    <p><strong>Akaun:</strong> 503015686612 </p>
-                    <p><strong>Nama:</strong> AHMAD AIMAN MOHAMED</p>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                        <em>Sila buat pembayaran terlebih dahulu sebelum isi borang</em>
-                    </p>
-                </div>
 
                 <form id="licenseForm" onsubmit="submitLicenseForm(event)">
                     <div class="form-group">
@@ -1642,8 +1627,9 @@
 
         // License Modal Functions
         function openLicenseModal() {
-            document.getElementById('licenseModal').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            // Pembelian PRO kini melalui saluran rasmi BCL (bayaran automatik + lesen segera).
+            // Flow lama (bayar manual + upload resit) DIHENTIKAN. Redirect ke BCL.
+            window.location.href = 'https://cikguaime.bcl.my/form/idme-pro';
         }
 
         function closeLicenseModal() {
